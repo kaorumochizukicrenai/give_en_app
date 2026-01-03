@@ -180,12 +180,326 @@
 		</style>
 		<style>
 			/* ここに後から追加したクラスなどのスタイルを追記可能 */
+			:root {
+				--accent-blue: #2563eb;
+				--accent-red: #dc2626;
+				--accent-slate: #0f172a;
+				--surface: rgba(255, 255, 255, 0.9);
+				--surface-strong: rgba(255, 255, 255, 0.98);
+			}
+
+			body {
+				font-family: "Inter", "Noto Sans JP", sans-serif;
+				color: var(--accent-slate);
+				background-image:
+					linear-gradient(120deg, rgba(15, 23, 42, 0.7), rgba(255, 255, 255, 0.3)),
+					url("https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=1200&q=80");
+				background-size: cover;
+				background-position: center;
+				background-attachment: fixed;
+				animation: bg-drift 24s ease-in-out infinite;
+			}
+
+			@keyframes bg-drift {
+				0% { background-position: center; }
+				50% { background-position: center 15%; }
+				100% { background-position: center; }
+			}
+
+			body::before {
+				content: "";
+				position: fixed;
+				inset: -15%;
+				background: radial-gradient(circle at 15% 20%, rgba(59, 130, 246, 0.35), transparent 45%),
+					radial-gradient(circle at 80% 10%, rgba(220, 38, 38, 0.28), transparent 50%),
+					radial-gradient(circle at 70% 80%, rgba(248, 250, 252, 0.4), transparent 55%);
+				opacity: 0.7;
+				filter: blur(6px);
+				animation: aurora 18s ease-in-out infinite;
+				pointer-events: none;
+				z-index: 0;
+			}
+
+			@keyframes aurora {
+				0% { transform: translate3d(0, 0, 0); }
+				50% { transform: translate3d(-2%, 3%, 0); }
+				100% { transform: translate3d(0, 0, 0); }
+			}
+
+			body * {
+				font-size: 20px;
+				line-height: 1.6;
+			}
+
+			div[MA_layer] {
+				backdrop-filter: blur(2px);
+			}
+
+			div[MA_layer] > div {
+				background: var(--surface);
+				border-radius: 20px;
+				border: 1px solid rgba(148, 163, 184, 0.35);
+				box-shadow: 0 28px 50px rgba(15, 23, 42, 0.18);
+				z-index: 1;
+			}
+
+			div[MA_dialog] > div {
+				background: var(--surface-strong);
+				border-radius: 18px;
+				box-shadow: 0 24px 40px rgba(15, 23, 42, 0.2);
+			}
+
+			div[MA_header],
+			div[MA_footer] {
+				background: rgba(255, 255, 255, 0.75);
+				backdrop-filter: blur(12px);
+				border-bottom: 1px solid rgba(148, 163, 184, 0.3);
+				box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+				align-items: center;
+				justify-content: space-between;
+				padding: 0 24px;
+			}
+
+			div[MA_footer] {
+				border-top: 1px solid rgba(148, 163, 184, 0.3);
+				border-bottom: none;
+				gap: 12px;
+			}
+
+			div:has( > div[MA_layer][MA_show="on"]) > div[MA_header],
+			div:has( > div[MA_layer][MA_show="on"]) > div[MA_footer] {
+				display: flex;
+			}
+
+			div[MA_header] > div[MA_hamburger],
+			div[MA_header] > div[MA_headericon] {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				float: none;
+			}
+
+			div[MA_header] > div[MA_hamburger] > i,
+			div[MA_header] > div[MA_hamburger] > svg {
+				color: var(--accent-slate);
+			}
+
+			div[MA_footer] > div[MA_footericon] {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				border-radius: 16px;
+				background: rgba(148, 163, 184, 0.12);
+				border: 1px solid rgba(148, 163, 184, 0.2);
+				box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+			}
+
+			.CL_icon,
+			.CL_footericon,
+			.CL_menuicon svg {
+				width: 28px;
+				height: 28px;
+				stroke-width: 2px;
+				color: var(--accent-slate);
+			}
+
+			.CL_layertitle,
+			.CL_dialogtitle {
+				font-size: 20px;
+				font-weight: 500;
+				letter-spacing: 0.08em;
+				text-transform: uppercase;
+				color: rgba(15, 23, 42, 0.5);
+				margin-bottom: 18px;
+			}
+
+			.CL_datatitle {
+				font-weight: 600;
+				color: #475569;
+				margin-top: 14px;
+				margin-bottom: 6px;
+			}
+
+			[MA_data] {
+				font-weight: 500;
+				color: #0f172a;
+			}
+
+			.CL_button {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				gap: 10px;
+				padding: 12px 20px;
+				border-radius: 12px;
+				background: linear-gradient(135deg, var(--accent-blue), #1d4ed8);
+				color: #ffffff;
+				font-weight: 600;
+				box-shadow: 0 14px 24px rgba(37, 99, 235, 0.25);
+				transition: transform 0.2s ease, box-shadow 0.2s ease;
+				cursor: pointer;
+				border: 1px solid rgba(37, 99, 235, 0.4);
+			}
+
+			.CL_button:hover {
+				transform: translateY(-1px);
+				box-shadow: 0 18px 28px rgba(37, 99, 235, 0.35);
+			}
+
+			div[MA_layer] .CL_button + .CL_button {
+				margin-top: 12px;
+			}
+
+			input,
+			select,
+			textarea {
+				width: 100%;
+				border-radius: 12px;
+				border: 1px solid rgba(148, 163, 184, 0.5);
+				padding: 12px 14px;
+				background: rgba(255, 255, 255, 0.95);
+				box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.08);
+			}
+
+			input[type="checkbox"] {
+				width: 22px;
+				height: 22px;
+				accent-color: var(--accent-blue);
+			}
+
+			textarea {
+				min-height: 140px;
+			}
+
+			[MA_message] {
+				background: rgba(148, 163, 184, 0.16);
+				border-radius: 12px;
+				padding: 12px 14px;
+				border: 1px dashed rgba(148, 163, 184, 0.5);
+				margin-top: 16px;
+				color: #334155;
+			}
+
+			[MA_dev],
+			[MA_dev] * {
+				opacity: 0.45;
+				filter: grayscale(0.4);
+				font-size: 14px;
+			}
+
+			div[MA_menu] > div {
+				background: var(--surface-strong);
+				border-left: 1px solid rgba(148, 163, 184, 0.3);
+				box-shadow: -24px 0 40px rgba(15, 23, 42, 0.15);
+			}
+
+			div[MA_menuclose] {
+				display: flex;
+				align-items: center;
+				justify-content: flex-end;
+				padding: 18px 24px;
+			}
+
+			div[MA_menuinner] {
+				display: flex;
+				align-items: center;
+				gap: 14px;
+				padding: 16px 20px;
+				margin: 0 16px 12px;
+				border-radius: 14px;
+				background: rgba(248, 250, 252, 0.9);
+				border: 1px solid rgba(148, 163, 184, 0.3);
+				box-shadow: 0 10px 18px rgba(15, 23, 42, 0.08);
+				font-weight: 600;
+			}
+
+			.CL_menutext {
+				font-size: 20px;
+			}
+
+			[MA_datalist] {
+				--list-accent: #2563eb;
+				--list-cols: 2;
+				--list-bg: rgba(255, 255, 255, 0.6);
+				--list-border: rgba(148, 163, 184, 0.35);
+				display: grid;
+				grid-template-columns: repeat(var(--list-cols), minmax(0, 1fr));
+				gap: 16px;
+				padding: 16px;
+				border-radius: 16px;
+				background: var(--list-bg);
+				border: 1px solid var(--list-border);
+				margin-bottom: 12px;
+			}
+
+			[MA_datalistchild] {
+				background: rgba(255, 255, 255, 0.95);
+				border-radius: 14px;
+				padding: 14px 16px;
+				border: 1px solid rgba(148, 163, 184, 0.3);
+				box-shadow: 0 8px 16px rgba(15, 23, 42, 0.08);
+				display: grid;
+				gap: 8px;
+				position: relative;
+			}
+
+			[MA_datalistchild]::before {
+				content: "";
+				position: absolute;
+				left: 0;
+				top: 12px;
+				bottom: 12px;
+				width: 4px;
+				border-radius: 999px;
+				background: var(--list-accent);
+			}
+
+			[MA_datalist='home_unread_dm_latest3'] { --list-accent: #dc2626; --list-cols: 3; --list-bg: rgba(254, 242, 242, 0.6); }
+			[MA_datalist='home_latest_news3'] { --list-accent: #1d4ed8; --list-cols: 3; --list-bg: rgba(219, 234, 254, 0.6); }
+			[MA_datalist='dm_thread_list'] { --list-accent: #0f766e; --list-cols: 2; --list-bg: rgba(240, 253, 250, 0.6); }
+			[MA_datalist='member_search_result_list'] { --list-accent: #7c3aed; --list-cols: 2; --list-bg: rgba(237, 233, 254, 0.6); }
+			[MA_datalist='member_urls'] { --list-accent: #0ea5e9; --list-cols: 2; --list-bg: rgba(224, 242, 254, 0.6); }
+			[MA_datalist='chat_message_list'] { --list-accent: #f97316; --list-cols: 1; --list-bg: rgba(255, 247, 237, 0.7); }
+			[MA_datalist='dm_memo_list'] { --list-accent: #22c55e; --list-cols: 2; --list-bg: rgba(240, 253, 244, 0.6); }
+			[MA_datalist='dm_memo_search_result'] { --list-accent: #14b8a6; --list-cols: 2; --list-bg: rgba(240, 253, 250, 0.6); }
+			[MA_datalist='event_new_list'] { --list-accent: #eab308; --list-cols: 2; --list-bg: rgba(254, 252, 232, 0.7); }
+			[MA_datalist='event_search_result_list'] { --list-accent: #f59e0b; --list-cols: 2; --list-bg: rgba(255, 251, 235, 0.7); }
+			[MA_datalist='notice_official_list'] { --list-accent: #0284c7; --list-cols: 2; --list-bg: rgba(224, 242, 254, 0.7); }
+			[MA_datalist='notice_member_intro_list'] { --list-accent: #9333ea; --list-cols: 2; --list-bg: rgba(243, 232, 255, 0.7); }
+			[MA_datalist='payment_history_list'] { --list-accent: #1d4ed8; --list-cols: 2; --list-bg: rgba(226, 232, 240, 0.7); }
+			[MA_datalist='profile_url_list'] { --list-accent: #0f766e; --list-cols: 2; --list-bg: rgba(204, 251, 241, 0.6); }
+			[MA_datalist='profile_url_inputs'] { --list-accent: #0f172a; --list-cols: 1; --list-bg: rgba(241, 245, 249, 0.8); }
+			[MA_datalist='admin_todo_tasks'] { --list-accent: #dc2626; --list-cols: 2; --list-bg: rgba(254, 226, 226, 0.6); }
+			[MA_datalist='admin_members'] { --list-accent: #1e40af; --list-cols: 2; --list-bg: rgba(219, 234, 254, 0.6); }
+			[MA_datalist='admin_member_basic'] { --list-accent: #0ea5e9; --list-cols: 3; --list-bg: rgba(224, 242, 254, 0.7); }
+			[MA_datalist='admin_member_status'] { --list-accent: #10b981; --list-cols: 3; --list-bg: rgba(209, 250, 229, 0.6); }
+			[MA_datalist='admin_member_profile'] { --list-accent: #6366f1; --list-cols: 2; --list-bg: rgba(224, 231, 255, 0.7); }
+			[MA_datalist='admin_official_dm_recipients'] { --list-accent: #f97316; --list-cols: 2; --list-bg: rgba(255, 237, 213, 0.7); }
+			[MA_datalist='admin_official_dm_messages'] { --list-accent: #fb7185; --list-cols: 1; --list-bg: rgba(255, 228, 230, 0.7); }
+			[MA_datalist='admin_membership_application_list'] { --list-accent: #14b8a6; --list-cols: 2; --list-bg: rgba(204, 251, 241, 0.6); }
+			[MA_datalist='admin_membership_application_detail'] { --list-accent: #2dd4bf; --list-cols: 2; --list-bg: rgba(240, 253, 250, 0.7); }
+			[MA_datalist='admin_event_post_application_list'] { --list-accent: #e11d48; --list-cols: 2; --list-bg: rgba(255, 228, 230, 0.7); }
+			[MA_datalist='admin_event_post_application_detail'] { --list-accent: #be123c; --list-cols: 2; --list-bg: rgba(254, 226, 226, 0.7); }
+			[MA_datalist='admin_kyc_submissions'] { --list-accent: #0ea5e9; --list-cols: 2; --list-bg: rgba(224, 242, 254, 0.7); }
+			[MA_datalist='admin_kyc_submission_detail'] { --list-accent: #0284c7; --list-cols: 2; --list-bg: rgba(186, 230, 253, 0.7); }
+			[MA_datalist='admin_kyc_doc_images'] { --list-accent: #475569; --list-cols: 2; --list-bg: rgba(241, 245, 249, 0.8); }
+			[MA_datalist='admin_invite_codes'] { --list-accent: #7c3aed; --list-cols: 2; --list-bg: rgba(237, 233, 254, 0.7); }
+			[MA_datalist='admin_invite_code_detail'] { --list-accent: #6d28d9; --list-cols: 2; --list-bg: rgba(233, 213, 255, 0.7); }
+			[MA_datalist='admin_profile_fields'] { --list-accent: #0f172a; --list-cols: 3; --list-bg: rgba(241, 245, 249, 0.8); }
+			[MA_datalist='admin_notices'] { --list-accent: #1d4ed8; --list-cols: 2; --list-bg: rgba(219, 234, 254, 0.7); }
+			[MA_datalist='admin_notice_detail'] { --list-accent: #2563eb; --list-cols: 2; --list-bg: rgba(224, 231, 255, 0.7); }
+			[MA_datalist='admin_reports'] { --list-accent: #dc2626; --list-cols: 2; --list-bg: rgba(254, 226, 226, 0.7); }
+			[MA_datalist='admin_report_detail'] { --list-accent: #ef4444; --list-cols: 2; --list-bg: rgba(254, 226, 226, 0.7); }
 		</style>
 		<!--ここにCDN等必要なhead内タグを追記可能↓  -->
-
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+		<script src="https://cdn.tailwindcss.com"></script>
+		<script src="https://unpkg.com/lucide@latest"></script>
 		<!--ここにCDN等必要なhead内タグを追記可能↑  -->
 	</head>
-	<body>
+	<body class="text-slate-900">
 		<!-- ここにログイン前のレイヤーをすべて追加↓ -->
 <div MA_prelogin MA_layer='login' MA_show='on'>
         <div>
@@ -383,6 +697,7 @@
 			<div MA_header> <!-- ヘッダー -->
 				<div MA_hamburger onclick='FJ0003_menudisplay("on");'>
 					<!-- ハンバーガーメニューのアイコンを設置 -->
+					<i data-lucide="menu" class="CL_icon"></i>
 				</div>
 				<div MA_headericon onclick='FJ0001_layerdisplay("client_home");'>
 					<img src='logotest.png'>
@@ -2138,20 +2453,20 @@
 
 			<div MA_footer> <!-- フッター -->
 				<!-- 必要であれば適宜変更↓ -->
-				<div MA_footericon>
-					<!-- アイコン -->
+				<div MA_footericon class="CL_footeritem">
+					<i data-lucide="users" class="CL_footericon"></i>
 				</div>
-				<div MA_footericon>
-					<!-- アイコン -->
+				<div MA_footericon class="CL_footeritem">
+					<i data-lucide="message-square" class="CL_footericon"></i>
 				</div>
-				<div MA_footericon>
-					<!-- アイコン -->
+				<div MA_footericon class="CL_footeritem">
+					<i data-lucide="calendar" class="CL_footericon"></i>
 				</div>
-				<div MA_footericon>
-					<!-- アイコン -->
+				<div MA_footericon class="CL_footeritem">
+					<i data-lucide="bell" class="CL_footericon"></i>
 				</div>
-				<div MA_footericon>
-					<!-- アイコン -->
+				<div MA_footericon class="CL_footeritem">
+					<i data-lucide="user" class="CL_footericon"></i>
 				</div>
 				<!-- 必要であれば適宜変更↑ -->
 			</div>
@@ -2160,6 +2475,7 @@
 			<div MA_header> <!-- ヘッダー -->
 				<div MA_hamburger onclick='FJ0003_menudisplay("on");'>
 					<!-- ハンバーガーメニューのアイコンを設置 -->
+					<i data-lucide="menu" class="CL_icon"></i>
 				</div>
 				<div MA_headericon onclick='FJ0001_layerdisplay("admin_home");'>
 					<img src='logotest.png'>
@@ -4208,15 +4524,19 @@
 			<!-- 必要であれば適宜変更↓ -->
 				<div MA_menuclose onclick='FJ0003_menudisplay("off");'>
 					<!-- ハンバーガーメニューを閉じるアイコン -->
+					<i data-lucide="x" class="CL_icon"></i>
 				</div>
 				<div MA_menuinner onclick='FJ0001_layerdisplay("client_profile_payment");'>
-					ログイン情報変更
+					<span class="CL_menuicon"><i data-lucide="settings"></i></span>
+					<span class="CL_menutext">ログイン情報変更</span>
 				</div>
 				<div MA_menuinner onclick='FJ0002_dialogdisplay("common_ok_message", "on");'>
-					利用規約
+					<span class="CL_menuicon"><i data-lucide="file-text"></i></span>
+					<span class="CL_menutext">利用規約</span>
 				</div>
 				<div MA_menuinner onclick='FJ0002_dialogdisplay("common_logout_confirm", "on");'>
-					ログアウト
+					<span class="CL_menuicon"><i data-lucide="log-out"></i></span>
+					<span class="CL_menutext">ログアウト</span>
 				</div>
 			<!-- 必要であれば適宜変更↑ -->
 			</div>
@@ -4227,19 +4547,30 @@
 			<!-- 必要であれば適宜変更↓ -->
 				<div MA_menuclose onclick='FJ0003_menudisplay("off");'>
 					<!-- ハンバーガーメニューを閉じるアイコン -->
+					<i data-lucide="x" class="CL_icon"></i>
 				</div>
 				<div MA_menuinner onclick='FJ0001_layerdisplay("admin_home");'>
-					ログイン情報変更
+					<span class="CL_menuicon"><i data-lucide="shield"></i></span>
+					<span class="CL_menutext">ログイン情報変更</span>
 				</div>
 				<div MA_menuinner onclick='FJ0002_dialogdisplay("common_ok_message", "on");'>
-					利用規約
+					<span class="CL_menuicon"><i data-lucide="file-text"></i></span>
+					<span class="CL_menutext">利用規約</span>
 				</div>
 				<div MA_menuinner onclick='FJ0002_dialogdisplay("common_logout_confirm", "on");'>
-					ログアウト
+					<span class="CL_menuicon"><i data-lucide="log-out"></i></span>
+					<span class="CL_menutext">ログアウト</span>
 				</div>
 			<!-- 必要であれば適宜変更↑ -->
 			</div>
 		</div>
+		<script>
+			window.addEventListener("DOMContentLoaded", () => {
+				if (window.lucide) {
+					lucide.createIcons();
+				}
+			});
+		</script>
 		<script>//ここは変更&追記不可		
 			//引数に入れた名前のレイヤーを表示する。現在表示されているレイヤーと、ダイアログと、ハンバーガーメニューは非表示になる	
 			function FJ0001_layerdisplay(layername){
