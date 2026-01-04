@@ -2,6 +2,9 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="user-scalable=no,width=700">
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet">
 		<style>	/* このstyleタグ内に限り変更不可。デザイン上変更したい場合は、別のstyleタグ内に、上書きでスタイルを適用してほしい。 */
 			body {
 				background-color: white;
@@ -180,12 +183,349 @@
 		</style>
 		<style>
 			/* ここに後から追加したクラスなどのスタイルを追記可能 */
+			:root {
+				color-scheme: light;
+			}
+
+			body {
+				font-family: "Noto Sans JP", system-ui, sans-serif;
+				color: #0f172a;
+				letter-spacing: 0.01em;
+				background: radial-gradient(circle at top, rgba(37, 99, 235, 0.2), transparent 52%),
+					radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.22), transparent 45%),
+					radial-gradient(circle at 80% 0%, rgba(196, 181, 253, 0.2), transparent 50%),
+					linear-gradient(135deg, #e2e8f0 0%, #f8fafc 50%, #eef2ff 100%);
+				animation: gradientShift 12s ease-in-out infinite;
+			}
+
+			body::before {
+				content: "";
+				position: fixed;
+				inset: 0;
+				background-image: repeating-linear-gradient(
+						45deg,
+						rgba(15, 23, 42, 0.07) 0,
+						rgba(15, 23, 42, 0.07) 1px,
+						transparent 1px,
+						transparent 12px
+					),
+					radial-gradient(circle at 80% 30%, rgba(14, 116, 144, 0.2), transparent 45%);
+				opacity: 0.65;
+				pointer-events: none;
+				z-index: 0;
+				animation: geometricDrift 14s ease-in-out infinite;
+			}
+
+			body::after {
+				content: "";
+				position: fixed;
+				inset: 0;
+				background: radial-gradient(circle at 30% 70%, rgba(15, 23, 42, 0.2), transparent 50%);
+				mix-blend-mode: soft-light;
+				opacity: 0.6;
+				pointer-events: none;
+				z-index: 0;
+			}
+
+			@keyframes gradientShift {
+				0%,
+				100% {
+					filter: hue-rotate(0deg);
+				}
+				50% {
+					filter: hue-rotate(12deg);
+				}
+			}
+
+			@keyframes geometricDrift {
+				0%,
+				100% {
+					transform: translate3d(0, 0, 0);
+				}
+				50% {
+					transform: translate3d(-12px, 14px, 0);
+				}
+			}
+
+			body > div {
+				position: relative;
+				z-index: 1;
+			}
+
+			.CL_layertitle,
+			.CL_dialogtitle {
+				display: none;
+			}
+
+			.CL_titlehint {
+				font-size: 20px;
+				color: #64748b;
+				letter-spacing: 0.04em;
+				text-transform: uppercase;
+			}
+
+			[MA_dev] {
+				font-size: 16px;
+				color: #94a3b8;
+				opacity: 0.7;
+			}
+
+			div[MA_layer] {
+				transition: opacity 0.5s ease, transform 0.5s ease;
+				opacity: 0;
+				transform: translateY(18px);
+			}
+
+			div[MA_layer][MA_show='on'] {
+				opacity: 1;
+				transform: translateY(0);
+			}
+
+			div[MA_dialog] {
+				backdrop-filter: blur(6px);
+			}
+
+			div[MA_dialog] > div {
+				border-radius: 28px;
+				box-shadow: 0 18px 40px rgba(15, 23, 42, 0.2);
+			}
+
+			div[MA_menu] > div {
+				border-radius: 28px 0 0 28px;
+				box-shadow: -12px 0 30px rgba(15, 23, 42, 0.2);
+			}
+
+			.CL_section {
+				padding: 24px;
+				border-radius: 24px;
+				box-shadow: 0 16px 32px rgba(15, 23, 42, 0.08);
+				background: rgba(255, 255, 255, 0.92);
+				border: 1px solid rgba(148, 163, 184, 0.25);
+				margin-bottom: 28px;
+			}
+
+			.CL_header,
+			.CL_footer {
+				backdrop-filter: blur(10px);
+				background: rgba(255, 255, 255, 0.8);
+				border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+			}
+
+			.CL_footer {
+				border-top: 1px solid rgba(148, 163, 184, 0.25);
+				border-bottom: none;
+			}
+
+			.CL_iconbutton {
+				width: 80px;
+				height: 80px;
+				position: relative;
+				text-align: center;
+			}
+
+			.CL_iconbutton img {
+				width: 42px;
+				height: 42px;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+			}
+
+			.CL_logo {
+				text-align: center;
+			}
+
+			.CL_logo img {
+				border-radius: 16px;
+				box-shadow: 0 10px 20px rgba(15, 23, 42, 0.15);
+				display: inline-block;
+			}
+
+			.CL_datatitle {
+				font-weight: 600;
+				color: #0f172a;
+				margin-top: 18px;
+			}
+
+			[MA_data] {
+				padding-left: 18px;
+				margin-top: 6px;
+				border-left: 3px solid rgba(99, 102, 241, 0.4);
+				color: #1e293b;
+			}
+
+			[MA_message] {
+				padding: 16px 18px;
+				border-radius: 18px;
+				background: rgba(15, 23, 42, 0.08);
+				color: #0f172a;
+				margin: 18px 0;
+				border: 1px solid rgba(148, 163, 184, 0.35);
+			}
+
+			input,
+			select,
+			textarea {
+				width: 100%;
+				border-radius: 16px;
+				border: 1px solid rgba(148, 163, 184, 0.45);
+				padding: 16px;
+				background: rgba(255, 255, 255, 0.95);
+				box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.08);
+			}
+
+			textarea {
+				min-height: 160px;
+			}
+
+			.CL_button {
+				margin: 10px 0;
+				padding: 18px 20px;
+				border-radius: 18px;
+				border: 1px solid rgba(30, 64, 175, 0.25);
+				background: linear-gradient(135deg, rgba(30, 64, 175, 0.1), rgba(59, 130, 246, 0.18));
+				color: #1e1b4b;
+				font-weight: 600;
+				box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+				transition: transform 0.2s ease, box-shadow 0.2s ease;
+			}
+
+			.CL_button:active {
+				transform: translateY(1px);
+				box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+			}
+
+			.CL_buttongrid {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 12px;
+				margin: 16px 0 24px;
+			}
+
+			.CL_buttongrid .CL_button {
+				margin: 0;
+			}
+
+			[MA_datalist] {
+				margin: 12px 0 24px;
+			}
+
+			[MA_datalistchild] {
+				padding: 18px;
+				border-radius: 20px;
+				border: 1px solid rgba(148, 163, 184, 0.35);
+				background: rgba(255, 255, 255, 0.9);
+				box-shadow: 0 12px 20px rgba(15, 23, 42, 0.08);
+				margin-bottom: 18px;
+			}
+
+			div[MA_datalist='home_unread_dm_latest3'] [MA_datalistchild] {
+				border-left: 6px solid #2563eb;
+			}
+
+			div[MA_datalist='home_latest_news3'] [MA_datalistchild] {
+				border-left: 6px solid #7c3aed;
+			}
+
+			div[MA_datalist='dm_thread_list'] [MA_datalistchild] {
+				border-left: 6px solid #0ea5e9;
+			}
+
+			div[MA_datalist='member_search_result_list'] [MA_datalistchild],
+			div[MA_datalist='member_urls'] [MA_datalistchild],
+			div[MA_datalist='profile_url_list'] [MA_datalistchild] {
+				border-left: 6px solid #16a34a;
+			}
+
+			div[MA_datalist='event_new_list'] [MA_datalistchild],
+			div[MA_datalist='event_search_result_list'] [MA_datalistchild] {
+				border-left: 6px solid #f97316;
+			}
+
+			div[MA_datalist='notice_official_list'] [MA_datalistchild],
+			div[MA_datalist='notice_member_intro_list'] [MA_datalistchild] {
+				border-left: 6px solid #d946ef;
+			}
+
+			div[MA_datalist='payment_history_list'] [MA_datalistchild] {
+				border-left: 6px solid #0f766e;
+			}
+
+			.CL_menuitem {
+				display: flex;
+				align-items: center;
+				gap: 16px;
+				padding: 20px 24px;
+				margin: 10px 16px;
+				border-radius: 18px;
+				background: rgba(248, 250, 252, 0.9);
+				border: 1px solid rgba(148, 163, 184, 0.35);
+				box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+				font-weight: 600;
+				color: #1e1b4b;
+			}
+
+			.CL_menuitem img {
+				width: 28px;
+				height: 28px;
+			}
+
+			.CL_menuclose {
+				padding: 12px 24px;
+				text-align: right;
+				position: relative;
+				height: 80px;
+			}
+
+			.CL_menuclose img {
+				width: 32px;
+				height: 32px;
+				position: absolute;
+				top: 50%;
+				right: 24px;
+				transform: translateY(-50%);
+			}
+
+			.CL_footericon {
+				width: 72px;
+				height: 72px;
+				border-radius: 20px;
+				background: rgba(255, 255, 255, 0.9);
+				box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+				position: relative;
+			}
+
+			.CL_footericon img {
+				width: 34px;
+				height: 34px;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+			}
+
+			.CL_footericon.is-hidden {
+				display: none;
+			}
+
+			.CL_cardimage img,
+			[MA_img] img,
+			[MA_imgpreview] {
+				width: 100%;
+				height: auto;
+				border-radius: 20px;
+				box-shadow: 0 12px 24px rgba(15, 23, 42, 0.15);
+				object-fit: cover;
+			}
 		</style>
 		<!--ここにCDN等必要なhead内タグを追記可能↓  -->
+		<script src="https://cdn.tailwindcss.com"></script>
+		<script src="https://unpkg.com/lucide@latest"></script>
 
 		<!--ここにCDN等必要なhead内タグを追記可能↑  -->
 	</head>
-	<body>
+	<body class="bg-slate-50 text-slate-900">
 		<!-- ここにログイン前のレイヤーをすべて追加↓ -->
 <div MA_prelogin MA_layer='login' MA_show='on'>
         <div>
@@ -380,11 +720,12 @@
 		<!-- ここにログイン前のレイヤーをすべて追加↑ -->
 
 		<div>	<!—一般アカウントのログイン後レイヤー群。ヘッダーと、ログイン後レイヤーと、フッターを格納 -->
-			<div MA_header> <!-- ヘッダー -->
-				<div MA_hamburger onclick='FJ0003_menudisplay("on");'>
+			<div MA_header class="CL_header"> <!-- ヘッダー -->
+				<div MA_hamburger class="CL_iconbutton" onclick='FJ0003_menudisplay("on");'>
+					<img src="https://unpkg.com/lucide-static@latest/icons/menu.svg" alt="メニュー">
 					<!-- ハンバーガーメニューのアイコンを設置 -->
 				</div>
-				<div MA_headericon onclick='FJ0001_layerdisplay("client_home");'>
+				<div MA_headericon class="CL_logo" onclick='FJ0001_layerdisplay("client_home");'>
 					<img src='logotest.png'>
 					<!-- ↑アプリのロゴの画像を設置 -->
 				</div>
@@ -835,12 +1176,12 @@
                 <div MA_data='profile_photo_state'>
                         <div MA_img='has_photo'>
                                 <div>
-                                        <img src='/insert/photo/test_member_photo.png'>
+                                        <img src='https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80'>
                                 </div>
                         </div>
                         <div MA_img='no_photo'>
                                 <div>
-                                        <img src='/insert/photo/img_no_photo.png'>
+                                        <img src='https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=600&q=80'>
                                 </div>
                         </div>
                 </div>
@@ -1083,12 +1424,12 @@
                                         <div MA_data='event_thumbnail_state'>
                                                 <div MA_img='has_thumbnail'>
                                                         <div>
-                                                                <img src='/insert/photo/test_event_thumbnail.png'>
+                                                                <img src='https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=80'>
                                                         </div>
                                                 </div>
                                                 <div MA_img='no_thumbnail'>
                                                         <div>
-                                                                <img src='/insert/photo/img_no_event_thumbnail.png'>
+                                                                <img src='https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=800&q=80'>
                                                         </div>
                                                 </div>
                                         </div>
@@ -1123,12 +1464,12 @@
                                         <div MA_data='event_thumbnail_state'>
                                                 <div MA_img='has_thumbnail'>
                                                         <div>
-                                                                <img src='/insert/photo/test_event_thumbnail2.png'>
+                                                                <img src='https://images.unsplash.com/photo-1485217988980-11786ced9454?auto=format&fit=crop&w=800&q=80'>
                                                         </div>
                                                 </div>
                                                 <div MA_img='no_thumbnail'>
                                                         <div>
-                                                                <img src='/insert/photo/img_no_event_thumbnail.png'>
+                                                                <img src='https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=800&q=80'>
                                                         </div>
                                                 </div>
                                         </div>
@@ -1596,12 +1937,12 @@
                 <div MA_data='event_thumbnail_state'>
                         <div MA_img='has_thumbnail'>
                                 <div>
-                                        <img src='/insert/photo/test_event_thumbnail.png'>
+                                        <img src='https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=80'>
                                 </div>
                         </div>
                         <div MA_img='no_thumbnail'>
                                 <div>
-                                        <img src='/insert/photo/img_no_event_thumbnail.png'>
+                                        <img src='https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=800&q=80'>
                                 </div>
                         </div>
                 </div>
@@ -1748,12 +2089,12 @@
                         <div MA_data='profile_photo_state'>
                                 <div MA_img='has_photo'>
                                         <div>
-                                                <img src='/insert/photo/test_member_photo.png'>
+                                                <img src='https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80'>
                                         </div>
                                 </div>
                                 <div MA_img='no_photo'>
                                         <div>
-                                                <img src='/insert/photo/img_no_photo.png'>
+                                                <img src='https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=600&q=80'>
                                         </div>
                                 </div>
                         </div>
@@ -1926,7 +2267,7 @@
                         </div>
                         <div class='CL_button' onclick='FJ0001_layerdisplay("client_profile_edit");'>画像を選ぶ</div>
                         <div>
-                                <img MA_imgpreview='profile_photo_preview' src='/insert/photo/img_not_selected.png'>
+                                <img MA_imgpreview='profile_photo_preview' src='https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80'>
                         </div>
 
                         <div class='CL_datatitle'>略歴</div>
@@ -1997,7 +2338,7 @@
                         </div>
                         <div class='CL_button' onclick='FJ0001_layerdisplay("client_identity_submit");'>画像1を選ぶ</div>
                         <div>
-                                <img MA_imgpreview='identity_doc_front_preview' src='/insert/photo/img_not_selected.png'>
+                                <img MA_imgpreview='identity_doc_front_preview' src='https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80'>
                         </div>
 
                         <div class='CL_datatitle'>画像アップロード（裏）</div>
@@ -2006,7 +2347,7 @@
                         </div>
                         <div class='CL_button' onclick='FJ0001_layerdisplay("client_identity_submit");'>画像2を選ぶ</div>
                         <div>
-                                <img MA_imgpreview='identity_doc_back_preview' src='/insert/photo/img_not_selected.png'>
+                                <img MA_imgpreview='identity_doc_back_preview' src='https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80'>
                         </div>
                 </form>
 
@@ -2136,32 +2477,33 @@
 </div>
 			<!-- ここにログイン後のレイヤーをすべて追加↑ -->
 
-			<div MA_footer> <!-- フッター -->
+			<div MA_footer class="CL_footer"> <!-- フッター -->
 				<!-- 必要であれば適宜変更↓ -->
-				<div MA_footericon>
-					<!-- アイコン -->
+				<div MA_footericon class="CL_footericon">
+					<img src="https://unpkg.com/lucide-static@latest/icons/search.svg" alt="検索">
 				</div>
-				<div MA_footericon>
-					<!-- アイコン -->
+				<div MA_footericon class="CL_footericon">
+					<img src="https://unpkg.com/lucide-static@latest/icons/calendar-days.svg" alt="イベント">
 				</div>
-				<div MA_footericon>
-					<!-- アイコン -->
+				<div MA_footericon class="CL_footericon">
+					<img src="https://unpkg.com/lucide-static@latest/icons/bell.svg" alt="お知らせ">
 				</div>
-				<div MA_footericon>
-					<!-- アイコン -->
+				<div MA_footericon class="CL_footericon">
+					<img src="https://unpkg.com/lucide-static@latest/icons/user-round.svg" alt="プロフィール">
 				</div>
-				<div MA_footericon>
-					<!-- アイコン -->
+				<div MA_footericon class="CL_footericon is-hidden">
+					<img src="https://unpkg.com/lucide-static@latest/icons/credit-card.svg" alt="支払い">
 				</div>
 				<!-- 必要であれば適宜変更↑ -->
 			</div>
 		</div>
 			<div>	<!-- 管理アカウントのログイン後レイヤー群。ヘッダーと、ログイン後レイヤーを格納 -->
-			<div MA_header> <!-- ヘッダー -->
-				<div MA_hamburger onclick='FJ0003_menudisplay("on");'>
+			<div MA_header class="CL_header"> <!-- ヘッダー -->
+				<div MA_hamburger class="CL_iconbutton" onclick='FJ0003_menudisplay("on");'>
+					<img src="https://unpkg.com/lucide-static@latest/icons/menu.svg" alt="メニュー">
 					<!-- ハンバーガーメニューのアイコンを設置 -->
 				</div>
-				<div MA_headericon onclick='FJ0001_layerdisplay("admin_home");'>
+				<div MA_headericon class="CL_logo" onclick='FJ0001_layerdisplay("admin_home");'>
 					<img src='logotest.png'>
 					<!-- ↑アプリのロゴの画像を設置 -->
 				</div>
@@ -2451,7 +2793,7 @@
                 <div class='CL_datatitle'>プロフィール画像</div>
                 <div MA_data='profile_photo'>
                         <div MA_img='photo'>
-                                <img src='/insert/photo/test_profile_default.png'>
+                                <img src='https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=600&q=80'>
                         </div>
                 </div>
 
@@ -2916,7 +3258,7 @@
                 <div class='CL_datatitle'>イベント画像（申込内容）</div>
                 <div MA_data='event_image'>
                         <div MA_img='thumbnail'>
-                                <img src='/insert/photo/test_event_thumbnail.png'>
+                                <img src='https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=80'>
                         </div>
                 </div>
 
@@ -3056,7 +3398,7 @@
                                 <div class='CL_datatitle'>表面</div>
                                 <div MA_data='doc_front'>
                                         <div MA_img='front'>
-                                                <img src='/insert/photo/test_kyc_doc_front.png'>
+                                                <img src='https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=800&q=80'>
                                         </div>
                                 </div>
                         </div>
@@ -3064,7 +3406,7 @@
                                 <div class='CL_datatitle'>裏面</div>
                                 <div MA_data='doc_back'>
                                         <div MA_img='back'>
-                                                <img src='/insert/photo/test_kyc_doc_back.png'>
+                                                <img src='https://images.unsplash.com/photo-1587614382346-4ec70e388b28?auto=format&fit=crop&w=800&q=80'>
                                         </div>
                                 </div>
                         </div>
@@ -4206,17 +4548,27 @@
 		<div MA_menu MA_client>	<!-- 一般アカウントでハンバーガーメニューボタンを押した後のメニュー -->
 			<div>
 			<!-- 必要であれば適宜変更↓ -->
-				<div MA_menuclose onclick='FJ0003_menudisplay("off");'>
+				<div MA_menuclose class="CL_menuclose" onclick='FJ0003_menudisplay("off");'>
+					<img src="https://unpkg.com/lucide-static@latest/icons/x.svg" alt="閉じる">
 					<!-- ハンバーガーメニューを閉じるアイコン -->
 				</div>
 				<div MA_menuinner onclick='FJ0001_layerdisplay("client_profile_payment");'>
-					ログイン情報変更
+					<div class="CL_menuitem">
+						<img src="https://unpkg.com/lucide-static@latest/icons/settings.svg" alt="設定">
+						<span>ログイン情報変更</span>
+					</div>
 				</div>
 				<div MA_menuinner onclick='FJ0002_dialogdisplay("common_ok_message", "on");'>
-					利用規約
+					<div class="CL_menuitem">
+						<img src="https://unpkg.com/lucide-static@latest/icons/file-text.svg" alt="利用規約">
+						<span>利用規約</span>
+					</div>
 				</div>
 				<div MA_menuinner onclick='FJ0002_dialogdisplay("common_logout_confirm", "on");'>
-					ログアウト
+					<div class="CL_menuitem">
+						<img src="https://unpkg.com/lucide-static@latest/icons/log-out.svg" alt="ログアウト">
+						<span>ログアウト</span>
+					</div>
 				</div>
 			<!-- 必要であれば適宜変更↑ -->
 			</div>
@@ -4225,17 +4577,27 @@
 		<div MA_menu MA_admin>	<!-- 管理アカウントでハンバーガーメニューボタンを押した後のメニュー -->
 			<div>
 			<!-- 必要であれば適宜変更↓ -->
-				<div MA_menuclose onclick='FJ0003_menudisplay("off");'>
+				<div MA_menuclose class="CL_menuclose" onclick='FJ0003_menudisplay("off");'>
+					<img src="https://unpkg.com/lucide-static@latest/icons/x.svg" alt="閉じる">
 					<!-- ハンバーガーメニューを閉じるアイコン -->
 				</div>
 				<div MA_menuinner onclick='FJ0001_layerdisplay("admin_home");'>
-					ログイン情報変更
+					<div class="CL_menuitem">
+						<img src="https://unpkg.com/lucide-static@latest/icons/settings.svg" alt="設定">
+						<span>ログイン情報変更</span>
+					</div>
 				</div>
 				<div MA_menuinner onclick='FJ0002_dialogdisplay("common_ok_message", "on");'>
-					利用規約
+					<div class="CL_menuitem">
+						<img src="https://unpkg.com/lucide-static@latest/icons/file-text.svg" alt="利用規約">
+						<span>利用規約</span>
+					</div>
 				</div>
 				<div MA_menuinner onclick='FJ0002_dialogdisplay("common_logout_confirm", "on");'>
-					ログアウト
+					<div class="CL_menuitem">
+						<img src="https://unpkg.com/lucide-static@latest/icons/log-out.svg" alt="ログアウト">
+						<span>ログアウト</span>
+					</div>
 				</div>
 			<!-- 必要であれば適宜変更↑ -->
 			</div>
@@ -4275,6 +4637,37 @@
 			}
 		</script>
 		<!-- scriptタグが追加で必要な場合はここに追記可能↓ -->
+		<script>
+			document.addEventListener('DOMContentLoaded', () => {
+				const parents = document.querySelectorAll('div, form');
+				parents.forEach((parent) => {
+					const children = Array.from(parent.children);
+					let buffer = [];
+
+					const flush = () => {
+						if (buffer.length < 2) {
+							buffer = [];
+							return;
+						}
+						const wrapper = document.createElement('div');
+						wrapper.className = 'CL_buttongrid';
+						buffer[0].before(wrapper);
+						buffer.forEach((node) => wrapper.appendChild(node));
+						buffer = [];
+					};
+
+					children.forEach((child) => {
+						if (child.classList.contains('CL_button')) {
+							buffer.push(child);
+						} else {
+							flush();
+							buffer = [];
+						}
+					});
+					flush();
+				});
+			});
+		</script>
 
 		<!-- scriptタグが追加で必要な場合はここに追記可能↑ -->
 	</body>
