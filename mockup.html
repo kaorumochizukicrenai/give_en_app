@@ -180,16 +180,364 @@
 		</style>
 		<style>
 			/* ここに後から追加したクラスなどのスタイルを追記可能 */
+			:root {
+				--ink-900: #0b1120;
+				--ink-800: #111827;
+				--ink-700: #1f2937;
+				--ivory-100: #f8fafc;
+				--accent-blue: #2563eb;
+				--accent-red: #dc2626;
+				--accent-gold: #c9a86a;
+				--glass-border: rgba(255, 255, 255, 0.18);
+			}
+
+			body {
+				color: var(--ivory-100);
+				background: radial-gradient(circle at top, rgba(37, 99, 235, 0.24), transparent 60%),
+					radial-gradient(circle at 20% 80%, rgba(220, 38, 38, 0.2), transparent 55%),
+					linear-gradient(135deg, #0b1120 0%, #111827 50%, #1f2937 100%);
+				background-size: 200% 200%;
+				animation: gradientShift 18s ease infinite;
+			}
+
+			body::before,
+			body::after {
+				content: "";
+				position: absolute;
+				inset: -20%;
+				background: radial-gradient(circle, rgba(201, 168, 106, 0.18), transparent 55%);
+				animation: floatGlow 24s ease-in-out infinite;
+				pointer-events: none;
+				z-index: 0;
+			}
+
+			body::after {
+				animation-delay: 6s;
+				opacity: 0.7;
+			}
+
+			@keyframes gradientShift {
+				0% {
+					background-position: 0% 50%;
+				}
+				50% {
+					background-position: 100% 50%;
+				}
+				100% {
+					background-position: 0% 50%;
+				}
+			}
+
+			@keyframes floatGlow {
+				0%,
+				100% {
+					transform: translate3d(0, 0, 0) scale(1);
+				}
+				50% {
+					transform: translate3d(4%, -3%, 0) scale(1.05);
+				}
+			}
+
+			body * {
+				font-family: "Manrope", "Noto Sans JP", "Hiragino Kaku Gothic ProN", sans-serif;
+				font-size: 22px;
+				color: inherit;
+			}
+
+			[MA_layer] > div,
+			[MA_dialog] > div {
+				box-shadow: 0 30px 80px rgba(15, 23, 42, 0.35);
+				border: 1px solid var(--glass-border);
+				backdrop-filter: blur(18px);
+				border-radius: 28px;
+				z-index: 1;
+			}
+
+			.screen-shell {
+				display: grid;
+				gap: 18px;
+			}
+
+			.CL_layertitle,
+			.CL_dialogtitle {
+				font-size: 20px;
+				opacity: 0;
+				height: 0;
+				margin: 0;
+				overflow: hidden;
+			}
+
+			.CL_datatitle {
+				font-weight: 600;
+				letter-spacing: 0.02em;
+				color: #e2e8f0;
+				margin-top: 20px;
+			}
+
+			.CL_datatitle + [MA_data] {
+				margin-left: 18px;
+				padding-left: 18px;
+				border-left: 2px solid rgba(201, 168, 106, 0.6);
+				color: #f8fafc;
+			}
+
+			form {
+				display: grid;
+				gap: 16px;
+			}
+
+			input,
+			textarea,
+			select {
+				width: 100%;
+				border-radius: 16px;
+				border: 1px solid rgba(148, 163, 184, 0.4);
+				padding: 14px 16px;
+				background: rgba(15, 23, 42, 0.55);
+				color: #f8fafc;
+				box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+			}
+
+			input:focus,
+			textarea:focus,
+			select:focus {
+				outline: none;
+				border-color: rgba(37, 99, 235, 0.8);
+				box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+			}
+
+			.CL_button {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				min-height: 56px;
+				border-radius: 999px;
+				padding: 12px 20px;
+				margin: 10px 8px 0 0;
+				width: calc(50% - 12px);
+				background: linear-gradient(120deg, rgba(37, 99, 235, 0.95), rgba(220, 38, 38, 0.95));
+				color: #f8fafc;
+				font-weight: 600;
+				letter-spacing: 0.02em;
+				box-shadow: 0 16px 30px rgba(15, 23, 42, 0.35);
+				transition: transform 0.2s ease, box-shadow 0.2s ease;
+			}
+
+			.CL_button:only-child {
+				width: 100%;
+			}
+
+			.CL_button:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 18px 36px rgba(37, 99, 235, 0.3);
+			}
+
+			[MA_message] {
+				margin-top: 18px;
+				padding: 16px 18px;
+				border-radius: 18px;
+				border: 1px solid rgba(248, 250, 252, 0.12);
+				background: rgba(15, 23, 42, 0.6);
+				color: #e2e8f0;
+			}
+
+			[MA_dev] {
+				opacity: 0.35;
+				filter: grayscale(0.8);
+				font-size: 16px;
+				letter-spacing: 0.02em;
+			}
+
+			[MA_dev].CL_button {
+				background: rgba(148, 163, 184, 0.25);
+				color: #e2e8f0;
+				box-shadow: none;
+			}
+
+			.hero-card {
+				display: grid;
+				gap: 16px;
+				padding: 22px;
+				border-radius: 24px;
+				background: rgba(15, 23, 42, 0.55);
+				border: 1px solid rgba(255, 255, 255, 0.12);
+				margin-bottom: 22px;
+			}
+
+			.hero-card img {
+				width: 100%;
+				height: 220px;
+				object-fit: cover;
+				border-radius: 18px;
+			}
+
+			.hero-tag {
+				font-weight: 600;
+				color: var(--accent-gold);
+			}
+
+			[MA_datalist] {
+				display: grid;
+				gap: 16px;
+				margin-top: 12px;
+			}
+
+			[MA_datalistchild] {
+				padding: 18px 20px;
+				border-radius: 20px;
+				border: 1px solid rgba(255, 255, 255, 0.12);
+				background: rgba(15, 23, 42, 0.55);
+				box-shadow: 0 14px 30px rgba(15, 23, 42, 0.25);
+			}
+
+			[MA_datalist^="home_"] > [MA_datalistchild] {
+				border-left: 5px solid #2563eb;
+				background: rgba(37, 99, 235, 0.12);
+			}
+
+			[MA_datalist^="dm_"] > [MA_datalistchild] {
+				border-left: 5px solid #dc2626;
+				background: rgba(220, 38, 38, 0.12);
+			}
+
+			[MA_datalist^="member_"] > [MA_datalistchild] {
+				border-left: 5px solid #0ea5e9;
+				background: rgba(14, 165, 233, 0.12);
+			}
+
+			[MA_datalist^="event_"] > [MA_datalistchild] {
+				border-left: 5px solid #c9a86a;
+				background: rgba(201, 168, 106, 0.12);
+			}
+
+			[MA_datalist^="notice_"] > [MA_datalistchild] {
+				border-left: 5px solid #22c55e;
+				background: rgba(34, 197, 94, 0.12);
+			}
+
+			[MA_datalist^="profile_"] > [MA_datalistchild],
+			[MA_datalist^="payment_"] > [MA_datalistchild] {
+				border-left: 5px solid #38bdf8;
+				background: rgba(56, 189, 248, 0.12);
+			}
+
+			[MA_datalist^="admin_"] > [MA_datalistchild] {
+				border-left: 5px solid #8b5cf6;
+				background: rgba(139, 92, 246, 0.12);
+			}
+
+			div[MA_header] {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 10px 24px;
+				background: rgba(15, 23, 42, 0.65);
+				backdrop-filter: blur(18px);
+				border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+			}
+
+			.header-icon,
+			.header-hamburger {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				border-radius: 16px;
+				background: rgba(255, 255, 255, 0.08);
+			}
+
+			.header-hamburger i,
+			.menu-close i,
+			.footer-icon i {
+				width: 34px;
+				height: 34px;
+			}
+
+			div[MA_footer] {
+				display: flex;
+				align-items: center;
+				justify-content: space-around;
+				background: rgba(15, 23, 42, 0.72);
+				border-top: 1px solid rgba(255, 255, 255, 0.1);
+				backdrop-filter: blur(18px);
+			}
+
+			div[MA_footer] > div[MA_footericon] {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				border-radius: 50%;
+				width: 56px;
+				height: 56px;
+				background: rgba(255, 255, 255, 0.08);
+				border: 1px solid rgba(255, 255, 255, 0.12);
+			}
+
+			.menu-panel {
+				background: linear-gradient(160deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95));
+				padding: 24px 20px 40px;
+			}
+
+			.menu-close {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 18px 12px;
+				border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+			}
+
+			.menu-title {
+				font-size: 22px;
+				font-weight: 600;
+				color: var(--accent-gold);
+			}
+
+			div[MA_menuinner] {
+				display: flex;
+				align-items: center;
+				gap: 16px;
+				padding: 18px 20px;
+				margin-top: 18px;
+				border-radius: 18px;
+				background: rgba(255, 255, 255, 0.05);
+				border: 1px solid rgba(255, 255, 255, 0.1);
+				transition: transform 0.2s ease, background 0.2s ease;
+			}
+
+			div[MA_menuinner]:hover {
+				transform: translateX(6px);
+				background: rgba(37, 99, 235, 0.2);
+			}
+
+			.menu-icon {
+				width: 28px;
+				height: 28px;
+				color: var(--accent-gold);
+			}
+
+			.section-divider {
+				height: 1px;
+				background: rgba(255, 255, 255, 0.1);
+				margin: 24px 0;
+			}
 		</style>
 		<!--ここにCDN等必要なhead内タグを追記可能↓  -->
-
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+		<script src="https://cdn.tailwindcss.com"></script>
+		<script src="https://unpkg.com/lucide@latest"></script>
 		<!--ここにCDN等必要なhead内タグを追記可能↑  -->
 	</head>
 	<body>
 		<!-- ここにログイン前のレイヤーをすべて追加↓ -->
 <div MA_prelogin MA_layer='login' MA_show='on'>
-        <div>
+        <div class="screen-shell">
                 <div class='CL_layertitle'>ログイン画面</div>
+				<div class="hero-card">
+					<span class="hero-tag">Premium Community</span>
+					<div>会員限定の上質なネットワーク体験を、洗練されたUIで。</div>
+					<img src="https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=1200&q=80" alt="都会の夜景">
+				</div>
 
                 <form MA_form='login' action='javascript:void(0);'>
                         <div class='CL_datatitle'>メールアドレス</div>
@@ -381,10 +729,11 @@
 
 		<div>	<!—一般アカウントのログイン後レイヤー群。ヘッダーと、ログイン後レイヤーと、フッターを格納 -->
 			<div MA_header> <!-- ヘッダー -->
-				<div MA_hamburger onclick='FJ0003_menudisplay("on");'>
+				<div MA_hamburger class="header-hamburger" onclick='FJ0003_menudisplay("on");'>
 					<!-- ハンバーガーメニューのアイコンを設置 -->
+					<i data-lucide="menu"></i>
 				</div>
-				<div MA_headericon onclick='FJ0001_layerdisplay("client_home");'>
+				<div MA_headericon class="header-icon" onclick='FJ0001_layerdisplay("client_home");'>
 					<img src='logotest.png'>
 					<!-- ↑アプリのロゴの画像を設置 -->
 				</div>
@@ -392,8 +741,13 @@
 
 			<!-- ここにログイン後のレイヤーをすべて追加↓ -->
 <div MA_client MA_layer='client_home'>
-        <div>
+        <div class="screen-shell">
                 <div class='CL_layertitle'>会員ホーム</div>
+				<div class="hero-card">
+					<span class="hero-tag">Member Spotlight</span>
+					<div>最新の交流やお知らせを、上質なビジュアルで一目で把握。</div>
+					<img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80" alt="洗練されたラウンジ空間">
+				</div>
 
                 <div class='CL_datatitle'>未読DM（最新3件）</div>
                 <div MA_datalist='home_unread_dm_latest3'>
@@ -2138,30 +2492,28 @@
 
 			<div MA_footer> <!-- フッター -->
 				<!-- 必要であれば適宜変更↓ -->
-				<div MA_footericon>
-					<!-- アイコン -->
+				<div MA_footericon class="footer-icon">
+					<i data-lucide="home"></i>
 				</div>
-				<div MA_footericon>
-					<!-- アイコン -->
+				<div MA_footericon class="footer-icon">
+					<i data-lucide="mail"></i>
 				</div>
-				<div MA_footericon>
-					<!-- アイコン -->
+				<div MA_footericon class="footer-icon">
+					<i data-lucide="calendar-check"></i>
 				</div>
-				<div MA_footericon>
-					<!-- アイコン -->
-				</div>
-				<div MA_footericon>
-					<!-- アイコン -->
+				<div MA_footericon class="footer-icon">
+					<i data-lucide="user-round"></i>
 				</div>
 				<!-- 必要であれば適宜変更↑ -->
 			</div>
 		</div>
 			<div>	<!-- 管理アカウントのログイン後レイヤー群。ヘッダーと、ログイン後レイヤーを格納 -->
 			<div MA_header> <!-- ヘッダー -->
-				<div MA_hamburger onclick='FJ0003_menudisplay("on");'>
+				<div MA_hamburger class="header-hamburger" onclick='FJ0003_menudisplay("on");'>
 					<!-- ハンバーガーメニューのアイコンを設置 -->
+					<i data-lucide="menu"></i>
 				</div>
-				<div MA_headericon onclick='FJ0001_layerdisplay("admin_home");'>
+				<div MA_headericon class="header-icon" onclick='FJ0001_layerdisplay("admin_home");'>
 					<img src='logotest.png'>
 					<!-- ↑アプリのロゴの画像を設置 -->
 				</div>
@@ -4204,38 +4556,48 @@
 		<!-- ここに簡易UI上のダイアログをすべて追加↑ -->
 
 		<div MA_menu MA_client>	<!-- 一般アカウントでハンバーガーメニューボタンを押した後のメニュー -->
-			<div>
+			<div class="menu-panel">
 			<!-- 必要であれば適宜変更↓ -->
-				<div MA_menuclose onclick='FJ0003_menudisplay("off");'>
+				<div MA_menuclose class="menu-close" onclick='FJ0003_menudisplay("off");'>
 					<!-- ハンバーガーメニューを閉じるアイコン -->
+					<span class="menu-title">メニュー</span>
+					<i data-lucide="x"></i>
 				</div>
 				<div MA_menuinner onclick='FJ0001_layerdisplay("client_profile_payment");'>
-					ログイン情報変更
+					<i data-lucide="settings" class="menu-icon"></i>
+					<span>ログイン情報変更</span>
 				</div>
 				<div MA_menuinner onclick='FJ0002_dialogdisplay("common_ok_message", "on");'>
-					利用規約
+					<i data-lucide="scroll-text" class="menu-icon"></i>
+					<span>利用規約</span>
 				</div>
 				<div MA_menuinner onclick='FJ0002_dialogdisplay("common_logout_confirm", "on");'>
-					ログアウト
+					<i data-lucide="log-out" class="menu-icon"></i>
+					<span>ログアウト</span>
 				</div>
 			<!-- 必要であれば適宜変更↑ -->
 			</div>
 		</div>
 
 		<div MA_menu MA_admin>	<!-- 管理アカウントでハンバーガーメニューボタンを押した後のメニュー -->
-			<div>
+			<div class="menu-panel">
 			<!-- 必要であれば適宜変更↓ -->
-				<div MA_menuclose onclick='FJ0003_menudisplay("off");'>
+				<div MA_menuclose class="menu-close" onclick='FJ0003_menudisplay("off");'>
 					<!-- ハンバーガーメニューを閉じるアイコン -->
+					<span class="menu-title">管理メニュー</span>
+					<i data-lucide="x"></i>
 				</div>
 				<div MA_menuinner onclick='FJ0001_layerdisplay("admin_home");'>
-					ログイン情報変更
+					<i data-lucide="settings" class="menu-icon"></i>
+					<span>ログイン情報変更</span>
 				</div>
 				<div MA_menuinner onclick='FJ0002_dialogdisplay("common_ok_message", "on");'>
-					利用規約
+					<i data-lucide="scroll-text" class="menu-icon"></i>
+					<span>利用規約</span>
 				</div>
 				<div MA_menuinner onclick='FJ0002_dialogdisplay("common_logout_confirm", "on");'>
-					ログアウト
+					<i data-lucide="log-out" class="menu-icon"></i>
+					<span>ログアウト</span>
 				</div>
 			<!-- 必要であれば適宜変更↑ -->
 			</div>
@@ -4275,7 +4637,11 @@
 			}
 		</script>
 		<!-- scriptタグが追加で必要な場合はここに追記可能↓ -->
-
+		<script>
+			if (window.lucide) {
+				window.lucide.createIcons();
+			}
+		</script>
 		<!-- scriptタグが追加で必要な場合はここに追記可能↑ -->
 	</body>
 </html>		
