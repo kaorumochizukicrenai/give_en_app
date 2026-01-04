@@ -180,12 +180,376 @@
 		</style>
 		<style>
 			/* ここに後から追加したクラスなどのスタイルを追記可能 */
+			:root {
+				--brand-primary: #d11a2a;
+				--brand-secondary: #1d4ed8;
+				--brand-ink: #0f172a;
+				--brand-muted: #64748b;
+				--brand-surface: rgba(255, 255, 255, 0.92);
+				--brand-border: rgba(15, 23, 42, 0.12);
+				--brand-glow: rgba(209, 26, 42, 0.25);
+			}
+
+			body {
+				font-family: "Noto Sans JP", "Inter", sans-serif;
+				color: var(--brand-ink);
+				background: radial-gradient(circle at top, rgba(209, 26, 42, 0.18), transparent 48%),
+					radial-gradient(circle at 20% 20%, rgba(29, 78, 216, 0.18), transparent 50%),
+					linear-gradient(180deg, #f8fafc 0%, #eef2ff 50%, #fff1f2 100%);
+				animation: gradientShift 14s ease-in-out infinite;
+			}
+
+			body:has( > div[MA_prelogin][MA_show='on']) {
+				background: radial-gradient(circle at top, rgba(209, 26, 42, 0.12), transparent 55%),
+					linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%);
+			}
+
+			@keyframes gradientShift {
+				0% {
+					background-position: 0% 0%, 100% 0%, 0% 0%;
+				}
+				50% {
+					background-position: 40% 20%, 80% 40%, 0% 40%;
+				}
+				100% {
+					background-position: 0% 0%, 100% 0%, 0% 0%;
+				}
+			}
+
+			.CL_layertitle,
+			.CL_dialogtitle {
+				display: none;
+			}
+
+			div[MA_layer] > div > * + * {
+				margin-top: 18px;
+			}
+
+			div[MA_dialog] > div > * + * {
+				margin-top: 18px;
+			}
+
+			div[MA_header] {
+				backdrop-filter: blur(16px);
+				background: rgba(255, 255, 255, 0.7);
+				border-bottom: 1px solid rgba(15, 23, 42, 0.1);
+				box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+			}
+
+			div[MA_footer] {
+				backdrop-filter: blur(16px);
+				background: rgba(255, 255, 255, 0.8);
+				border-top: 1px solid rgba(15, 23, 42, 0.1);
+				box-shadow: 0 -10px 26px rgba(15, 23, 42, 0.08);
+			}
+
+			div[MA_footer] > div[MA_footericon] {
+				text-align: center;
+				line-height: 80px;
+				border-radius: 28px;
+				border: 1px solid rgba(15, 23, 42, 0.12);
+				background: rgba(255, 255, 255, 0.95);
+				box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+			}
+
+			div[MA_footer] > div[MA_footericon] img {
+				width: 32px;
+				height: 32px;
+				vertical-align: middle;
+			}
+
+			.footer-icon-hidden {
+				display: none;
+			}
+
+			.CL_datatitle {
+				font-weight: 700;
+				letter-spacing: 0.02em;
+				color: var(--brand-ink);
+			}
+
+			.CL_datatitle + [MA_data] {
+				margin-top: 10px;
+				padding-left: 18px;
+				border-left: 4px solid var(--brand-secondary);
+				color: var(--brand-ink);
+			}
+
+			.CL_datatitle + div[MA_data] {
+				margin-top: 10px;
+				padding-left: 18px;
+				border-left: 4px solid var(--brand-secondary);
+				color: var(--brand-ink);
+			}
+
+			[MA_datalist] {
+				border-radius: 24px;
+				padding: 20px;
+				border: 1px solid var(--brand-border);
+				background: var(--brand-surface);
+				box-shadow: 0 16px 30px rgba(15, 23, 42, 0.08);
+			}
+
+			[MA_datalistchild] {
+				border-radius: 18px;
+				padding: 18px;
+				border: 1px solid rgba(15, 23, 42, 0.1);
+				background: rgba(255, 255, 255, 0.9);
+				box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+			}
+
+			[MA_datalistchild] + [MA_datalistchild] {
+				margin-top: 16px;
+			}
+
+			[MA_datalist*='dm'] {
+				border-left: 6px solid #ef4444;
+			}
+
+			[MA_datalist*='event'] {
+				border-left: 6px solid #2563eb;
+			}
+
+			[MA_datalist*='notice'] {
+				border-left: 6px solid #7c3aed;
+			}
+
+			[MA_datalist*='member'] {
+				border-left: 6px solid #16a34a;
+			}
+
+			[MA_datalist*='payment'] {
+				border-left: 6px solid #0f766e;
+			}
+
+			[MA_datalist*='admin'] {
+				border-left: 6px solid #f97316;
+			}
+
+			.CL_button {
+				padding: 16px 18px;
+				border-radius: 16px;
+				background: linear-gradient(135deg, var(--brand-primary), #f97316);
+				color: #fff;
+				font-weight: 700;
+				letter-spacing: 0.02em;
+				border: 1px solid rgba(255, 255, 255, 0.4);
+				box-shadow: 0 12px 24px rgba(209, 26, 42, 0.3);
+			}
+
+			.CL_button[MA_dev] {
+				background: rgba(15, 23, 42, 0.08);
+				color: var(--brand-muted);
+				box-shadow: none;
+				border: 1px dashed rgba(15, 23, 42, 0.25);
+			}
+
+			[MA_dev] {
+				opacity: 0.55;
+				font-size: 20px;
+			}
+
+			input,
+			select,
+			textarea {
+				width: 100%;
+				padding: 14px 16px;
+				border-radius: 14px;
+				border: 1px solid rgba(15, 23, 42, 0.15);
+				background: rgba(255, 255, 255, 0.95);
+				box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.08);
+			}
+
+			textarea {
+				min-height: 180px;
+			}
+
+			input[type='checkbox'],
+			input[type='radio'] {
+				display: none;
+			}
+
+			.control-row {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 16px;
+				padding: 12px 16px;
+				border-radius: 14px;
+				border: 1px solid rgba(15, 23, 42, 0.12);
+				background: rgba(255, 255, 255, 0.8);
+			}
+
+			.is-check-label {
+				font-weight: 700;
+				color: var(--brand-ink);
+			}
+
+			.check-icon {
+				width: 28px;
+				height: 28px;
+				filter: drop-shadow(0 6px 10px rgba(15, 23, 42, 0.15));
+			}
+
+			.button-grid {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 14px;
+			}
+
+			[MA_message] {
+				padding: 16px 18px;
+				border-radius: 16px;
+				background: rgba(15, 23, 42, 0.06);
+				border: 1px solid rgba(15, 23, 42, 0.1);
+				color: var(--brand-muted);
+			}
+
+			[MA_dialog] > div {
+				border-radius: 24px;
+				box-shadow: 0 24px 60px rgba(15, 23, 42, 0.2);
+			}
+
+			div[MA_menu] > div {
+				background: rgba(255, 255, 255, 0.96);
+				box-shadow: -20px 0 50px rgba(15, 23, 42, 0.15);
+			}
+
+			.menu-item {
+				display: flex;
+				align-items: center;
+				gap: 16px;
+				padding: 18px 20px;
+				border-radius: 18px;
+				background: rgba(15, 23, 42, 0.04);
+				border: 1px solid rgba(15, 23, 42, 0.08);
+			}
+
+			.menu-item img {
+				width: 28px;
+				height: 28px;
+			}
+
+			[MA_menuinner] + [MA_menuinner] {
+				margin-top: 16px;
+			}
+
+			[MA_menuclose] {
+				text-align: right;
+				padding: 20px;
+				line-height: 80px;
+			}
+
+			.menu-close-icon {
+				width: 32px;
+				height: 32px;
+			}
+
+			[MA_header] > div[MA_hamburger] img {
+				width: 40px;
+				height: 40px;
+				margin: 20px 20px 0 20px;
+			}
+
+			div[MA_layer][MA_show='on'] {
+				animation: layerIn 0.45s ease-out;
+			}
+
+			div[MA_layer][MA_show='off'] {
+				animation: layerOut 0.35s ease-in;
+			}
+
+			div[MA_dialog][MA_show='on'] {
+				animation: dialogIn 0.4s ease-out;
+			}
+
+			div[MA_dialog][MA_show='off'] {
+				animation: dialogOut 0.3s ease-in;
+			}
+
+			div[MA_menu][MA_show='on'] {
+				animation: menuIn 0.4s ease-out;
+			}
+
+			div[MA_menu][MA_show='off'] {
+				animation: menuOut 0.3s ease-in;
+			}
+
+			@keyframes layerIn {
+				from {
+					opacity: 0;
+					transform: translateY(20px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+
+			@keyframes layerOut {
+				from {
+					opacity: 1;
+					transform: translateY(0);
+				}
+				to {
+					opacity: 0;
+					transform: translateY(20px);
+				}
+			}
+
+			@keyframes dialogIn {
+				from {
+					opacity: 0;
+					transform: scale(0.96);
+				}
+				to {
+					opacity: 1;
+					transform: scale(1);
+				}
+			}
+
+			@keyframes dialogOut {
+				from {
+					opacity: 1;
+					transform: scale(1);
+				}
+				to {
+					opacity: 0;
+					transform: scale(0.96);
+				}
+			}
+
+			@keyframes menuIn {
+				from {
+					opacity: 0;
+					transform: translateX(24px);
+				}
+				to {
+					opacity: 1;
+					transform: translateX(0);
+				}
+			}
+
+			@keyframes menuOut {
+				from {
+					opacity: 1;
+					transform: translateX(0);
+				}
+				to {
+					opacity: 0;
+					transform: translateX(24px);
+				}
+			}
 		</style>
 		<!--ここにCDN等必要なhead内タグを追記可能↓  -->
 
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet">
+		<script src="https://cdn.tailwindcss.com"></script>
 		<!--ここにCDN等必要なhead内タグを追記可能↑  -->
 	</head>
-	<body>
+	<body class="app-body text-slate-900 font-sans">
 		<!-- ここにログイン前のレイヤーをすべて追加↓ -->
 <div MA_prelogin MA_layer='login' MA_show='on'>
         <div>
@@ -383,6 +747,7 @@
 			<div MA_header> <!-- ヘッダー -->
 				<div MA_hamburger onclick='FJ0003_menudisplay("on");'>
 					<!-- ハンバーガーメニューのアイコンを設置 -->
+					<img src="https://unpkg.com/lucide-static@latest/icons/menu.svg" alt="menu icon">
 				</div>
 				<div MA_headericon onclick='FJ0001_layerdisplay("client_home");'>
 					<img src='logotest.png'>
@@ -835,12 +1200,12 @@
                 <div MA_data='profile_photo_state'>
                         <div MA_img='has_photo'>
                                 <div>
-                                        <img src='/insert/photo/test_member_photo.png'>
+                                        <img src='https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&q=80'>
                                 </div>
                         </div>
                         <div MA_img='no_photo'>
                                 <div>
-                                        <img src='/insert/photo/img_no_photo.png'>
+                                        <img src='https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=400&q=60'>
                                 </div>
                         </div>
                 </div>
@@ -1083,12 +1448,12 @@
                                         <div MA_data='event_thumbnail_state'>
                                                 <div MA_img='has_thumbnail'>
                                                         <div>
-                                                                <img src='/insert/photo/test_event_thumbnail.png'>
+                                                                <img src='https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=600&q=80'>
                                                         </div>
                                                 </div>
                                                 <div MA_img='no_thumbnail'>
                                                         <div>
-                                                                <img src='/insert/photo/img_no_event_thumbnail.png'>
+                                                                <img src='https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=60'>
                                                         </div>
                                                 </div>
                                         </div>
@@ -1123,12 +1488,12 @@
                                         <div MA_data='event_thumbnail_state'>
                                                 <div MA_img='has_thumbnail'>
                                                         <div>
-                                                                <img src='/insert/photo/test_event_thumbnail2.png'>
+                                                                <img src='https://images.unsplash.com/photo-1485217988980-11786ced9454?auto=format&fit=crop&w=600&q=80'>
                                                         </div>
                                                 </div>
                                                 <div MA_img='no_thumbnail'>
                                                         <div>
-                                                                <img src='/insert/photo/img_no_event_thumbnail.png'>
+                                                                <img src='https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=60'>
                                                         </div>
                                                 </div>
                                         </div>
@@ -1596,12 +1961,12 @@
                 <div MA_data='event_thumbnail_state'>
                         <div MA_img='has_thumbnail'>
                                 <div>
-                                        <img src='/insert/photo/test_event_thumbnail.png'>
+                                        <img src='https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=600&q=80'>
                                 </div>
                         </div>
                         <div MA_img='no_thumbnail'>
                                 <div>
-                                        <img src='/insert/photo/img_no_event_thumbnail.png'>
+                                        <img src='https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=60'>
                                 </div>
                         </div>
                 </div>
@@ -1748,12 +2113,12 @@
                         <div MA_data='profile_photo_state'>
                                 <div MA_img='has_photo'>
                                         <div>
-                                                <img src='/insert/photo/test_member_photo.png'>
+                                                <img src='https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&q=80'>
                                         </div>
                                 </div>
                                 <div MA_img='no_photo'>
                                         <div>
-                                                <img src='/insert/photo/img_no_photo.png'>
+                                                <img src='https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=400&q=60'>
                                         </div>
                                 </div>
                         </div>
@@ -1926,7 +2291,7 @@
                         </div>
                         <div class='CL_button' onclick='FJ0001_layerdisplay("client_profile_edit");'>画像を選ぶ</div>
                         <div>
-                                <img MA_imgpreview='profile_photo_preview' src='/insert/photo/img_not_selected.png'>
+                                <img MA_imgpreview='profile_photo_preview' src='https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=400&q=60'>
                         </div>
 
                         <div class='CL_datatitle'>略歴</div>
@@ -1997,7 +2362,7 @@
                         </div>
                         <div class='CL_button' onclick='FJ0001_layerdisplay("client_identity_submit");'>画像1を選ぶ</div>
                         <div>
-                                <img MA_imgpreview='identity_doc_front_preview' src='/insert/photo/img_not_selected.png'>
+                                <img MA_imgpreview='identity_doc_front_preview' src='https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=400&q=60'>
                         </div>
 
                         <div class='CL_datatitle'>画像アップロード（裏）</div>
@@ -2006,7 +2371,7 @@
                         </div>
                         <div class='CL_button' onclick='FJ0001_layerdisplay("client_identity_submit");'>画像2を選ぶ</div>
                         <div>
-                                <img MA_imgpreview='identity_doc_back_preview' src='/insert/photo/img_not_selected.png'>
+                                <img MA_imgpreview='identity_doc_back_preview' src='https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=400&q=60'>
                         </div>
                 </form>
 
@@ -2140,18 +2505,23 @@
 				<!-- 必要であれば適宜変更↓ -->
 				<div MA_footericon>
 					<!-- アイコン -->
+					<img src="https://unpkg.com/lucide-static@latest/icons/home.svg" alt="home">
 				</div>
 				<div MA_footericon>
 					<!-- アイコン -->
+					<img src="https://unpkg.com/lucide-static@latest/icons/search.svg" alt="search">
 				</div>
 				<div MA_footericon>
 					<!-- アイコン -->
+					<img src="https://unpkg.com/lucide-static@latest/icons/calendar.svg" alt="events">
 				</div>
 				<div MA_footericon>
 					<!-- アイコン -->
+					<img src="https://unpkg.com/lucide-static@latest/icons/bell.svg" alt="notifications">
 				</div>
-				<div MA_footericon>
+				<div MA_footericon class="footer-icon-hidden">
 					<!-- アイコン -->
+					<img src="https://unpkg.com/lucide-static@latest/icons/user.svg" alt="profile">
 				</div>
 				<!-- 必要であれば適宜変更↑ -->
 			</div>
@@ -2160,6 +2530,7 @@
 			<div MA_header> <!-- ヘッダー -->
 				<div MA_hamburger onclick='FJ0003_menudisplay("on");'>
 					<!-- ハンバーガーメニューのアイコンを設置 -->
+					<img src="https://unpkg.com/lucide-static@latest/icons/menu.svg" alt="menu icon">
 				</div>
 				<div MA_headericon onclick='FJ0001_layerdisplay("admin_home");'>
 					<img src='logotest.png'>
@@ -2303,18 +2674,23 @@
 
                 <form MA_form='admin_member_list_condition' action='javascript:void(0);'>
                         <div class='CL_datatitle'>キーワード対象（複数可）</div>
+                        <div class='CL_datatitle'>氏名</div>
                         <div>
                                 <input type='checkbox' name='kw_target_name'>
                         </div>
+                        <div class='CL_datatitle'>会社名</div>
                         <div>
                                 <input type='checkbox' name='kw_target_company'>
                         </div>
+                        <div class='CL_datatitle'>メール</div>
                         <div>
                                 <input type='checkbox' name='kw_target_email'>
                         </div>
+                        <div class='CL_datatitle'>電話</div>
                         <div>
                                 <input type='checkbox' name='kw_target_phone'>
                         </div>
+                        <div class='CL_datatitle'>会員ID</div>
                         <div>
                                 <input type='checkbox' name='kw_target_member_id'>
                         </div>
@@ -2330,29 +2706,37 @@
                         </div>
 
                         <div class='CL_datatitle'>アカウント状態（複数可）</div>
+                        <div class='CL_datatitle'>有効</div>
                         <div>
                                 <input type='checkbox' name='status_active'>
                         </div>
+                        <div class='CL_datatitle'>停止中</div>
                         <div>
                                 <input type='checkbox' name='status_suspended'>
                         </div>
+                        <div class='CL_datatitle'>承認待ち</div>
                         <div>
                                 <input type='checkbox' name='status_pending'>
                         </div>
+                        <div class='CL_datatitle'>退会済み</div>
                         <div>
                                 <input type='checkbox' name='status_withdrawn'>
                         </div>
 
                         <div class='CL_datatitle'>本人確認状態（複数可）</div>
+                        <div class='CL_datatitle'>未提出</div>
                         <div>
                                 <input type='checkbox' name='kyc_unsubmitted'>
                         </div>
+                        <div class='CL_datatitle'>審査中</div>
                         <div>
                                 <input type='checkbox' name='kyc_reviewing'>
                         </div>
+                        <div class='CL_datatitle'>承認済み</div>
                         <div>
                                 <input type='checkbox' name='kyc_approved'>
                         </div>
+                        <div class='CL_datatitle'>却下</div>
                         <div>
                                 <input type='checkbox' name='kyc_rejected'>
                         </div>
@@ -2451,7 +2835,7 @@
                 <div class='CL_datatitle'>プロフィール画像</div>
                 <div MA_data='profile_photo'>
                         <div MA_img='photo'>
-                                <img src='/insert/photo/test_profile_default.png'>
+                                <img src='https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80'>
                         </div>
                 </div>
 
@@ -2916,7 +3300,7 @@
                 <div class='CL_datatitle'>イベント画像（申込内容）</div>
                 <div MA_data='event_image'>
                         <div MA_img='thumbnail'>
-                                <img src='/insert/photo/test_event_thumbnail.png'>
+                                <img src='https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=600&q=80'>
                         </div>
                 </div>
 
@@ -3056,7 +3440,7 @@
                                 <div class='CL_datatitle'>表面</div>
                                 <div MA_data='doc_front'>
                                         <div MA_img='front'>
-                                                <img src='/insert/photo/test_kyc_doc_front.png'>
+                                                <img src='https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=400&q=60'>
                                         </div>
                                 </div>
                         </div>
@@ -3064,7 +3448,7 @@
                                 <div class='CL_datatitle'>裏面</div>
                                 <div MA_data='doc_back'>
                                         <div MA_img='back'>
-                                                <img src='/insert/photo/test_kyc_doc_back.png'>
+                                                <img src='https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=400&q=60'>
                                         </div>
                                 </div>
                         </div>
@@ -4208,15 +4592,25 @@
 			<!-- 必要であれば適宜変更↓ -->
 				<div MA_menuclose onclick='FJ0003_menudisplay("off");'>
 					<!-- ハンバーガーメニューを閉じるアイコン -->
+					<img class="menu-close-icon" src="https://unpkg.com/lucide-static@latest/icons/x.svg" alt="close">
 				</div>
 				<div MA_menuinner onclick='FJ0001_layerdisplay("client_profile_payment");'>
-					ログイン情報変更
+					<div class="menu-item">
+						<img src="https://unpkg.com/lucide-static@latest/icons/user-cog.svg" alt="account">
+						<span>ログイン情報変更</span>
+					</div>
 				</div>
 				<div MA_menuinner onclick='FJ0002_dialogdisplay("common_ok_message", "on");'>
-					利用規約
+					<div class="menu-item">
+						<img src="https://unpkg.com/lucide-static@latest/icons/file-text.svg" alt="terms">
+						<span>利用規約</span>
+					</div>
 				</div>
 				<div MA_menuinner onclick='FJ0002_dialogdisplay("common_logout_confirm", "on");'>
-					ログアウト
+					<div class="menu-item">
+						<img src="https://unpkg.com/lucide-static@latest/icons/log-out.svg" alt="logout">
+						<span>ログアウト</span>
+					</div>
 				</div>
 			<!-- 必要であれば適宜変更↑ -->
 			</div>
@@ -4227,15 +4621,25 @@
 			<!-- 必要であれば適宜変更↓ -->
 				<div MA_menuclose onclick='FJ0003_menudisplay("off");'>
 					<!-- ハンバーガーメニューを閉じるアイコン -->
+					<img class="menu-close-icon" src="https://unpkg.com/lucide-static@latest/icons/x.svg" alt="close">
 				</div>
 				<div MA_menuinner onclick='FJ0001_layerdisplay("admin_home");'>
-					ログイン情報変更
+					<div class="menu-item">
+						<img src="https://unpkg.com/lucide-static@latest/icons/user-cog.svg" alt="account">
+						<span>ログイン情報変更</span>
+					</div>
 				</div>
 				<div MA_menuinner onclick='FJ0002_dialogdisplay("common_ok_message", "on");'>
-					利用規約
+					<div class="menu-item">
+						<img src="https://unpkg.com/lucide-static@latest/icons/file-text.svg" alt="terms">
+						<span>利用規約</span>
+					</div>
 				</div>
 				<div MA_menuinner onclick='FJ0002_dialogdisplay("common_logout_confirm", "on");'>
-					ログアウト
+					<div class="menu-item">
+						<img src="https://unpkg.com/lucide-static@latest/icons/log-out.svg" alt="logout">
+						<span>ログアウト</span>
+					</div>
 				</div>
 			<!-- 必要であれば適宜変更↑ -->
 			</div>
@@ -4275,6 +4679,58 @@
 			}
 		</script>
 		<!-- scriptタグが追加で必要な場合はここに追記可能↓ -->
+		<script>
+			document.addEventListener('DOMContentLoaded', () => {
+				const wrapButtonGroups = (parent) => {
+					let node = parent.firstElementChild;
+					while (node) {
+						if (node.classList && node.classList.contains('CL_button')) {
+							const group = [];
+							let current = node;
+							while (current && current.classList && current.classList.contains('CL_button')) {
+								group.push(current);
+								current = current.nextElementSibling;
+							}
+							if (group.length >= 2) {
+								const wrapper = document.createElement('div');
+								wrapper.className = 'button-grid';
+								parent.insertBefore(wrapper, group[0]);
+								group.forEach((btn) => wrapper.appendChild(btn));
+							}
+							node = current;
+							continue;
+						}
+						node = node.nextElementSibling;
+					}
+				};
+
+				document.querySelectorAll('div[MA_layer] > div, div[MA_dialog] > div').forEach((parent) => {
+					wrapButtonGroups(parent);
+				});
+
+				document.querySelectorAll("input[type='checkbox'], input[type='radio']").forEach((input) => {
+					const inputWrap = input.parentElement;
+					const title = inputWrap ? inputWrap.previousElementSibling : null;
+					if (!title || !title.classList.contains('CL_datatitle')) {
+						return;
+					}
+					const row = document.createElement('div');
+					row.className = 'control-row';
+					const icon = document.createElement('img');
+					icon.className = 'check-icon';
+					icon.alt = input.type === 'radio' ? 'radio indicator' : 'checkbox indicator';
+					icon.src = input.type === 'radio'
+						? 'https://unpkg.com/lucide-static@latest/icons/circle.svg'
+						: 'https://unpkg.com/lucide-static@latest/icons/check-square.svg';
+					title.classList.add('is-check-label');
+					const parent = title.parentElement;
+					parent.insertBefore(row, title);
+					row.appendChild(title);
+					row.appendChild(icon);
+					row.appendChild(inputWrap);
+				});
+			});
+		</script>
 
 		<!-- scriptタグが追加で必要な場合はここに追記可能↑ -->
 	</body>
