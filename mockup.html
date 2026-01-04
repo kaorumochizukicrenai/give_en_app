@@ -180,16 +180,314 @@
 		</style>
 		<style>
 			/* ここに後から追加したクラスなどのスタイルを追記可能 */
+			body {
+				font-family: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
+				color: #0f172a;
+				background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 30%, #eff6ff 60%, #fff 100%);
+				background-size: 200% 200%;
+				animation: bodyGradient 16s ease infinite;
+			}
+
+			body::before {
+				content: "";
+				position: absolute;
+				top: -20%;
+				left: -20%;
+				width: 140%;
+				height: 140%;
+				background: radial-gradient(circle at 20% 20%, rgba(239, 68, 68, 0.18), transparent 45%),
+					radial-gradient(circle at 80% 10%, rgba(59, 130, 246, 0.18), transparent 50%),
+					radial-gradient(circle at 60% 80%, rgba(99, 102, 241, 0.12), transparent 45%);
+				filter: blur(0px);
+				animation: floatingGlow 20s ease-in-out infinite;
+				z-index: 0;
+				pointer-events: none;
+			}
+
+			body > * {
+				position: relative;
+				z-index: 1;
+			}
+
+			@keyframes bodyGradient {
+				0% { background-position: 0% 50%; }
+				50% { background-position: 100% 50%; }
+				100% { background-position: 0% 50%; }
+			}
+
+			@keyframes floatingGlow {
+				0% { transform: translate3d(0, 0, 0); opacity: 0.7; }
+				50% { transform: translate3d(2%, -2%, 0); opacity: 0.85; }
+				100% { transform: translate3d(0, 0, 0); opacity: 0.7; }
+			}
+
+			@keyframes layerIn {
+				from { opacity: 0; transform: translateY(24px); }
+				to { opacity: 1; transform: translateY(0); }
+			}
+
+			@keyframes layerOut {
+				from { opacity: 1; transform: translateY(0); }
+				to { opacity: 0; transform: translateY(24px); }
+			}
+
+			div[MA_layer][MA_show='on'],
+			div[MA_dialog][MA_show='on'],
+			div[MA_menu][MA_show='on'] {
+				animation: layerIn 0.5s ease;
+			}
+
+			div[MA_layer][MA_show='off'],
+			div[MA_dialog][MA_show='off'],
+			div[MA_menu][MA_show='off'] {
+				animation: layerOut 0.4s ease;
+			}
+
+			.CL_layertitle,
+			.CL_dialogtitle {
+				display: none;
+			}
+
+			.CL_button {
+				border-radius: 18px;
+				padding: 16px 20px;
+				margin: 12px 0;
+				background: linear-gradient(135deg, #ef4444, #b91c1c);
+				color: #fff;
+				font-weight: 700;
+				text-align: center;
+				box-shadow: 0 10px 18px rgba(239, 68, 68, 0.2);
+				letter-spacing: 0.02em;
+			}
+
+			.CL_button.is-secondary {
+				background: linear-gradient(135deg, #2563eb, #1d4ed8);
+				box-shadow: 0 10px 18px rgba(37, 99, 235, 0.2);
+			}
+
+			.CL_button.is-ghost {
+				background: #fff;
+				color: #2563eb;
+				border: 2px solid #93c5fd;
+				box-shadow: none;
+			}
+
+			.CL_button-grid {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 14px;
+				margin: 16px 0 28px;
+			}
+
+			.CL_section {
+				margin-bottom: 32px;
+			}
+
+			.CL_datatitle {
+				font-weight: 700;
+				color: #0f172a;
+				margin-top: 18px;
+			}
+
+			.CL_datatitle + [MA_data] {
+				margin-left: 20px;
+				padding-left: 16px;
+				border-left: 3px solid rgba(15, 23, 42, 0.2);
+			}
+
+			[MA_data] {
+				color: #1e293b;
+				font-weight: 600;
+			}
+
+			input,
+			select,
+			textarea {
+				padding: 14px 16px;
+				border-radius: 14px;
+				border: 2px solid rgba(148, 163, 184, 0.6);
+				width: 100%;
+				box-sizing: border-box;
+				background-color: rgba(255, 255, 255, 0.9);
+			}
+
+			form > div {
+				margin-bottom: 16px;
+			}
+
+			.CL_card {
+				border-radius: 24px;
+				padding: 18px;
+				background: rgba(255, 255, 255, 0.9);
+				box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+				margin: 16px 0;
+				border: 1px solid rgba(148, 163, 184, 0.35);
+			}
+
+			.CL_badge {
+				display: inline-flex;
+				align-items: center;
+				gap: 8px;
+				padding: 6px 14px;
+				border-radius: 999px;
+				background: rgba(37, 99, 235, 0.12);
+				color: #1d4ed8;
+				font-weight: 700;
+				margin-bottom: 12px;
+			}
+
+			.CL_divider {
+				height: 2px;
+				background: rgba(148, 163, 184, 0.3);
+				margin: 24px 0;
+			}
+
+			[MA_message] {
+				margin-top: 18px;
+				padding: 14px 18px;
+				border-radius: 16px;
+				background: rgba(15, 23, 42, 0.08);
+			}
+
+			[MA_dev] {
+				opacity: 0.35;
+				font-size: 16px;
+				filter: grayscale(1);
+			}
+
+			[MA_datalist] {
+				margin: 18px 0;
+			}
+
+			[MA_datalistchild] {
+				padding: 16px;
+				border-radius: 20px;
+				border: 2px solid rgba(148, 163, 184, 0.4);
+				box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+				background: rgba(255, 255, 255, 0.9);
+				margin-bottom: 16px;
+			}
+
+			div[MA_layer='client_home'] [MA_datalist] {
+				border-left: 6px solid #ef4444;
+				padding-left: 16px;
+			}
+
+			div[MA_layer='client_search_dm'] [MA_datalist] {
+				border-left: 6px solid #3b82f6;
+				padding-left: 16px;
+			}
+
+			div[MA_layer='client_event'] [MA_datalist] {
+				border-left: 6px solid #f97316;
+				padding-left: 16px;
+			}
+
+			div[MA_layer='client_notice'] [MA_datalist] {
+				border-left: 6px solid #14b8a6;
+				padding-left: 16px;
+			}
+
+			div[MA_layer^='admin_'] [MA_datalist] {
+				border-left: 6px solid #6366f1;
+				padding-left: 16px;
+			}
+
+			.CL_checkbox-row {
+				display: flex;
+				align-items: center;
+				gap: 12px;
+				margin-top: 12px;
+			}
+
+			.CL_checkbox-row img {
+				width: 28px;
+				height: 28px;
+			}
+
+			.CL_checkbox-row .CL_datatitle {
+				margin-top: 0;
+				font-weight: 800;
+				color: #111827;
+			}
+
+			.CL_checkbox-input {
+				display: none;
+			}
+
+			.CL_header {
+				padding: 10px 24px;
+				backdrop-filter: blur(10px);
+			}
+
+			.CL_header img,
+			.CL_footer img,
+			.CL_menu img {
+				width: 36px;
+				height: 36px;
+			}
+
+			.CL_footer {
+				background: rgba(255, 255, 255, 0.92);
+				backdrop-filter: blur(10px);
+				border-top: 2px solid rgba(148, 163, 184, 0.3);
+			}
+
+			.CL_footericon {
+				text-align: center;
+				padding-top: 12px;
+			}
+
+			.CL_menu-panel {
+				background: rgba(255, 255, 255, 0.96);
+				box-shadow: -12px 0 24px rgba(15, 23, 42, 0.15);
+			}
+
+			.CL_menuclose {
+				text-align: right;
+				padding: 24px;
+			}
+
+			.CL_menuitem {
+				padding: 18px 24px;
+				border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+				font-weight: 700;
+			}
+
+			.CL_dialog-card {
+				border-radius: 28px;
+				box-shadow: 0 20px 40px rgba(15, 23, 42, 0.25);
+				border: 2px solid rgba(148, 163, 184, 0.3);
+			}
+
+			div[MA_dialog] > div {
+				border-radius: 28px;
+				box-shadow: 0 20px 40px rgba(15, 23, 42, 0.25);
+				border: 2px solid rgba(148, 163, 184, 0.3);
+			}
+
+			.CL_hero-image {
+				width: 100%;
+				border-radius: 26px;
+				margin-bottom: 22px;
+				box-shadow: 0 18px 30px rgba(15, 23, 42, 0.15);
+			}
 		</style>
 		<!--ここにCDN等必要なhead内タグを追記可能↓  -->
-
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700;800&display=swap" rel="stylesheet">
+		<script src="https://cdn.tailwindcss.com"></script>
 		<!--ここにCDN等必要なhead内タグを追記可能↑  -->
 	</head>
-	<body>
+	<body class="text-slate-900 antialiased">
 		<!-- ここにログイン前のレイヤーをすべて追加↓ -->
 <div MA_prelogin MA_layer='login' MA_show='on'>
         <div>
                 <div class='CL_layertitle'>ログイン画面</div>
+				<div class="CL_section">
+					<img class="CL_hero-image" src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=1200&q=80" alt="team collaboration">
+				</div>
 
                 <form MA_form='login' action='javascript:void(0);'>
                         <div class='CL_datatitle'>メールアドレス</div>
@@ -203,10 +501,12 @@
                         </div>
                 </form>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("client_home");'>ログイン</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("account_register_request");'>新規アカウント登録申請</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("password_reset_request");'>パスワードをリセット</div>
 
+                </div>
                 <div MA_message='login_validation_error'>
                         <span>入力エラーが表示される</span>
                 </div>
@@ -220,6 +520,7 @@
                         <span>このアカウントは現在停止中です。</span>
                 </div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("login");'>OK（承認待ち/停止中メッセージ用）</div>
 				<div class='CL_button' MA_dev onclick='FJ0001_layerdisplay("account_detail_register");'>新規アカウント詳細登録 (開発者確認)</div>
 				<div class='CL_button' MA_dev onclick='FJ0001_layerdisplay("account_detail_link_expired");'>新規アカウント登録リンク期限切れ (開発者確認)</div>
@@ -227,6 +528,7 @@
 				<div class='CL_button' MA_dev onclick='FJ0001_layerdisplay("password_reset_link_expired");'>パスワードリセットリンク期限切れ (開発者確認)</div>
 				<div class='CL_button' MA_dev onclick='FJ0001_layerdisplay("password_reset_completed");'>パスワードリセット完了 (開発者確認)</div>
 				<div class='CL_button' MA_dev onclick='FJ0001_layerdisplay("admin_home");'>管理者ホーム (開発者確認)</div>
+                </div>
         </div>
 </div>
 <div MA_prelogin MA_layer='account_register_request'>
@@ -240,9 +542,11 @@
                         </div>
                 </form>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("account_register_mail_sent");'>認証メールを送る</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("login");'>戻る</div>
 
+                </div>
                 <div MA_message='account_register_request_error'>
                         <span>入力エラーが表示される</span>
                 </div>
@@ -283,9 +587,11 @@
                         </div>
                 </form>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("account_detail_submitted");'>この内容で登録申請する</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("login");'>戻る</div>
 
+                </div>
                 <div MA_message='account_detail_register_error'>
                         <span>入力エラーが表示される（例：電話番号形式不正、必須未入力、招待コード未入力など）</span>
                 </div>
@@ -322,9 +628,11 @@
                         </div>
                 </form>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("password_reset_mail_sent");'>リセットメールを送る</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("login");'>戻る</div>
 
+                </div>
                 <div MA_message='password_reset_request_error'>
                         <span>入力エラーが表示される（例：メール形式不正、電話番号形式不正、必須未入力）</span>
                 </div>
@@ -362,9 +670,11 @@
                         </div>
                 </form>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("password_reset_completed");'>新パスワードを登録する</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("login");'>戻る</div>
 
+                </div>
                 <div MA_message='password_reset_new_password_error'>
                         <span>入力エラーが表示される（例：必須、桁数、確認用一致）</span>
                 </div>
@@ -380,12 +690,12 @@
 		<!-- ここにログイン前のレイヤーをすべて追加↑ -->
 
 		<div>	<!—一般アカウントのログイン後レイヤー群。ヘッダーと、ログイン後レイヤーと、フッターを格納 -->
-			<div MA_header> <!-- ヘッダー -->
-				<div MA_hamburger onclick='FJ0003_menudisplay("on");'>
-					<!-- ハンバーガーメニューのアイコンを設置 -->
+			<div MA_header class="CL_header"> <!-- ヘッダー -->
+				<div MA_hamburger class="CL_hamburger" onclick='FJ0003_menudisplay("on");'>
+					<img src="https://unpkg.com/lucide-static@latest/icons/menu.svg" alt="menu icon">
 				</div>
-				<div MA_headericon onclick='FJ0001_layerdisplay("client_home");'>
-					<img src='logotest.png'>
+				<div MA_headericon class="CL_headericon" onclick='FJ0001_layerdisplay("client_home");'>
+					<img src='logotest.png' alt="app logo">
 					<!-- ↑アプリのロゴの画像を設置 -->
 				</div>
 			</div>
@@ -394,6 +704,9 @@
 <div MA_client MA_layer='client_home'>
         <div>
                 <div class='CL_layertitle'>会員ホーム</div>
+				<div class="CL_section">
+					<img class="CL_hero-image" src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80" alt="event highlight">
+				</div>
 
                 <div class='CL_datatitle'>未読DM（最新3件）</div>
                 <div MA_datalist='home_unread_dm_latest3'>
@@ -454,10 +767,12 @@
                 <div MA_message='home_info'>
                         <span>フッターアイコン（会員検索&DM／イベント／お知らせ／プロフィール&支払い）から各画面へ移動できる想定（この簡易UIではフッター自体は省略）</span>
                 </div>
+				<div class="CL_button-grid">
 				<div class='CL_button' MA_dev onclick='FJ0001_layerdisplay("client_search_dm");'>会員検索&DM (開発者確認)</div>
 				<div class='CL_button' MA_dev onclick='FJ0001_layerdisplay("client_event");'>イベント一覧 (開発者確認)</div>
 				<div class='CL_button' MA_dev onclick='FJ0001_layerdisplay("client_notice");'>お知らせ一覧 (開発者確認)</div>
 				<div class='CL_button' MA_dev onclick='FJ0001_layerdisplay("client_profile_payment");'>プロフィール&支払い (開発者確認)</div>
+				</div>
         </div>
 </div>
 <div MA_client MA_layer='client_search_dm'>
@@ -476,13 +791,16 @@
                                 </div>
                         </form>
 
+                        <div class="CL_button-grid">
                         <div class='CL_button' onclick='FJ0001_layerdisplay("client_search_dm");'>検索</div>
                         <div class='CL_button' onclick='FJ0002_dialogdisplay("client_dm_thread_sort", "on");'>並び替え</div>
 
+                        </div>
                         <form MA_form='dm_thread_filters' action='javascript:void(0);'>
-                                <div class='CL_datatitle'>未読のみ</div>
-                                <div>
-                                        <input type='checkbox' name='unread_only'>
+                                <div class="CL_checkbox-row">
+                                        <input class="CL_checkbox-input" type='checkbox' name='unread_only'>
+                                        <img src="https://unpkg.com/lucide-static@latest/icons/check-square.svg" alt="checked icon">
+                                        <div class='CL_datatitle'>未読のみ</div>
                                 </div>
                         </form>
 
@@ -536,10 +854,12 @@
                                 </div>
                         </form>
 
+                        <div class="CL_button-grid">
                         <div class='CL_button' onclick='FJ0001_layerdisplay("client_member_search_condition");'>検索条件</div>
                         <div class='CL_button' onclick='FJ0002_dialogdisplay("client_member_sort", "on");'>並び替え</div>
                         <div class='CL_button' onclick='FJ0001_layerdisplay("client_member_detail");'>検索する</div>
 
+                        </div>
                         <div class='CL_datatitle'>クイック絞り込み</div>
                         <form MA_form='member_search_quick_filter' action='javascript:void(0);'>
                                 <div class='CL_datatitle'>絞り込み</div>
@@ -818,10 +1138,12 @@
                         </div>
                 </form>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_member_condition_reset_confirm", "on");'>条件をリセット</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("client_search_dm");'>この条件で閉じる</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("client_search_dm");'>戻る</div>
 
+                </div>
                 <div MA_message='member_search_condition_validation_error'>
                         <span>入力エラーが表示される（例：年齢範囲の大小逆転、登録日範囲の不整合など）</span>
                 </div>
@@ -897,18 +1219,22 @@
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_one_on_one_confirm", "on");'>
                         <div MA_data='one_on_one_button_label'>1on1済み</div>
                 </div>
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("client_search_dm");'>DMする</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_block_confirm", "on");'>ブロック</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_report", "on");'>通報</div>
 
                 <div class='CL_button' onclick='FJ0001_layerdisplay("client_search_dm");'>戻る</div>
 
+                </div>
                 <div MA_message='member_detail_info'>
                         <span>フォロー/1on1は確認ダイアログが出る想定。ブロックは確認後に「ブロックしました」表示。通報は通報ダイアログで理由入力。</span>
                 </div>
+				<div class="CL_button-grid">
 				<div class='CL_button' MA_dev onclick='FJ0002_dialogdisplay("client_follow_confirm", "on");'>フォロー確認ダイアログ (開発者確認)</div>
 				<div class='CL_button' MA_dev onclick='FJ0002_dialogdisplay("client_one_on_one_confirm", "on");'>1on1確認ダイアログ (開発者確認)</div>
 				<div class='CL_button' MA_dev onclick='FJ0002_dialogdisplay("client_report_done", "on");'>通報完了ダイアログ (開発者確認)</div>
+				</div>
         </div>
 </div>
 <div MA_client MA_layer='client_chat'>
@@ -918,9 +1244,11 @@
                 <div class='CL_datatitle'>相手</div>
                 <div MA_data='chat_partner_name'>佐藤 花子</div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("client_dm_memo");'>メモ</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("client_member_detail");'>相手プロフィール</div>
 
+                </div>
                 <div class='CL_datatitle'>メッセージ一覧</div>
                 <div MA_datalist='chat_message_list'>
                         <div MA_datalistchild>
@@ -948,9 +1276,11 @@
                         </div>
                 </form>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("client_chat");'>送信</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("client_search_dm");'>戻る</div>
 
+                </div>
                 <div MA_message='chat_send_error'>
                         <span>入力エラーが表示される（例：空送信不可、最大文字数超過）</span>
                 </div>
@@ -963,9 +1293,11 @@
                 <div class='CL_datatitle'>対象スレッド相手</div>
                 <div MA_data='memo_partner_name'>佐藤 花子</div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("client_dm_memo_edit");'>新規メモ作成</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("client_dm_memo_search");'>メモ検索</div>
 
+                </div>
                 <div class='CL_datatitle'>メモ一覧</div>
                 <div MA_datalist='dm_memo_list'>
                         <div MA_datalistchild>
@@ -1050,10 +1382,12 @@
                         </div>
                 </form>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("common_ok_message", "on");'>保存</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_memo_delete_confirm", "on");'>削除</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("client_dm_memo");'>戻る</div>
 
+                </div>
                 <div MA_message='dm_memo_edit_validation_error'>
                         <span>入力エラーが表示される（例：空保存不可、最大文字数超過）</span>
                 </div>
@@ -1175,18 +1509,22 @@
                                 </div>
                         </form>
 
+                        <div class="CL_button-grid">
                         <div class='CL_button' onclick='FJ0001_layerdisplay("client_event_search_condition");'>検索条件</div>
                         <div class='CL_button' onclick='FJ0002_dialogdisplay("client_event_sort", "on");'>並び替え</div>
                         <div class='CL_button' onclick='FJ0001_layerdisplay("client_event");'>検索する</div>
 
+                        </div>
                         <div class='CL_datatitle'>クイック絞り込み</div>
                         <div>
+                                <div class="CL_button-grid">
                                 <div class='CL_button' onclick='FJ0001_layerdisplay("client_event");'>すべて</div>
                                 <div class='CL_button' onclick='FJ0001_layerdisplay("client_event");'>募集中のみ</div>
                                 <div class='CL_button' onclick='FJ0001_layerdisplay("client_event");'>本日開催</div>
                                 <div class='CL_button' onclick='FJ0001_layerdisplay("client_event");'>今週開催</div>
                                 <div class='CL_button' onclick='FJ0001_layerdisplay("client_event");'>オンラインのみ</div>
                                 <div class='CL_button' onclick='FJ0001_layerdisplay("client_event");'>無料のみ</div>
+                                </div>
                         </div>
 
                         <div class='CL_datatitle'>現在の条件</div>
@@ -1307,9 +1645,11 @@
                                 </div>
                         </form>
 
+                        <div class="CL_button-grid">
                         <div class='CL_button' onclick='FJ0001_layerdisplay("client_event_detail");'>掲載申請する</div>
                         <div class='CL_button' onclick='FJ0001_layerdisplay("client_home");'>戻る</div>
 
+                        </div>
                         <div MA_message='event_post_request_validation_error'>
                                 <span>入力エラーが表示される（例：必須、日時形式、URL形式、金額、定員など）</span>
                         </div>
@@ -1425,33 +1765,40 @@
 
                         <div class='CL_datatitle'>曜日（複数可）</div>
                         <div>
-                                <div class='CL_datatitle'>月</div>
-                                <div>
-                                        <input type='checkbox' name='weekday_mon'>
+                                <div class="CL_checkbox-row">
+                                        <input class="CL_checkbox-input" type='checkbox' name='weekday_mon'>
+                                        <img src="https://unpkg.com/lucide-static@latest/icons/check-square.svg" alt="checked icon">
+                                        <div class='CL_datatitle'>月</div>
                                 </div>
-                                <div class='CL_datatitle'>火</div>
-                                <div>
-                                        <input type='checkbox' name='weekday_tue'>
+                                <div class="CL_checkbox-row">
+                                        <input class="CL_checkbox-input" type='checkbox' name='weekday_tue'>
+                                        <img src="https://unpkg.com/lucide-static@latest/icons/check-square.svg" alt="checked icon">
+                                        <div class='CL_datatitle'>火</div>
                                 </div>
-                                <div class='CL_datatitle'>水</div>
-                                <div>
-                                        <input type='checkbox' name='weekday_wed'>
+                                <div class="CL_checkbox-row">
+                                        <input class="CL_checkbox-input" type='checkbox' name='weekday_wed'>
+                                        <img src="https://unpkg.com/lucide-static@latest/icons/check-square.svg" alt="checked icon">
+                                        <div class='CL_datatitle'>水</div>
                                 </div>
-                                <div class='CL_datatitle'>木</div>
-                                <div>
-                                        <input type='checkbox' name='weekday_thu'>
+                                <div class="CL_checkbox-row">
+                                        <input class="CL_checkbox-input" type='checkbox' name='weekday_thu'>
+                                        <img src="https://unpkg.com/lucide-static@latest/icons/check-square.svg" alt="checked icon">
+                                        <div class='CL_datatitle'>木</div>
                                 </div>
-                                <div class='CL_datatitle'>金</div>
-                                <div>
-                                        <input type='checkbox' name='weekday_fri'>
+                                <div class="CL_checkbox-row">
+                                        <input class="CL_checkbox-input" type='checkbox' name='weekday_fri'>
+                                        <img src="https://unpkg.com/lucide-static@latest/icons/check-square.svg" alt="checked icon">
+                                        <div class='CL_datatitle'>金</div>
                                 </div>
-                                <div class='CL_datatitle'>土</div>
-                                <div>
-                                        <input type='checkbox' name='weekday_sat'>
+                                <div class="CL_checkbox-row">
+                                        <input class="CL_checkbox-input" type='checkbox' name='weekday_sat'>
+                                        <img src="https://unpkg.com/lucide-static@latest/icons/check-square.svg" alt="checked icon">
+                                        <div class='CL_datatitle'>土</div>
                                 </div>
-                                <div class='CL_datatitle'>日</div>
-                                <div>
-                                        <input type='checkbox' name='weekday_sun'>
+                                <div class="CL_checkbox-row">
+                                        <input class="CL_checkbox-input" type='checkbox' name='weekday_sun'>
+                                        <img src="https://unpkg.com/lucide-static@latest/icons/check-square.svg" alt="checked icon">
+                                        <div class='CL_datatitle'>日</div>
                                 </div>
                         </div>
 
@@ -1557,9 +1904,10 @@
                                 <input type='text' name='host_keyword' maxlength=100>
                         </div>
 
-                        <div class='CL_datatitle'>公式イベントのみ</div>
-                        <div>
-                                <input type='checkbox' name='official_only'>
+                        <div class="CL_checkbox-row">
+                                <input class="CL_checkbox-input" type='checkbox' name='official_only'>
+                                <img src="https://unpkg.com/lucide-static@latest/icons/check-square.svg" alt="checked icon">
+                                <div class='CL_datatitle'>公式イベントのみ</div>
                         </div>
 
                         <div class='CL_datatitle'>アーカイブ有無</div>
@@ -1573,16 +1921,19 @@
                                 </select>
                         </div>
 
-                        <div class='CL_datatitle'>初参加歓迎</div>
-                        <div>
-                                <input type='checkbox' name='first_time_welcome_only'>
+                        <div class="CL_checkbox-row">
+                                <input class="CL_checkbox-input" type='checkbox' name='first_time_welcome_only'>
+                                <img src="https://unpkg.com/lucide-static@latest/icons/check-square.svg" alt="checked icon">
+                                <div class='CL_datatitle'>初参加歓迎</div>
                         </div>
                 </form>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("common_ok_message", "on");'>条件をリセット</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("client_event");'>この条件で閉じる</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("client_event");'>戻る</div>
 
+                </div>
                 <div MA_message='event_search_condition_validation_error'>
                         <span>入力エラーが表示される（例：金額範囲の大小逆転、日付範囲の不整合など）</span>
                 </div>
@@ -1591,6 +1942,9 @@
 <div MA_client MA_layer='client_event_detail'>
         <div>
                 <div class='CL_layertitle'>イベント詳細</div>
+				<div class="CL_section">
+					<img class="CL_hero-image" src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80" alt="event banner">
+				</div>
 
                 <div class='CL_datatitle'>サムネイル</div>
                 <div MA_data='event_thumbnail_state'>
@@ -1636,9 +1990,11 @@
                 <div class='CL_datatitle'>本文</div>
                 <div MA_data='event_body'>新年の交流会です。軽食をご用意します。名刺をお持ちください。</div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_event_apply_external_notice", "on");'>応募する</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("client_event");'>戻る</div>
 
+                </div>
                 <div MA_message='event_apply_external_form_notice'>
                         <span>応募する押下で外部フォームへ移動する前の注意ダイアログが出る想定</span>
                 </div>
@@ -1857,9 +2213,11 @@
                         </div>
                 </div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("client_home");'>戻る</div>
 				<div class='CL_button' MA_dev onclick='FJ0002_dialogdisplay("client_withdraw_caution", "on");'>退会注意ダイアログ (開発者確認)</div>
 				<div class='CL_button' MA_dev onclick='FJ0002_dialogdisplay("client_withdraw_final_confirm", "on");'>退会最終確認ダイアログ (開発者確認)</div>
+                </div>
         </div>
 </div>
 <div MA_client MA_layer='client_profile_edit'>
@@ -1966,10 +2324,12 @@
                         </div>
                 </form>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("client_profile_edit");'>URL追加</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_logininfo_change_confirm", "on");'>保存</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("client_profile_payment");'>戻る</div>
 
+                </div>
                 <div MA_message='profile_edit_validation_error'>
                         <span>入力エラーが表示される（例：必須、文字数、日付形式、URL形式など）</span>
                 </div>
@@ -2010,9 +2370,11 @@
                         </div>
                 </form>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("common_ok_message", "on");'>提出する</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("client_profile_payment");'>戻る</div>
 
+                </div>
                 <div MA_message='identity_submit_validation_error'>
                         <span>入力エラーが表示される（例：必須、ファイル形式/サイズなど）</span>
                 </div>
@@ -2103,9 +2465,11 @@
                         </div>
                 </form>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("common_ok_message", "on");'>登録する</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("client_profile_payment");'>戻る</div>
 
+                </div>
                 <div MA_message='payment_method_setup_validation_error'>
                         <span>入力エラーが表示される（例：必須、形式など）</span>
                 </div>
@@ -2130,39 +2494,41 @@
                 <div class='CL_datatitle'>取引ID</div>
                 <div MA_data='transaction_id'>txn_20260101_0001</div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("client_payment_history_detail");'>領収書をダウンロード</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("client_profile_payment");'>戻る</div>
+                </div>
         </div>
 </div>
 			<!-- ここにログイン後のレイヤーをすべて追加↑ -->
 
-			<div MA_footer> <!-- フッター -->
+			<div MA_footer class="CL_footer"> <!-- フッター -->
 				<!-- 必要であれば適宜変更↓ -->
-				<div MA_footericon>
-					<!-- アイコン -->
+				<div MA_footericon class="CL_footericon">
+					<img src="https://unpkg.com/lucide-static@latest/icons/message-square.svg" alt="dm icon">
 				</div>
-				<div MA_footericon>
-					<!-- アイコン -->
+				<div MA_footericon class="CL_footericon">
+					<img src="https://unpkg.com/lucide-static@latest/icons/calendar-check.svg" alt="event icon">
 				</div>
-				<div MA_footericon>
-					<!-- アイコン -->
+				<div MA_footericon class="CL_footericon">
+					<img src="https://unpkg.com/lucide-static@latest/icons/bell.svg" alt="notice icon">
 				</div>
-				<div MA_footericon>
-					<!-- アイコン -->
+				<div MA_footericon class="CL_footericon">
+					<img src="https://unpkg.com/lucide-static@latest/icons/user-round.svg" alt="profile icon">
 				</div>
-				<div MA_footericon>
-					<!-- アイコン -->
+				<div MA_footericon class="CL_footericon">
+					<img src="https://unpkg.com/lucide-static@latest/icons/credit-card.svg" alt="payment icon">
 				</div>
 				<!-- 必要であれば適宜変更↑ -->
 			</div>
 		</div>
 			<div>	<!-- 管理アカウントのログイン後レイヤー群。ヘッダーと、ログイン後レイヤーを格納 -->
-			<div MA_header> <!-- ヘッダー -->
-				<div MA_hamburger onclick='FJ0003_menudisplay("on");'>
-					<!-- ハンバーガーメニューのアイコンを設置 -->
+			<div MA_header class="CL_header"> <!-- ヘッダー -->
+				<div MA_hamburger class="CL_hamburger" onclick='FJ0003_menudisplay("on");'>
+					<img src="https://unpkg.com/lucide-static@latest/icons/menu.svg" alt="menu icon">
 				</div>
-				<div MA_headericon onclick='FJ0001_layerdisplay("admin_home");'>
-					<img src='logotest.png'>
+				<div MA_headericon class="CL_headericon" onclick='FJ0001_layerdisplay("admin_home");'>
+					<img src='logotest.png' alt="app logo">
 					<!-- ↑アプリのロゴの画像を設置 -->
 				</div>
 			</div>
@@ -2201,6 +2567,7 @@
                 </div>
 
                 <div class='CL_datatitle'>管理メニュー</div>
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_member_list");'>会員一覧</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_official_dm_recipients");'>DM（公式DM）</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_membership_applications");'>新規入会申し込み承認</div>
@@ -2210,6 +2577,7 @@
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_profile_field_list");'>会員プロフィール項目管理</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_notice_list");'>公式お知らせ管理</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_report_list");'>通報管理</div>
+                </div>
         </div>
 </div>
 <div MA_layer='admin_member_list' MA_admin>
@@ -2226,16 +2594,20 @@
                         <div MA_data='condition_summary'>アカウント状態：有効／本人確認：承認済み</div>
                 </form>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_member_list_condition");'>検索条件</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_member_sort", "on");'>並び替え</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_member_list");'>検索する</div>
 
+                </div>
                 <div class='CL_datatitle'>クイック絞り込み</div>
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_member_list");'>すべて</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_member_list");'>停止中</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_member_list");'>承認待ち</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_member_list");'>本人確認：審査中</div>
 
+                </div>
                 <div class='CL_datatitle'>会員一覧（最大30件）</div>
                 <div MA_datalist='admin_members'>
                         <div MA_datalistchild>
@@ -2293,8 +2665,10 @@
                         <span>検索結果がありません</span>
                 </div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_member_list");'>次の30件を表示</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_home");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_layer='admin_member_list_condition' MA_admin>
@@ -2303,20 +2677,30 @@
 
                 <form MA_form='admin_member_list_condition' action='javascript:void(0);'>
                         <div class='CL_datatitle'>キーワード対象（複数可）</div>
-                        <div>
-                                <input type='checkbox' name='kw_target_name'>
+                        <div class="CL_checkbox-row">
+                                <input class="CL_checkbox-input" type='checkbox' name='kw_target_name'>
+                                <img src="https://unpkg.com/lucide-static@latest/icons/check-square.svg" alt="checked icon">
+                                <div class='CL_datatitle'>氏名</div>
                         </div>
-                        <div>
-                                <input type='checkbox' name='kw_target_company'>
+                        <div class="CL_checkbox-row">
+                                <input class="CL_checkbox-input" type='checkbox' name='kw_target_company'>
+                                <img src="https://unpkg.com/lucide-static@latest/icons/check-square.svg" alt="checked icon">
+                                <div class='CL_datatitle'>会社名</div>
                         </div>
-                        <div>
-                                <input type='checkbox' name='kw_target_email'>
+                        <div class="CL_checkbox-row">
+                                <input class="CL_checkbox-input" type='checkbox' name='kw_target_email'>
+                                <img src="https://unpkg.com/lucide-static@latest/icons/check-square.svg" alt="checked icon">
+                                <div class='CL_datatitle'>メールアドレス</div>
                         </div>
-                        <div>
-                                <input type='checkbox' name='kw_target_phone'>
+                        <div class="CL_checkbox-row">
+                                <input class="CL_checkbox-input" type='checkbox' name='kw_target_phone'>
+                                <img src="https://unpkg.com/lucide-static@latest/icons/check-square.svg" alt="checked icon">
+                                <div class='CL_datatitle'>電話番号</div>
                         </div>
-                        <div>
-                                <input type='checkbox' name='kw_target_member_id'>
+                        <div class="CL_checkbox-row">
+                                <input class="CL_checkbox-input" type='checkbox' name='kw_target_member_id'>
+                                <img src="https://unpkg.com/lucide-static@latest/icons/check-square.svg" alt="checked icon">
+                                <div class='CL_datatitle'>会員ID</div>
                         </div>
 
                         <div class='CL_datatitle'>一致方式</div>
@@ -2330,31 +2714,47 @@
                         </div>
 
                         <div class='CL_datatitle'>アカウント状態（複数可）</div>
-                        <div>
-                                <input type='checkbox' name='status_active'>
+                        <div class="CL_checkbox-row">
+                                <input class="CL_checkbox-input" type='checkbox' name='status_active'>
+                                <img src="https://unpkg.com/lucide-static@latest/icons/check-square.svg" alt="checked icon">
+                                <div class='CL_datatitle'>有効</div>
                         </div>
-                        <div>
-                                <input type='checkbox' name='status_suspended'>
+                        <div class="CL_checkbox-row">
+                                <input class="CL_checkbox-input" type='checkbox' name='status_suspended'>
+                                <img src="https://unpkg.com/lucide-static@latest/icons/check-square.svg" alt="checked icon">
+                                <div class='CL_datatitle'>停止中</div>
                         </div>
-                        <div>
-                                <input type='checkbox' name='status_pending'>
+                        <div class="CL_checkbox-row">
+                                <input class="CL_checkbox-input" type='checkbox' name='status_pending'>
+                                <img src="https://unpkg.com/lucide-static@latest/icons/check-square.svg" alt="checked icon">
+                                <div class='CL_datatitle'>承認待ち</div>
                         </div>
-                        <div>
-                                <input type='checkbox' name='status_withdrawn'>
+                        <div class="CL_checkbox-row">
+                                <input class="CL_checkbox-input" type='checkbox' name='status_withdrawn'>
+                                <img src="https://unpkg.com/lucide-static@latest/icons/check-square.svg" alt="checked icon">
+                                <div class='CL_datatitle'>退会済み</div>
                         </div>
 
                         <div class='CL_datatitle'>本人確認状態（複数可）</div>
-                        <div>
-                                <input type='checkbox' name='kyc_unsubmitted'>
+                        <div class="CL_checkbox-row">
+                                <input class="CL_checkbox-input" type='checkbox' name='kyc_unsubmitted'>
+                                <img src="https://unpkg.com/lucide-static@latest/icons/check-square.svg" alt="checked icon">
+                                <div class='CL_datatitle'>未提出</div>
                         </div>
-                        <div>
-                                <input type='checkbox' name='kyc_reviewing'>
+                        <div class="CL_checkbox-row">
+                                <input class="CL_checkbox-input" type='checkbox' name='kyc_reviewing'>
+                                <img src="https://unpkg.com/lucide-static@latest/icons/check-square.svg" alt="checked icon">
+                                <div class='CL_datatitle'>審査中</div>
                         </div>
-                        <div>
-                                <input type='checkbox' name='kyc_approved'>
+                        <div class="CL_checkbox-row">
+                                <input class="CL_checkbox-input" type='checkbox' name='kyc_approved'>
+                                <img src="https://unpkg.com/lucide-static@latest/icons/check-square.svg" alt="checked icon">
+                                <div class='CL_datatitle'>承認済み</div>
                         </div>
-                        <div>
-                                <input type='checkbox' name='kyc_rejected'>
+                        <div class="CL_checkbox-row">
+                                <input class="CL_checkbox-input" type='checkbox' name='kyc_rejected'>
+                                <img src="https://unpkg.com/lucide-static@latest/icons/check-square.svg" alt="checked icon">
+                                <div class='CL_datatitle'>却下</div>
                         </div>
 
                         <div class='CL_datatitle'>プロフィール充実度</div>
@@ -2439,9 +2839,11 @@
                         </div>
                 </form>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("common_ok_message", "on");'>条件をリセット</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_member_list");'>この条件で閉じる</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_member_list");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_layer='admin_member_detail' MA_admin>
@@ -2527,10 +2929,12 @@
                         </div>
                 </div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_member_edit");'>編集</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("common_ok_message", "on");'>停止（停止中の場合は停止解除）</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_official_dm_chat");'>公式DM</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_member_list");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_layer='admin_member_edit' MA_admin>
@@ -2591,8 +2995,10 @@
                         <span>入力エラー表示エリア（例：メールアドレスが不正です / 電話番号が重複しています）</span>
                 </div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("common_ok_message", "on");'>保存</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_member_detail");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_layer='admin_official_dm_recipients' MA_admin>
@@ -2609,10 +3015,12 @@
                         <div MA_data='condition_summary'>最終ログイン：7日以内／活動地域：東京都</div>
                 </form>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_official_dm_recipient_condition");'>検索条件</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_officialdm_recipient_sort", "on");'>並び替え</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_official_dm_recipients");'>検索する</div>
 
+                </div>
                 <div class='CL_datatitle'>宛先候補（最大30件）</div>
                 <div MA_datalist='admin_official_dm_recipients'>
                         <div MA_datalistchild>
@@ -2658,8 +3066,10 @@
                         <span>該当する宛先がありません</span>
                 </div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_official_dm_recipients");'>次の30件を表示</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_home");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_layer='admin_official_dm_recipient_condition' MA_admin>
@@ -2705,9 +3115,11 @@
                         </div>
                 </form>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_official_dm_recipients");'>この条件で閉じる</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_official_dm_recipients");'>戻る</div>
 				<div class='CL_button' MA_dev onclick='FJ0002_dialogdisplay("admin_officialdm_condition_reset_confirm", "on");'>宛先条件リセット確認 (開発者確認)</div>
+                </div>
         </div>
 </div>
 <div MA_layer='admin_official_dm_chat' MA_admin>
@@ -2751,8 +3163,10 @@
                         <span>入力エラー表示エリア（例：空欄では送信できません）</span>
                 </div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_official_dm_chat");'>送信</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_official_dm_recipients");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_layer='admin_membership_applications' MA_admin>
@@ -2769,16 +3183,20 @@
                         <div MA_data='condition_summary'>状態：未対応</div>
                 </form>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_member_list_condition");'>検索条件</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_member_sort", "on");'>並び替え</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_membership_applications");'>検索する</div>
 
+                </div>
                 <div class='CL_datatitle'>クイック絞り込み</div>
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_membership_applications");'>すべて</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_membership_applications");'>未対応</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_membership_applications");'>承認済み</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_membership_applications");'>却下済み</div>
 
+                </div>
                 <div class='CL_datatitle'>申請一覧（最大30件）</div>
                 <div MA_datalist='admin_membership_application_list'>
                         <div MA_datalistchild>
@@ -2807,8 +3225,10 @@
                         </div>
                 </div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_membership_applications");'>次の30件を表示</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_home");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_layer='admin_membership_application_detail' MA_admin>
@@ -2851,9 +3271,11 @@
                         </div>
                 </div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_membership_approve_confirm", "on");'>承認</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_membership_reject_reason", "on");'>却下</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_membership_applications");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_layer='admin_event_post_applications' MA_admin>
@@ -2870,16 +3292,20 @@
                         <div MA_data='condition_summary'>状態：未対応</div>
                 </form>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_member_list_condition");'>検索条件</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_member_sort", "on");'>並び替え</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_event_post_applications");'>検索する</div>
 
+                </div>
                 <div class='CL_datatitle'>クイック絞り込み</div>
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_event_post_applications");'>すべて</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_event_post_applications");'>未対応</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_event_post_applications");'>承認済み</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_event_post_applications");'>却下済み</div>
 
+                </div>
                 <div class='CL_datatitle'>申込一覧（最大30件）</div>
                 <div MA_datalist='admin_event_post_application_list'>
                         <div MA_datalistchild>
@@ -2905,8 +3331,10 @@
                         </div>
                 </div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_event_post_applications");'>次の30件を表示</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_home");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_layer='admin_event_post_application_detail' MA_admin>
@@ -2964,9 +3392,11 @@
                         </div>
                 </div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_eventpost_approve_confirm", "on");'>承認</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_eventpost_reject_reason", "on");'>却下</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_event_post_applications");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_layer='admin_kyc_submission_list' MA_admin>
@@ -2983,16 +3413,20 @@
                         <div MA_data='condition_summary'>状態：未対応</div>
                 </form>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_member_list_condition");'>検索条件</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_member_sort", "on");'>並び替え</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_kyc_submission_list");'>検索する</div>
 
+                </div>
                 <div class='CL_datatitle'>クイック絞り込み</div>
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_kyc_submission_list");'>すべて</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_kyc_submission_list");'>未対応</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_kyc_submission_list");'>承認済み</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_kyc_submission_list");'>却下済み</div>
 
+                </div>
                 <div class='CL_datatitle'>提出一覧（最大30件）</div>
                 <div MA_datalist='admin_kyc_submissions'>
                         <div MA_datalistchild>
@@ -3018,8 +3452,10 @@
                         </div>
                 </div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_kyc_submission_list");'>次の30件を表示</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_home");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_layer='admin_kyc_submission_detail' MA_admin>
@@ -3070,9 +3506,11 @@
                         </div>
                 </div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_kyc_approve_confirm", "on");'>承認</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_kyc_reject_reason", "on");'>却下</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_kyc_submission_list");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_layer='admin_invite_code_list' MA_admin>
@@ -3116,8 +3554,10 @@
                         </div>
                 </div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_invite_code_list");'>次の30件を表示</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_home");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_layer='admin_invite_code_create' MA_admin>
@@ -3180,8 +3620,10 @@
                         <span>入力エラー表示エリア（例：期限が過去、上限が0、コード形式不正など）</span>
                 </div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("common_ok_message", "on");'>作成する</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_invite_code_list");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_layer='admin_invite_code_detail' MA_admin>
@@ -3212,18 +3654,22 @@
                         </div>
                 </div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_invite_code_detail");'>コピー</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("common_ok_message", "on");'>無効化（無効の場合は有効化）</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_invite_code_list");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_layer='admin_profile_field_list' MA_admin>
         <div>
                 <div class='CL_layertitle'>会員プロフィール項目管理</div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_profile_field_add");'>項目を追加</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_profile_field_order_save_confirm", "on");'>表示順を変更</div>
 
+                </div>
                 <div class='CL_datatitle'>項目一覧</div>
                 <div MA_datalist='admin_profile_fields'>
                         <div MA_datalistchild>
@@ -3340,8 +3786,10 @@
                         <span>入力エラー表示エリア（例：表示名が未入力、選択肢が未設定など）</span>
                 </div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_profile_field_save_confirm", "on");'>保存</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_profile_field_list");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_layer='admin_profile_field_edit' MA_admin>
@@ -3410,9 +3858,11 @@
                         <span>入力エラー表示エリア</span>
                 </div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_profile_field_save_confirm", "on");'>保存</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_profile_field_hide_confirm", "on");'>削除（非表示化）</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_profile_field_list");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_layer='admin_notice_list' MA_admin>
@@ -3462,8 +3912,10 @@
                         </div>
                 </div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_notice_list");'>次の30件を表示</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_home");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_layer='admin_notice_create' MA_admin>
@@ -3523,9 +3975,11 @@
                         <span>入力エラー表示エリア</span>
                 </div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_notice_save_confirm", "on");'>保存</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_notice_save_confirm", "on");'>配信する</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_notice_list");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_layer='admin_notice_detail' MA_admin>
@@ -3560,9 +4014,11 @@
                         </div>
                 </div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_notice_edit");'>編集</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_notice_delete_confirm", "on");'>削除（取り下げ）</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_notice_list");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_layer='admin_notice_edit' MA_admin>
@@ -3623,8 +4079,10 @@
                         <span>入力エラー表示エリア</span>
                 </div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_notice_save_confirm", "on");'>保存</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_notice_detail");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_layer='admin_report_list' MA_admin>
@@ -3641,16 +4099,20 @@
                         <div MA_data='condition_summary'>対応状況：未対応</div>
                 </form>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_member_list_condition");'>検索条件</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_member_sort", "on");'>並び替え</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_report_list");'>検索する</div>
 
+                </div>
                 <div class='CL_datatitle'>クイック絞り込み</div>
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_report_list");'>すべて</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_report_list");'>未対応</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_report_list");'>対応中</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_report_list");'>対応済み</div>
 
+                </div>
                 <div class='CL_datatitle'>通報一覧（最大30件）</div>
                 <div MA_datalist='admin_reports'>
                         <div MA_datalistchild>
@@ -3676,8 +4138,10 @@
                         </div>
                 </div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_report_list");'>次の30件を表示</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_home");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_layer='admin_report_detail' MA_admin>
@@ -3716,10 +4180,12 @@
                         </div>
                 </div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_member_detail");'>被通報者プロフィール</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_member_detail");'>通報者プロフィール</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_report_status_update", "on");'>対応状況を更新</div>
                 <div class='CL_button' onclick='FJ0001_layerdisplay("admin_report_list");'>戻る</div>
+                </div>
         </div>
 </div>
 			<!-- ここにログイン後のレイヤーをすべて追加↑ -->
@@ -3737,8 +4203,10 @@
                 <div class='CL_datatitle'>確認内容</div>
                 <div MA_data='follow_confirm_text'>フォローしますか？（フォロー中の場合は「フォロー解除しますか？」に切り替わる）</div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_follow_confirm", "off");'>確定</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_follow_confirm", "off");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_dialog='client_one_on_one_confirm'>
@@ -3751,8 +4219,10 @@
                 <div class='CL_datatitle'>確認内容</div>
                 <div MA_data='one_on_one_confirm_text'>1on1済みにしますか？（1on1済みの場合は「未実施に戻しますか？」に切り替わる）</div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_one_on_one_confirm", "off");'>確定</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_one_on_one_confirm", "off");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_dialog='client_block_confirm'>
@@ -3765,8 +4235,10 @@
                 <div class='CL_datatitle'>注意</div>
                 <div MA_data='block_caution_text'>ブロックすると検索結果・DMに表示されなくなります。</div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_block_confirm", "off");'>ブロックする</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_block_confirm", "off");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_dialog='client_report'>
@@ -3797,8 +4269,10 @@
                         <span>入力エラー表示エリア（例：その他選択時は詳細が必須です）</span>
                 </div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_report", "off");'>通報する</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_report", "off");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_dialog='client_report_done'>
@@ -3832,8 +4306,10 @@
                         </div>
                 </form>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_member_sort", "off");'>適用</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_member_sort", "off");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_dialog='client_member_condition_reset_confirm'>
@@ -3843,8 +4319,10 @@
                 <div class='CL_datatitle'>確認</div>
                 <div MA_data='reset_confirm_text'>検索条件をリセットしますか？</div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_member_condition_reset_confirm", "off");'>リセットする</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_member_condition_reset_confirm", "off");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_dialog='client_dm_thread_sort'>
@@ -3865,8 +4343,10 @@
                         </div>
                 </form>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_dm_thread_sort", "off");'>適用</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_dm_thread_sort", "off");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_dialog='client_memo_delete_confirm'>
@@ -3876,8 +4356,10 @@
                 <div class='CL_datatitle'>確認</div>
                 <div MA_data='memo_delete_confirm_text'>このメモを削除しますか？</div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_memo_delete_confirm", "off");'>削除する</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_memo_delete_confirm", "off");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_dialog='client_event_sort'>
@@ -3900,8 +4382,10 @@
                         </div>
                 </form>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_event_sort", "off");'>適用</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_event_sort", "off");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_dialog='client_event_apply_external_notice'>
@@ -3911,8 +4395,10 @@
                 <div class='CL_datatitle'>注意</div>
                 <div MA_data='external_form_notice_text'>応募は外部フォームで行います。外部フォームへ移動しますか？</div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_event_apply_external_notice", "off");'>外部フォームへ移動する</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_event_apply_external_notice", "off");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_dialog='client_logininfo_change_confirm'>
@@ -3922,8 +4408,10 @@
                 <div class='CL_datatitle'>確認</div>
                 <div MA_data='logininfo_change_confirm_text'>入力した内容で変更を保存しますか？</div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_logininfo_change_confirm", "off");'>保存する</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_logininfo_change_confirm", "off");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_dialog='client_withdraw_caution'>
@@ -3933,8 +4421,10 @@
                 <div class='CL_datatitle'>注意</div>
                 <div MA_data='withdraw_caution_text'>退会すると復旧できません。退会手続きへ進みますか？</div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_withdraw_caution", "off");'>退会手続きへ進む</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_withdraw_caution", "off");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_dialog='client_withdraw_final_confirm'>
@@ -3944,8 +4434,10 @@
                 <div class='CL_datatitle'>確認</div>
                 <div MA_data='withdraw_final_confirm_text'>退会を確定します。よろしいですか？</div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_withdraw_final_confirm", "off");'>退会を確定する</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("client_withdraw_final_confirm", "off");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_dialog='common_logout_confirm'>
@@ -3955,8 +4447,10 @@
                 <div class='CL_datatitle'>確認</div>
                 <div MA_data='logout_confirm_text'>ログアウトしますか？</div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("common_logout_confirm", "off");'>ログアウトする</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("common_logout_confirm", "off");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_dialog='common_ok_message'>
@@ -3976,8 +4470,10 @@
                 <div class='CL_datatitle'>注意</div>
                 <div MA_data='membership_approve_notice'>承認すると初回パスワードのメールが送られます。</div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_membership_approve_confirm", "off");'>承認する</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_membership_approve_confirm", "off");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_dialog='admin_membership_reject_reason'>
@@ -3995,8 +4491,10 @@
                         <span>入力エラー表示エリア（例：却下理由を入力してください）</span>
                 </div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_membership_reject_reason", "off");'>却下する</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_membership_reject_reason", "off");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_dialog='admin_eventpost_approve_confirm'>
@@ -4006,8 +4504,10 @@
                 <div class='CL_datatitle'>確認</div>
                 <div MA_data='eventpost_approve_confirm_text'>この申込を承認しますか？</div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_eventpost_approve_confirm", "off");'>承認する</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_eventpost_approve_confirm", "off");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_dialog='admin_eventpost_reject_reason'>
@@ -4025,8 +4525,10 @@
                         <span>入力エラー表示エリア（例：却下理由を入力してください）</span>
                 </div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_eventpost_reject_reason", "off");'>却下する</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_eventpost_reject_reason", "off");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_dialog='admin_kyc_approve_confirm'>
@@ -4036,8 +4538,10 @@
                 <div class='CL_datatitle'>確認</div>
                 <div MA_data='kyc_approve_confirm_text'>この本人確認を承認しますか？</div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_kyc_approve_confirm", "off");'>承認する</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_kyc_approve_confirm", "off");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_dialog='admin_kyc_reject_reason'>
@@ -4055,8 +4559,10 @@
                         <span>入力エラー表示エリア（例：却下理由を入力してください）</span>
                 </div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_kyc_reject_reason", "off");'>却下する</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_kyc_reject_reason", "off");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_dialog='admin_member_sort'>
@@ -4079,8 +4585,10 @@
                         </div>
                 </form>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_member_sort", "off");'>適用</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_member_sort", "off");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_dialog='admin_officialdm_recipient_sort'>
@@ -4101,8 +4609,10 @@
                         </div>
                 </form>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_officialdm_recipient_sort", "off");'>適用</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_officialdm_recipient_sort", "off");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_dialog='admin_officialdm_condition_reset_confirm'>
@@ -4112,8 +4622,10 @@
                 <div class='CL_datatitle'>確認</div>
                 <div MA_data='reset_confirm_text'>宛先検索条件をリセットしますか？</div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_officialdm_condition_reset_confirm", "off");'>リセットする</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_officialdm_condition_reset_confirm", "off");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_dialog='admin_profile_field_save_confirm'>
@@ -4123,8 +4635,10 @@
                 <div class='CL_datatitle'>確認</div>
                 <div MA_data='profile_field_save_confirm_text'>変更内容を保存しますか？</div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_profile_field_save_confirm", "off");'>保存する</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_profile_field_save_confirm", "off");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_dialog='admin_profile_field_hide_confirm'>
@@ -4134,8 +4648,10 @@
                 <div class='CL_datatitle'>確認</div>
                 <div MA_data='profile_field_hide_confirm_text'>この項目を非表示にしますか？（会員の入力値がある場合は注意文言を表示）</div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_profile_field_hide_confirm", "off");'>非表示にする</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_profile_field_hide_confirm", "off");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_dialog='admin_profile_field_order_save_confirm'>
@@ -4145,8 +4661,10 @@
                 <div class='CL_datatitle'>確認</div>
                 <div MA_data='order_save_confirm_text'>表示順の変更を保存しますか？</div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_profile_field_order_save_confirm", "off");'>保存する</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_profile_field_order_save_confirm", "off");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_dialog='admin_notice_save_confirm'>
@@ -4156,8 +4674,10 @@
                 <div class='CL_datatitle'>確認</div>
                 <div MA_data='notice_save_confirm_text'>この内容で保存しますか？</div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_notice_save_confirm", "off");'>保存する</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_notice_save_confirm", "off");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_dialog='admin_notice_delete_confirm'>
@@ -4167,8 +4687,10 @@
                 <div class='CL_datatitle'>注意</div>
                 <div MA_data='notice_delete_caution_text'>配信済みの場合は取り下げ扱いになります。</div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_notice_delete_confirm", "off");'>削除（取り下げ）する</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_notice_delete_confirm", "off");'>戻る</div>
+                </div>
         </div>
 </div>
 <div MA_dialog='admin_report_status_update'>
@@ -4197,45 +4719,53 @@
                         <span>入力エラー表示エリア（例：メモが長すぎます）</span>
                 </div>
 
+                <div class="CL_button-grid">
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_report_status_update", "off");'>更新する</div>
                 <div class='CL_button' onclick='FJ0002_dialogdisplay("admin_report_status_update", "off");'>戻る</div>
+                </div>
         </div>
 </div>
 		<!-- ここに簡易UI上のダイアログをすべて追加↑ -->
 
-		<div MA_menu MA_client>	<!-- 一般アカウントでハンバーガーメニューボタンを押した後のメニュー -->
-			<div>
+		<div MA_menu MA_client class="CL_menu">	<!-- 一般アカウントでハンバーガーメニューボタンを押した後のメニュー -->
+			<div class="CL_menu-panel">
 			<!-- 必要であれば適宜変更↓ -->
-				<div MA_menuclose onclick='FJ0003_menudisplay("off");'>
-					<!-- ハンバーガーメニューを閉じるアイコン -->
+				<div MA_menuclose class="CL_menuclose" onclick='FJ0003_menudisplay("off");'>
+					<img src="https://unpkg.com/lucide-static@latest/icons/x.svg" alt="close icon">
 				</div>
-				<div MA_menuinner onclick='FJ0001_layerdisplay("client_profile_payment");'>
-					ログイン情報変更
+				<div MA_menuinner class="CL_menuitem" onclick='FJ0001_layerdisplay("client_profile_payment");'>
+					<img src="https://unpkg.com/lucide-static@latest/icons/shield-check.svg" alt="security icon">
+					<span>ログイン情報変更</span>
 				</div>
-				<div MA_menuinner onclick='FJ0002_dialogdisplay("common_ok_message", "on");'>
-					利用規約
+				<div MA_menuinner class="CL_menuitem" onclick='FJ0002_dialogdisplay("common_ok_message", "on");'>
+					<img src="https://unpkg.com/lucide-static@latest/icons/scroll-text.svg" alt="terms icon">
+					<span>利用規約</span>
 				</div>
-				<div MA_menuinner onclick='FJ0002_dialogdisplay("common_logout_confirm", "on");'>
-					ログアウト
+				<div MA_menuinner class="CL_menuitem" onclick='FJ0002_dialogdisplay("common_logout_confirm", "on");'>
+					<img src="https://unpkg.com/lucide-static@latest/icons/log-out.svg" alt="logout icon">
+					<span>ログアウト</span>
 				</div>
 			<!-- 必要であれば適宜変更↑ -->
 			</div>
 		</div>
 
-		<div MA_menu MA_admin>	<!-- 管理アカウントでハンバーガーメニューボタンを押した後のメニュー -->
-			<div>
+		<div MA_menu MA_admin class="CL_menu">	<!-- 管理アカウントでハンバーガーメニューボタンを押した後のメニュー -->
+			<div class="CL_menu-panel">
 			<!-- 必要であれば適宜変更↓ -->
-				<div MA_menuclose onclick='FJ0003_menudisplay("off");'>
-					<!-- ハンバーガーメニューを閉じるアイコン -->
+				<div MA_menuclose class="CL_menuclose" onclick='FJ0003_menudisplay("off");'>
+					<img src="https://unpkg.com/lucide-static@latest/icons/x.svg" alt="close icon">
 				</div>
-				<div MA_menuinner onclick='FJ0001_layerdisplay("admin_home");'>
-					ログイン情報変更
+				<div MA_menuinner class="CL_menuitem" onclick='FJ0001_layerdisplay("admin_home");'>
+					<img src="https://unpkg.com/lucide-static@latest/icons/layout-dashboard.svg" alt="dashboard icon">
+					<span>ログイン情報変更</span>
 				</div>
-				<div MA_menuinner onclick='FJ0002_dialogdisplay("common_ok_message", "on");'>
-					利用規約
+				<div MA_menuinner class="CL_menuitem" onclick='FJ0002_dialogdisplay("common_ok_message", "on");'>
+					<img src="https://unpkg.com/lucide-static@latest/icons/scroll-text.svg" alt="terms icon">
+					<span>利用規約</span>
 				</div>
-				<div MA_menuinner onclick='FJ0002_dialogdisplay("common_logout_confirm", "on");'>
-					ログアウト
+				<div MA_menuinner class="CL_menuitem" onclick='FJ0002_dialogdisplay("common_logout_confirm", "on");'>
+					<img src="https://unpkg.com/lucide-static@latest/icons/log-out.svg" alt="logout icon">
+					<span>ログアウト</span>
 				</div>
 			<!-- 必要であれば適宜変更↑ -->
 			</div>
