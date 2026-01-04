@@ -180,12 +180,452 @@
 		</style>
 		<style>
 			/* ここに後から追加したクラスなどのスタイルを追記可能 */
+			:root {
+				--brand-red: #d4082f !important;
+				--brand-deep: #6c0f22 !important;
+				--brand-navy: #1d2a44 !important;
+				--brand-ink: #121212 !important;
+				--brand-mist: rgba(255, 255, 255, 0.88) !important;
+				--brand-line: rgba(29, 42, 68, 0.22) !important;
+				--brand-shadow: 0 18px 40px rgba(29, 42, 68, 0.18) !important;
+			}
+
+			body {
+				background: radial-gradient(120% 120% at 20% 20%, rgba(212, 8, 47, 0.18), transparent 60%),
+					radial-gradient(140% 140% at 80% 30%, rgba(29, 42, 68, 0.25), transparent 62%),
+					linear-gradient(120deg, #fff7f8 0%, #fdf5f3 45%, #f4f0ff 100%) !important;
+				background-size: 240% 240% !important;
+				animation: MA_bgfloat 22s linear infinite !important;
+				color: var(--brand-ink) !important;
+			}
+
+			body:has( > div[MA_prelogin][MA_show='on']) {
+				background: radial-gradient(140% 140% at 10% 10%, rgba(212, 8, 47, 0.22), transparent 60%),
+					radial-gradient(160% 160% at 85% 15%, rgba(29, 42, 68, 0.22), transparent 60%),
+					linear-gradient(130deg, #f6f6f8 0%, #fff1f2 55%, #f4f0ff 100%) !important;
+				background-size: 260% 260% !important;
+				animation: MA_bgfloat 22s linear infinite !important;
+			}
+
+			@keyframes MA_bgfloat {
+				0% {
+					background-position: 0% 50% !important;
+				}
+				50% {
+					background-position: 100% 50% !important;
+				}
+				100% {
+					background-position: 0% 50% !important;
+				}
+			}
+
+			body,
+			body *:not([MA_dev]) {
+				font-family: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif !important;
+				font-size: 22px !important;
+				line-height: 1.6 !important;
+				letter-spacing: 0.02em !important;
+			}
+
+			[MA_dev],
+			[MA_dev] * {
+				font-size: 16px !important;
+				opacity: 0.4 !important;
+				filter: grayscale(1) !important;
+			}
+
+			.CL_layertitle,
+			.CL_dialogtitle {
+				display: none !important;
+			}
+
+			div[MA_layer] > div {
+				border: 2px solid rgba(29, 42, 68, 0.18) !important;
+				border-radius: 28px !important;
+				box-shadow: var(--brand-shadow) !important;
+				backdrop-filter: blur(8px) !important;
+			}
+
+			div[MA_dialog] > div,
+			div[MA_menu] > div {
+				background: var(--brand-mist) !important;
+				border-radius: 28px !important;
+				box-shadow: var(--brand-shadow) !important;
+				border: 2px solid rgba(29, 42, 68, 0.18) !important;
+			}
+
+			div[MA_header],
+			div[MA_footer] {
+				background: rgba(255, 255, 255, 0.82) !important;
+				backdrop-filter: blur(14px) !important;
+				border-bottom: 1px solid rgba(29, 42, 68, 0.15) !important;
+			}
+
+			div[MA_footer] {
+				border-top: 1px solid rgba(29, 42, 68, 0.15) !important;
+			}
+
+			div[MA_layer][MA_show='on'] {
+				animation: MA_layer_in 0.6s ease-out both !important;
+			}
+
+			div[MA_layer][MA_show='off'] {
+				animation: MA_layer_out 0.45s ease-in both !important;
+			}
+
+			div[MA_dialog][MA_show='on'] {
+				animation: MA_dialog_in 0.55s ease-out both !important;
+			}
+
+			div[MA_dialog][MA_show='off'] {
+				animation: MA_dialog_out 0.4s ease-in both !important;
+			}
+
+			div[MA_menu][MA_show='on'] {
+				animation: MA_menu_in 0.6s ease-out both !important;
+			}
+
+			div[MA_menu][MA_show='off'] {
+				animation: MA_menu_out 0.4s ease-in both !important;
+			}
+
+			@keyframes MA_layer_in {
+				0% {
+					opacity: 0 !important;
+					transform: translateY(30px) scale(0.98) !important;
+				}
+				100% {
+					opacity: 1 !important;
+					transform: translateY(0px) scale(1) !important;
+				}
+			}
+
+			@keyframes MA_layer_out {
+				0% {
+					opacity: 1 !important;
+					transform: translateY(0px) scale(1) !important;
+				}
+				100% {
+					opacity: 0 !important;
+					transform: translateY(-20px) scale(0.98) !important;
+				}
+			}
+
+			@keyframes MA_dialog_in {
+				0% {
+					opacity: 0 !important;
+					transform: scale(0.95) !important;
+				}
+				100% {
+					opacity: 1 !important;
+					transform: scale(1) !important;
+				}
+			}
+
+			@keyframes MA_dialog_out {
+				0% {
+					opacity: 1 !important;
+					transform: scale(1) !important;
+				}
+				100% {
+					opacity: 0 !important;
+					transform: scale(0.96) !important;
+				}
+			}
+
+			@keyframes MA_menu_in {
+				0% {
+					opacity: 0 !important;
+					transform: translateX(40px) !important;
+				}
+				100% {
+					opacity: 1 !important;
+					transform: translateX(0px) !important;
+				}
+			}
+
+			@keyframes MA_menu_out {
+				0% {
+					opacity: 1 !important;
+					transform: translateX(0px) !important;
+				}
+				100% {
+					opacity: 0 !important;
+					transform: translateX(40px) !important;
+				}
+			}
+
+			div[MA_layer] > div > * {
+				margin-top: 18px !important;
+			}
+
+			.CL_datatitle {
+				font-weight: 600 !important;
+				color: var(--brand-navy) !important;
+				margin-top: 18px !important;
+			}
+
+			.CL_datatitle + [MA_data] {
+				margin-left: 20px !important;
+				font-weight: 700 !important;
+				color: var(--brand-ink) !important;
+			}
+
+			[MA_data] {
+				font-weight: 600 !important;
+				color: var(--brand-ink) !important;
+			}
+
+			form {
+				margin-top: 16px !important;
+			}
+
+			input,
+			select,
+			textarea {
+				width: 100% !important;
+				min-height: 70px !important;
+				padding: 16px 18px !important;
+				border-radius: 18px !important;
+				border: 2px solid rgba(29, 42, 68, 0.2) !important;
+				box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.4) !important;
+				background: rgba(255, 255, 255, 0.88) !important;
+				color: var(--brand-ink) !important;
+			}
+
+			textarea {
+				min-height: 160px !important;
+			}
+
+			input[type='checkbox'],
+			input[type='radio'] {
+				display: none !important;
+			}
+
+			.CL_checkline {
+				border: 2px dashed rgba(29, 42, 68, 0.25) !important;
+				border-radius: 18px !important;
+				padding: 12px 18px !important;
+				margin-top: 14px !important;
+				color: var(--brand-navy) !important;
+			}
+
+			.CL_checkboxlabel {
+				font-weight: 700 !important;
+				color: var(--brand-ink) !important;
+			}
+
+			.CL_checkboxicon {
+				width: 32px !important;
+				height: 32px !important;
+				float: right !important;
+			}
+
+			.CL_button {
+				padding: 18px 22px !important;
+				border-radius: 20px !important;
+				border: 2px solid rgba(212, 8, 47, 0.25) !important;
+				background: linear-gradient(135deg, rgba(212, 8, 47, 0.95), rgba(108, 15, 34, 0.95)) !important;
+				color: #ffffff !important;
+				text-align: center !important;
+				box-shadow: 0 12px 26px rgba(212, 8, 47, 0.25) !important;
+				margin-top: 16px !important;
+			}
+
+			.CL_button.CL_button-secondary {
+				background: rgba(29, 42, 68, 0.92) !important;
+				border-color: rgba(29, 42, 68, 0.35) !important;
+			}
+
+			.CL_button.CL_button-ghost {
+				background: rgba(255, 255, 255, 0.88) !important;
+				color: var(--brand-navy) !important;
+			}
+
+			.CL_buttongrid {
+				column-count: 2 !important;
+				column-gap: 16px !important;
+			}
+
+			.CL_buttongrid .CL_button {
+				break-inside: avoid !important;
+				margin-top: 12px !important;
+			}
+
+			[MA_datalist] {
+				margin-top: 18px !important;
+				padding: 14px !important;
+				border-radius: 22px !important;
+				border: 2px solid rgba(29, 42, 68, 0.16) !important;
+			}
+
+			.CL_datalist-1 {
+				border-left: 8px solid var(--brand-red) !important;
+			}
+
+			.CL_datalist-2 {
+				border-left: 8px solid var(--brand-navy) !important;
+			}
+
+			.CL_datalist-3 {
+				border-left: 8px solid #8a1538 !important;
+			}
+
+			.CL_datalist-4 {
+				border-left: 8px solid #2a3e7a !important;
+			}
+
+			.CL_datalist-scroll {
+				height: 560px !important;
+				overflow-y: auto !important;
+			}
+
+			[MA_datalistchild] {
+				border: 1px solid rgba(29, 42, 68, 0.18) !important;
+				border-radius: 18px !important;
+				padding: 16px !important;
+				margin-top: 12px !important;
+				box-shadow: 0 10px 22px rgba(29, 42, 68, 0.12) !important;
+			}
+
+			[MA_message] {
+				border-left: 8px solid rgba(29, 42, 68, 0.25) !important;
+				padding: 14px 18px !important;
+				border-radius: 16px !important;
+				background: rgba(255, 255, 255, 0.78) !important;
+				box-shadow: 0 10px 24px rgba(29, 42, 68, 0.1) !important;
+			}
+
+			.CL_headericon,
+			.CL_footericon,
+			.CL_hamburger,
+			.CL_menuclose {
+				text-align: center !important;
+				padding-top: 18px !important;
+			}
+
+			.CL_icon {
+				width: 36px !important;
+				height: 36px !important;
+			}
+
+			.CL_menuinner {
+				border: 2px solid rgba(29, 42, 68, 0.18) !important;
+				border-radius: 18px !important;
+				padding: 18px 20px !important;
+				margin-top: 16px !important;
+				background: rgba(255, 255, 255, 0.85) !important;
+				color: var(--brand-navy) !important;
+			}
+
+			.CL_menuinner img {
+				width: 30px !important;
+				height: 30px !important;
+				margin-right: 12px !important;
+			}
+
+			img.CL_photo {
+				width: 100% !important;
+				border-radius: 20px !important;
+				border: 2px solid rgba(29, 42, 68, 0.18) !important;
+				box-shadow: 0 12px 24px rgba(29, 42, 68, 0.15) !important;
+			}
 		</style>
 		<!--ここにCDN等必要なhead内タグを追記可能↓  -->
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&display=swap" rel="stylesheet">
+		<script src="https://cdn.tailwindcss.com"></script>
+		<script src="https://unpkg.com/lucide@latest"></script>
+		<script>
+			document.addEventListener('DOMContentLoaded', () => {
+				const wrapButtonGroups = (panel) => {
+					if (panel.classList.contains('CL_buttongrid')) {
+						return;
+					}
+					panel.classList.add('CL_screen');
+					const children = Array.from(panel.children);
+					let group = [];
+					const flush = () => {
+						if (group.length > 1) {
+							const wrapper = document.createElement('div');
+							wrapper.className = 'CL_buttongrid';
+							group[0].before(wrapper);
+							group.forEach((btn) => wrapper.appendChild(btn));
+						}
+						group = [];
+					};
+					children.forEach((child) => {
+						if (child.classList.contains('CL_button')) {
+							group.push(child);
+						} else {
+							flush();
+						}
+					});
+					flush();
+				};
 
+				document.querySelectorAll('div[MA_layer] > div, div[MA_dialog] > div').forEach((panel) => {
+					wrapButtonGroups(panel);
+					panel.querySelectorAll('div').forEach((nested) => wrapButtonGroups(nested));
+				});
+
+				document.querySelectorAll('[MA_datalist]').forEach((list, index) => {
+					list.classList.add('CL_datalist', `CL_datalist-${(index % 4) + 1}`);
+				});
+
+				document.querySelectorAll('[MA_menuinner]').forEach((item) => item.classList.add('CL_menuinner'));
+				document.querySelectorAll('[MA_menuclose]').forEach((item) => item.classList.add('CL_menuclose'));
+				document.querySelectorAll('[MA_hamburger]').forEach((item) => item.classList.add('CL_hamburger'));
+				document.querySelectorAll('[MA_headericon]').forEach((item) => item.classList.add('CL_headericon'));
+				document.querySelectorAll('[MA_footericon]').forEach((item) => item.classList.add('CL_footericon'));
+
+				document.querySelectorAll('div[MA_layer]').forEach((layer) => {
+					const lists = layer.querySelectorAll('[MA_datalist]');
+					if (lists.length > 1) {
+						lists.forEach((list) => list.classList.add('CL_datalist-scroll'));
+					}
+				});
+
+				document.querySelectorAll("input[type='checkbox'], input[type='radio']").forEach((input) => {
+					const inputWrap = input.parentElement;
+					const label = inputWrap ? inputWrap.previousElementSibling : null;
+					if (label && label.classList.contains('CL_datatitle')) {
+						const line = document.createElement('div');
+						line.className = 'CL_checkline';
+						label.classList.add('CL_checkboxlabel');
+						inputWrap.classList.add('CL_checkinput');
+						label.before(line);
+						line.appendChild(label);
+						line.appendChild(inputWrap);
+					}
+
+					if (inputWrap && !inputWrap.querySelector('.CL_checkboxicon')) {
+						const icon = document.createElement('img');
+						icon.src = 'https://unpkg.com/lucide-static@latest/icons/check-square-2.svg';
+						icon.alt = 'check';
+						icon.className = 'CL_checkboxicon';
+						inputWrap.appendChild(icon);
+					}
+				});
+
+				const unsplash = [
+					'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=640&q=80',
+					'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=640&q=80',
+					'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=640&q=80',
+					'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=640&q=80',
+					'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=640&q=80',
+					'https://images.unsplash.com/photo-1507537297725-24a1c029d3ca?auto=format&fit=crop&w=640&q=80'
+				];
+				document.querySelectorAll("img[src^='/insert/photo/']").forEach((img, index) => {
+					img.src = unsplash[index % unsplash.length];
+					img.classList.add('CL_photo');
+				});
+			});
+		</script>
 		<!--ここにCDN等必要なhead内タグを追記可能↑  -->
 	</head>
-	<body>
+	<body class="text-neutral-900">
 		<!-- ここにログイン前のレイヤーをすべて追加↓ -->
 <div MA_prelogin MA_layer='login' MA_show='on'>
         <div>
@@ -383,6 +823,7 @@
 			<div MA_header> <!-- ヘッダー -->
 				<div MA_hamburger onclick='FJ0003_menudisplay("on");'>
 					<!-- ハンバーガーメニューのアイコンを設置 -->
+					<img class='CL_icon' src='https://unpkg.com/lucide-static@latest/icons/menu.svg' alt='menu'>
 				</div>
 				<div MA_headericon onclick='FJ0001_layerdisplay("client_home");'>
 					<img src='logotest.png'>
@@ -2140,18 +2581,23 @@
 				<!-- 必要であれば適宜変更↓ -->
 				<div MA_footericon>
 					<!-- アイコン -->
+					<img class='CL_icon' src='https://unpkg.com/lucide-static@latest/icons/home.svg' alt='home'>
 				</div>
 				<div MA_footericon>
 					<!-- アイコン -->
+					<img class='CL_icon' src='https://unpkg.com/lucide-static@latest/icons/search.svg' alt='search'>
 				</div>
 				<div MA_footericon>
 					<!-- アイコン -->
+					<img class='CL_icon' src='https://unpkg.com/lucide-static@latest/icons/calendar-days.svg' alt='events'>
 				</div>
 				<div MA_footericon>
 					<!-- アイコン -->
+					<img class='CL_icon' src='https://unpkg.com/lucide-static@latest/icons/bell.svg' alt='notices'>
 				</div>
 				<div MA_footericon>
 					<!-- アイコン -->
+					<img class='CL_icon' src='https://unpkg.com/lucide-static@latest/icons/user-round.svg' alt='profile'>
 				</div>
 				<!-- 必要であれば適宜変更↑ -->
 			</div>
@@ -2160,6 +2606,7 @@
 			<div MA_header> <!-- ヘッダー -->
 				<div MA_hamburger onclick='FJ0003_menudisplay("on");'>
 					<!-- ハンバーガーメニューのアイコンを設置 -->
+					<img class='CL_icon' src='https://unpkg.com/lucide-static@latest/icons/menu.svg' alt='menu'>
 				</div>
 				<div MA_headericon onclick='FJ0001_layerdisplay("admin_home");'>
 					<img src='logotest.png'>
@@ -4208,14 +4655,18 @@
 			<!-- 必要であれば適宜変更↓ -->
 				<div MA_menuclose onclick='FJ0003_menudisplay("off");'>
 					<!-- ハンバーガーメニューを閉じるアイコン -->
+					<img class='CL_icon' src='https://unpkg.com/lucide-static@latest/icons/x.svg' alt='close'>
 				</div>
 				<div MA_menuinner onclick='FJ0001_layerdisplay("client_profile_payment");'>
+					<img src='https://unpkg.com/lucide-static@latest/icons/settings.svg' alt='settings'>
 					ログイン情報変更
 				</div>
 				<div MA_menuinner onclick='FJ0002_dialogdisplay("common_ok_message", "on");'>
+					<img src='https://unpkg.com/lucide-static@latest/icons/file-text.svg' alt='terms'>
 					利用規約
 				</div>
 				<div MA_menuinner onclick='FJ0002_dialogdisplay("common_logout_confirm", "on");'>
+					<img src='https://unpkg.com/lucide-static@latest/icons/log-out.svg' alt='logout'>
 					ログアウト
 				</div>
 			<!-- 必要であれば適宜変更↑ -->
@@ -4227,14 +4678,18 @@
 			<!-- 必要であれば適宜変更↓ -->
 				<div MA_menuclose onclick='FJ0003_menudisplay("off");'>
 					<!-- ハンバーガーメニューを閉じるアイコン -->
+					<img class='CL_icon' src='https://unpkg.com/lucide-static@latest/icons/x.svg' alt='close'>
 				</div>
 				<div MA_menuinner onclick='FJ0001_layerdisplay("admin_home");'>
+					<img src='https://unpkg.com/lucide-static@latest/icons/settings.svg' alt='settings'>
 					ログイン情報変更
 				</div>
 				<div MA_menuinner onclick='FJ0002_dialogdisplay("common_ok_message", "on");'>
+					<img src='https://unpkg.com/lucide-static@latest/icons/file-text.svg' alt='terms'>
 					利用規約
 				</div>
 				<div MA_menuinner onclick='FJ0002_dialogdisplay("common_logout_confirm", "on");'>
+					<img src='https://unpkg.com/lucide-static@latest/icons/log-out.svg' alt='logout'>
 					ログアウト
 				</div>
 			<!-- 必要であれば適宜変更↑ -->
