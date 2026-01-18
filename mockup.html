@@ -1,327 +1,2115 @@
-<html lang='ja'>
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="user-scalable=no,width=700">
-		<style>	/* このstyleタグ内に限り変更不可。デザイン上変更したい場合は、別のstyleタグ内に、上書きでスタイルを適用してほしい。 */
-			body {
-				background-color: white;
-				width: 100vw;
-				height: 100vh;
-				position: relative;
-				margin: 0px;
-				padding: 0px;
-				overflow: hidden;
-			}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Business Matching UX Mock</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body {
+      font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+    }
+    .animated-bg {
+      position: fixed;
+      inset: -30vmax;
+      z-index: -1;
+      background: radial-gradient(circle at 20% 30%, rgba(99,102,241,0.45), transparent 45%),
+                  radial-gradient(circle at 80% 20%, rgba(236,72,153,0.45), transparent 40%),
+                  radial-gradient(circle at 50% 80%, rgba(14,165,233,0.45), transparent 45%);
+      filter: blur(0px);
+      animation: drift 22s ease-in-out infinite alternate;
+    }
+    @keyframes drift {
+      0% { transform: translate3d(-15%, -10%, 0) scale(1.05); }
+      50% { transform: translate3d(12%, 8%, 0) scale(1.2); }
+      100% { transform: translate3d(-8%, 18%, 0) scale(1.1); }
+    }
+    .screen {
+      display: none;
+    }
+    .screen.active {
+      display: block;
+    }
+    .modal {
+      display: none;
+    }
+    .modal.active {
+      display: flex;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+  <div class="animated-bg" aria-hidden="true"></div>
 
-			body:has( > div[MA_prelogin][MA_show='on']) {
-				background-color: rgb(230,230,230);
-			}
+  <header id="app-header" class="fixed top-0 left-0 right-0 z-40 hidden bg-slate-900/80 backdrop-blur border-b border-white/10">
+    <div class="max-w-6xl mx-auto flex items-center justify-between px-4 py-3">
+      <button class="flex items-center gap-3" data-home-button data-screen-target="member-home">
+        <img src="logotest.png" alt="app logo" class="w-9 h-9 rounded-full object-cover" />
+        <span class="font-semibold tracking-wide">Business Matching</span>
+      </button>
+      <button class="p-2 rounded-full bg-white/10 hover:bg-white/20" data-open-menu>
+        <i data-lucide="menu"></i>
+      </button>
+    </div>
+  </header>
 
-			body * {
-				font-size: 25px;
-				font-family: monospace;
-				line-height: 1.5;
-				appearance: none;
-				-webkit-appearance: none;
-				text-size-adjust: none;
-			}
-	
-			div[MA_layer] {
-				display: none;
-				width: 100vw;
-				height: 100vh;
-				position: absolute;
-				top: 0px;
-				left: 0px;
-				z-index: 10000;
-				overflow-y: auto;
-				overflow-x: hidden;
-			}
-	
-			div[MA_header] {
-				height: 80px;
-				z-index: 11000;
-				display: none;
-				position: absolute;
-				top: 0px;
-				left: 0px;
-				width: 100vw;
-				overflow: hidden;
-			}
+  <footer id="app-footer" class="fixed bottom-0 left-0 right-0 z-40 hidden bg-slate-900/80 backdrop-blur border-t border-white/10">
+    <div class="max-w-6xl mx-auto px-4 py-2">
+      <div class="flex items-center gap-3 overflow-x-auto" MA-database>
+        <div class="flex gap-3" id="footer-ads" data-template="tpl-footer-ad"></div>
+      </div>
+    </div>
+  </footer>
 
-			div[MA_header] > div[MA_headericon] {
-				width: 80px;
-				height: 80px;
-			}
+  <main class="relative pt-20 pb-24">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="flex flex-wrap gap-2 mb-6" MA-dev>
+        <button class="px-3 py-1 text-xs rounded-full bg-white/10" data-screen-target="login-existing">ログイン画面</button>
+        <button class="px-3 py-1 text-xs rounded-full bg-white/10" data-screen-target="password-new">新パスワード登録</button>
+        <button class="px-3 py-1 text-xs rounded-full bg-white/10" data-screen-target="password-invalid">パスワードリンク無効</button>
+        <button class="px-3 py-1 text-xs rounded-full bg-white/10" data-screen-target="signup-detail">新規詳細登録</button>
+        <button class="px-3 py-1 text-xs rounded-full bg-white/10" data-screen-target="signup-invalid">新規リンク無効</button>
+        <button class="px-3 py-1 text-xs rounded-full bg-white/10" data-screen-target="member-home">会員ホーム</button>
+        <button class="px-3 py-1 text-xs rounded-full bg-white/10" data-screen-target="admin-home">管理者ホーム</button>
+      </div>
 
-			div[MA_header] > div[MA_headericon] > img {
-				width: 80px;
-				height: 80px;
-			}
+      <section id="login-existing" class="screen active" data-auth="public">
+        <div class="max-w-xl mx-auto bg-white/10 rounded-3xl p-8 border border-white/10 shadow-xl">
+          <h1 class="text-2xl font-semibold mb-6">ログイン</h1>
+          <div class="flex gap-2 mb-6">
+            <button class="flex-1 py-2 rounded-xl bg-white/20" data-tab="login" data-tab-group="login">アカウント作成済みの方</button>
+            <button class="flex-1 py-2 rounded-xl bg-white/5" data-tab="signup" data-tab-group="login" data-screen-target="login-new">アカウント未作成の方</button>
+          </div>
+          <div class="space-y-4">
+            <input type="email" placeholder="メールアドレス" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10" />
+            <input type="password" placeholder="パスワード" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10" />
+            <p class="text-rose-300 text-sm hidden" data-error="login-validation">入力エラーメッセージ（バリデーション）</p>
+            <p class="text-rose-200 text-sm hidden" data-error="login-invalid">ログイン情報が間違っています</p>
+            <div class="flex flex-col gap-3">
+              <button class="w-full py-3 rounded-xl bg-rose-500 text-white font-semibold" data-screen-target="member-home">ログイン</button>
+              <button class="w-full py-3 rounded-xl bg-white/10" data-screen-target="password-reset">パスワードリセット</button>
+            </div>
+            <div class="flex gap-2" MA-dev>
+              <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="login-validation">入力エラー表示</button>
+              <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="login-invalid">認証エラー表示</button>
+            </div>
+          </div>
+        </div>
+      </section>
 
-			div[MA_header] > div[MA_hamburger] {
-				float: right;
-				width: 80px;
-				height: 80px;
-			}
+      <section id="login-new" class="screen" data-auth="public">
+        <div class="max-w-xl mx-auto bg-white/10 rounded-3xl p-8 border border-white/10 shadow-xl">
+          <h1 class="text-2xl font-semibold mb-6">アカウント申請</h1>
+          <div class="flex gap-2 mb-6">
+            <button class="flex-1 py-2 rounded-xl bg-white/5" data-screen-target="login-existing">アカウント作成済みの方</button>
+            <button class="flex-1 py-2 rounded-xl bg-white/20" data-tab="signup" data-tab-group="login">アカウント未作成の方</button>
+          </div>
+          <div class="space-y-4">
+            <input type="email" placeholder="メールアドレス" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10" />
+            <p class="text-rose-300 text-sm hidden" data-error="signup-validation">入力エラーメッセージ（バリデーション）</p>
+            <p class="text-emerald-200 text-sm hidden" data-error="signup-sent">認証メールを送付しました</p>
+            <button class="w-full py-3 rounded-xl bg-rose-500 text-white font-semibold">アカウント申請</button>
+            <div class="flex gap-2" MA-dev>
+              <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="signup-validation">入力エラー表示</button>
+              <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="signup-sent">送付メッセージ表示</button>
+            </div>
+          </div>
+        </div>
+      </section>
 
-			div[MA_header] > div[MA_hamburger] > img {
-				width: 80px;
-				height: 80px;
-			}
+      <section id="password-reset" class="screen" data-auth="public">
+        <div class="max-w-xl mx-auto bg-white/10 rounded-3xl p-8 border border-white/10 shadow-xl">
+          <h1 class="text-2xl font-semibold mb-6">パスワードリセット</h1>
+          <div class="space-y-4">
+            <input type="email" placeholder="メールアドレス" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10" />
+            <input type="tel" placeholder="電話番号" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10" />
+            <p class="text-rose-300 text-sm hidden" data-error="reset-validation">入力エラーメッセージ（バリデーション）</p>
+            <p class="text-emerald-200 text-sm hidden" data-error="reset-sent">パスワードリセットメールを送付しました</p>
+            <div class="flex flex-col gap-3">
+              <button class="w-full py-3 rounded-xl bg-rose-500 text-white font-semibold">送信</button>
+              <button class="w-full py-3 rounded-xl bg-white/10" data-screen-target="login-existing">戻る</button>
+            </div>
+            <div class="flex gap-2" MA-dev>
+              <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="reset-validation">入力エラー表示</button>
+              <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="reset-sent">送付メッセージ表示</button>
+            </div>
+          </div>
+        </div>
+      </section>
 
-			div[MA_footer] {
-				height: 80px;
-				z-index: 11000;
-				display: none;
-				position: absolute;
-				width: 100vw;
-				bottom: 0px;
-				left: 0px;
-				overflow: hidden;
-			}
+      <section id="password-new" class="screen" data-auth="public">
+        <div class="max-w-xl mx-auto bg-white/10 rounded-3xl p-8 border border-white/10 shadow-xl">
+          <h1 class="text-2xl font-semibold mb-6">新パスワード登録</h1>
+          <div class="space-y-4">
+            <input type="password" placeholder="新パスワード" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10" />
+            <input type="password" placeholder="パスワード確認" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10" />
+            <p class="text-rose-300 text-sm hidden" data-error="newpass-validation">入力エラーメッセージ（バリデーション）</p>
+            <p class="text-emerald-200 text-sm hidden" data-error="newpass-done">パスワードを変更しました</p>
+            <p class="text-emerald-200 text-sm hidden" data-error="newpass-close">そのまま画面を閉じてください</p>
+            <button class="w-full py-3 rounded-xl bg-rose-500 text-white font-semibold">登録</button>
+            <div class="flex gap-2" MA-dev>
+              <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="newpass-validation">入力エラー表示</button>
+              <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="newpass-done">完了表示</button>
+              <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="newpass-close">閉じる指示表示</button>
+            </div>
+          </div>
+        </div>
+      </section>
 
-			div[MA_footer] > div[MA_footericon] {
-				height: 80px;
-				width: 80px;
-				padding: 0px 30px;
-			}
-	
-			div:has( > div[MA_layer][MA_show="on"]) > div[MA_header] {	
-				display: block;
-			}	
+      <section id="password-invalid" class="screen" data-auth="public">
+        <div class="max-w-xl mx-auto bg-white/10 rounded-3xl p-8 border border-white/10 text-center">
+          <p>リンクの有効期限が切れています。このまま画面を閉じてください</p>
+        </div>
+      </section>
 
-			div:has( > div[MA_layer][MA_show="on"]) > div[MA_footer] {	
-				display: flex;
-				align-items: center;
-				justify-content: center;
-			}	
-				
-			div[MA_layer][MA_prelogin] {	
-				z-index: 20000;
-			}
+      <section id="signup-detail" class="screen" data-auth="public">
+        <div class="max-w-xl mx-auto bg-white/10 rounded-3xl p-8 border border-white/10 shadow-xl">
+          <h1 class="text-2xl font-semibold mb-6">新規アカウント詳細登録</h1>
+          <div class="space-y-4">
+            <input type="text" placeholder="お名前" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10" />
+            <input type="tel" placeholder="電話番号" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10" />
+            <input type="text" placeholder="会社名" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10" />
+            <input type="text" placeholder="招待コード" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10" />
+            <p class="text-rose-300 text-sm hidden" data-error="signup-detail-validation">入力エラーメッセージ（バリデーション）</p>
+            <p class="text-emerald-200 text-sm hidden" data-error="signup-detail-done">管理者からメールが届くので、そこにあるパスワードでログインしてください。</p>
+            <button class="w-full py-3 rounded-xl bg-rose-500 text-white font-semibold">詳細登録</button>
+            <div class="flex gap-2" MA-dev>
+              <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="signup-detail-validation">入力エラー表示</button>
+              <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="signup-detail-done">完了表示</button>
+            </div>
+          </div>
+        </div>
+      </section>
 
-			div[MA_dialog] {
-				width: 100vw;
-				height: 100vh;
-				background-color: rgba(0,0,0,0.3);
-				display: none;
-				position: absolute;
-				top: 0px;
-				left: 0px;
-				z-index: 30000;
-			}
+      <section id="signup-invalid" class="screen" data-auth="public">
+        <div class="max-w-xl mx-auto bg-white/10 rounded-3xl p-8 border border-white/10 text-center">
+          <p>リンクの有効期限が切れています。このまま画面を閉じてください</p>
+        </div>
+      </section>
 
-			div[MA_layer][MA_show='on'] {
-				display: flex;
-				align-items: flex-start;
-				justify-content: center;
-			}
+      <section id="member-home" class="screen" data-auth="member">
+        <div class="space-y-8">
+          <div class="flex items-center justify-between">
+            <h1 class="text-2xl font-semibold">会員ホーム</h1>
+            <button class="px-4 py-2 rounded-xl bg-white/10" data-screen-target="tutorial">チュートリアルページを開く</button>
+          </div>
+          <section class="bg-white/10 rounded-3xl p-6 border border-white/10">
+            <h2 class="text-lg font-semibold mb-4">新着通知</h2>
+            <div class="grid gap-3" MA-database id="notifications" data-template="tpl-notification"></div>
+          </section>
+          <section class="bg-white/10 rounded-3xl p-6 border border-white/10">
+            <h2 class="text-lg font-semibold mb-4">バナー広告</h2>
+            <div class="flex gap-4 overflow-x-auto" MA-database id="banner-ads" data-template="tpl-banner"></div>
+          </section>
+          <section class="grid md:grid-cols-2 gap-6">
+            <div class="bg-white/10 rounded-3xl p-6 border border-white/10">
+              <h2 class="text-lg font-semibold mb-4">直近にログインした会員</h2>
+              <div class="grid gap-4" MA-database id="recent-members" data-template="tpl-member-card"></div>
+            </div>
+            <div class="bg-white/10 rounded-3xl p-6 border border-white/10">
+              <h2 class="text-lg font-semibold mb-4">おすすめユーザー</h2>
+              <div class="grid gap-4" MA-database id="recommended-members" data-template="tpl-member-card"></div>
+            </div>
+          </section>
+        </div>
+      </section>
 
-			div[MA_dialog][MA_show='on'] {	
-				display: flex;
-				align-items: center;
-				justify-content: center;
-			}
+      <section id="tutorial" class="screen" data-auth="member">
+        <div class="max-w-3xl mx-auto bg-white/10 rounded-3xl p-8 border border-white/10 space-y-6">
+          <h1 class="text-2xl font-semibold">チュートリアル</h1>
+          <div class="grid gap-6">
+            <div class="bg-white/5 rounded-2xl p-6">
+              <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=60" class="rounded-xl mb-4" alt="tutorial" />
+              <p>チュートリアル説明テキスト</p>
+            </div>
+            <div class="bg-white/5 rounded-2xl p-6">
+              <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=60" class="rounded-xl mb-4" alt="tutorial" />
+              <p>チュートリアル説明テキスト</p>
+            </div>
+            <div class="bg-white/5 rounded-2xl p-6">
+              <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=60" class="rounded-xl mb-4" alt="tutorial" />
+              <p>チュートリアル説明テキスト</p>
+            </div>
+            <div class="bg-white/5 rounded-2xl p-6">
+              <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=60" class="rounded-xl mb-4" alt="tutorial" />
+              <p>チュートリアル説明テキスト</p>
+            </div>
+            <div class="bg-white/5 rounded-2xl p-6">
+              <img src="https://images.unsplash.com/photo-1485217988980-11786ced9454?auto=format&fit=crop&w=800&q=60" class="rounded-xl mb-4" alt="tutorial" />
+              <p>チュートリアル説明テキスト</p>
+            </div>
+          </div>
+          <div class="flex justify-between">
+            <button class="px-4 py-2 rounded-xl bg-white/10">戻る</button>
+            <div class="flex gap-2">
+              <button class="px-4 py-2 rounded-xl bg-white/10">次へ</button>
+              <button class="px-4 py-2 rounded-xl bg-rose-500 text-white" data-screen-target="member-home">完了</button>
+            </div>
+          </div>
+        </div>
+      </section>
 
-			div[MA_layer] > div {
-				padding: 90px 30px;
-				min-height: calc(100vh - 180px);
-				width: 640px;
-				position: relative;
-			}
+      <section id="terms" class="screen" data-auth="member admin">
+        <div class="max-w-3xl mx-auto bg-white/10 rounded-3xl p-8 border border-white/10 space-y-6">
+          <h1 class="text-2xl font-semibold">利用規約</h1>
+          <p class="text-sm leading-relaxed">利用規約本文テキスト...</p>
+          <button class="px-4 py-2 rounded-xl bg-white/10" data-screen-target="member-home">戻る</button>
+        </div>
+      </section>
 
-			div[MA_dialog] > div {
-				height: 540px;
-				width: 540px;
-				background-color: white;
-				padding: 30px 30px;
-				position: relative;
-				overflow-y: auto;
-				overflow-x: hidden;
-			}
+      <section id="profile" class="screen" data-auth="member">
+        <div class="max-w-3xl mx-auto bg-white/10 rounded-3xl p-8 border border-white/10">
+          <h1 class="text-2xl font-semibold mb-6">プロフィール管理</h1>
+          <div class="space-y-4">
+            <input type="text" placeholder="名前" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10" />
+            <input type="date" placeholder="生年月日" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10" />
+            <input type="text" placeholder="管理者追加項目" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10" />
+            <p class="text-rose-300 text-sm hidden" data-error="profile-validation">入力エラーメッセージ（バリデーション）</p>
+            <p class="text-emerald-200 text-sm hidden" data-error="profile-saved">保存完了メッセージ</p>
+            <div class="flex gap-3">
+              <button class="flex-1 py-3 rounded-xl bg-rose-500 text-white font-semibold">保存</button>
+              <button class="flex-1 py-3 rounded-xl bg-white/10" data-screen-target="member-home">戻る</button>
+            </div>
+            <div class="flex gap-2" MA-dev>
+              <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="profile-validation">入力エラー表示</button>
+              <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="profile-saved">保存完了表示</button>
+            </div>
+          </div>
+        </div>
+      </section>
 
-			div[MA_menu] {
-				width: 100vw;
-				height: 100vh;
-				background-color: rgba(0,0,0,0.3);
-				display: none;
-				position: absolute;
-				top: 0px;
-				left: 0px;
-				z-index: 30000;
-			}
+      <section id="verification" class="screen" data-auth="member">
+        <div class="max-w-3xl mx-auto bg-white/10 rounded-3xl p-8 border border-white/10">
+          <h1 class="text-2xl font-semibold mb-6">本人確認書類提出</h1>
+          <div class="space-y-4">
+            <input type="file" class="w-full" />
+            <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=600&q=60" class="rounded-xl" alt="preview" />
+            <p class="text-rose-300 text-sm hidden" data-error="verification-validation">入力エラーメッセージ（バリデーション）</p>
+            <p class="text-emerald-200 text-sm hidden" data-error="verification-done">提出完了メッセージ</p>
+            <div class="flex gap-3">
+              <button class="flex-1 py-3 rounded-xl bg-rose-500 text-white font-semibold">提出</button>
+              <button class="flex-1 py-3 rounded-xl bg-white/10" data-screen-target="member-home">戻る</button>
+            </div>
+            <div class="flex gap-2" MA-dev>
+              <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="verification-validation">入力エラー表示</button>
+              <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="verification-done">提出完了表示</button>
+            </div>
+          </div>
+        </div>
+      </section>
 
-			div[MA_menu] > div {
-				height: 100vh;
-				width: 70vw;
-				background-color: white;
-				position: relative;
-				overflow-y: auto;
-				overflow-x: hidden;
-			}
-				
-			div[MA_menu][MA_show='on'] {
-				display: flex;
-				align-items: center;
-				justify-content: right;
-			}
+      <section id="billing" class="screen" data-auth="member">
+        <div class="max-w-3xl mx-auto bg-white/10 rounded-3xl p-8 border border-white/10 space-y-6">
+          <div class="flex items-center justify-between">
+            <h1 class="text-2xl font-semibold">支払情報</h1>
+            <button class="px-4 py-2 rounded-xl bg-white/10" data-screen-target="member-home">戻る</button>
+          </div>
+          <div class="flex gap-2">
+            <button class="flex-1 py-2 rounded-xl bg-white/20" data-tab="pay-method" data-tab-group="billing" data-screen-target="billing-method">支払い方法設定</button>
+            <button class="flex-1 py-2 rounded-xl bg-white/5" data-tab="pay-history" data-tab-group="billing" data-screen-target="billing-history">支払履歴</button>
+            <button class="flex-1 py-2 rounded-xl bg-white/5" data-tab="pay-receipt" data-tab-group="billing" data-screen-target="billing-receipt">領収書ダウンロード</button>
+          </div>
+        </div>
+      </section>
 
-			div[MA_menuclose] {
-				height: 80px;
-				width: 100%;
-			}
+      <section id="billing-method" class="screen" data-auth="member">
+        <div class="max-w-3xl mx-auto bg-white/10 rounded-3xl p-8 border border-white/10">
+          <h1 class="text-2xl font-semibold mb-6">支払い方法設定</h1>
+          <div class="space-y-4">
+            <input type="text" placeholder="支払い方法入力" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10" />
+            <p class="text-rose-300 text-sm hidden" data-error="billing-method-validation">入力エラーメッセージ（バリデーション）</p>
+            <p class="text-emerald-200 text-sm hidden" data-error="billing-method-saved">保存完了メッセージ</p>
+            <div class="flex gap-3">
+              <button class="flex-1 py-3 rounded-xl bg-rose-500 text-white font-semibold">保存</button>
+              <button class="flex-1 py-3 rounded-xl bg-white/10" data-screen-target="billing">戻る</button>
+            </div>
+            <div class="flex gap-2" MA-dev>
+              <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="billing-method-validation">入力エラー表示</button>
+              <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="billing-method-saved">保存完了表示</button>
+            </div>
+          </div>
+        </div>
+      </section>
 
-			div[MA_menuinner] {
-				width: 100%;
-				height: 150px;
-				max-height: calc((100vh / 3) - 80px);
-			}
-		</style>
-		<style>
-			/* ここに後から追加したクラスなどのスタイルを追記可能 */
-		</style>
-		<!--ここにCDN等必要なhead内タグを追記可能↓  -->
+      <section id="billing-history" class="screen" data-auth="member">
+        <div class="bg-white/10 rounded-3xl p-6 border border-white/10 space-y-4">
+          <h1 class="text-2xl font-semibold">支払履歴</h1>
+          <div class="flex flex-wrap gap-2">
+            <button class="px-4 py-2 rounded-xl bg-white/10" data-open-dialog="billing-history-search">検索ダイアログを開く</button>
+            <button class="px-4 py-2 rounded-xl bg-white/10" data-open-dialog="billing-history-sort">並び替えダイアログを開く</button>
+            <button class="ml-auto px-4 py-2 rounded-xl bg-white/10" data-screen-target="billing">戻る</button>
+          </div>
+          <div class="grid gap-3" MA-database id="billing-history-list" data-template="tpl-payment-row"></div>
+          <button class="w-full py-3 rounded-xl bg-white/10">次の30件を表示</button>
+        </div>
+      </section>
 
-		<!--ここにCDN等必要なhead内タグを追記可能↑  -->
-	</head>
-	<body>
-		<!-- ここにログイン前のレイヤーをすべて追加↓ -->
+      <section id="billing-receipt" class="screen" data-auth="member">
+        <div class="max-w-3xl mx-auto bg-white/10 rounded-3xl p-8 border border-white/10">
+          <h1 class="text-2xl font-semibold mb-6">領収書ダウンロード</h1>
+          <div class="space-y-4">
+            <input type="month" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10" />
+            <select class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10">
+              <option>請求書種別</option>
+              <option>請求書</option>
+              <option>領収書</option>
+            </select>
+            <p class="text-rose-300 text-sm hidden" data-error="receipt-validation">入力エラーメッセージ（バリデーション）</p>
+            <div class="flex gap-3">
+              <button class="flex-1 py-3 rounded-xl bg-rose-500 text-white font-semibold">ダウンロード</button>
+              <button class="flex-1 py-3 rounded-xl bg-white/10" data-screen-target="billing">戻る</button>
+            </div>
+            <div class="flex gap-2" MA-dev>
+              <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="receipt-validation">入力エラー表示</button>
+            </div>
+          </div>
+        </div>
+      </section>
 
-		<!-- ここにログイン前のレイヤーをすべて追加↑ -->
+      <section id="charge" class="screen" data-auth="member">
+        <div class="max-w-3xl mx-auto bg-white/10 rounded-3xl p-8 border border-white/10">
+          <h1 class="text-2xl font-semibold mb-4">従量課金チャージ</h1>
+          <p class="text-lg mb-6">現在のポイント: 12,400pt</p>
+          <div class="grid sm:grid-cols-3 gap-3 mb-6" MA-database id="charge-buttons" data-template="tpl-charge-btn"></div>
+          <p class="text-rose-300 text-sm hidden" data-error="charge-validation">入力エラーメッセージ（バリデーション）</p>
+          <p class="text-emerald-200 text-sm hidden" data-error="charge-done">チャージ完了メッセージ</p>
+          <div class="flex gap-3">
+            <button class="flex-1 py-3 rounded-xl bg-white/10" data-screen-target="member-home">戻る</button>
+          </div>
+          <div class="flex gap-2 mt-3" MA-dev>
+            <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="charge-validation">入力エラー表示</button>
+            <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="charge-done">完了表示</button>
+          </div>
+        </div>
+      </section>
 
-		<div>	<!—一般アカウントのログイン後レイヤー群。ヘッダーと、ログイン後レイヤーと、フッターを格納 -->
-			<div MA_header> <!-- ヘッダー -->
-				<div MA_hamburger onclick='FJ0003_menudisplay("on");'>
-					<!-- ハンバーガーメニューのアイコンを設置 -->
-				</div>
-				<div MA_headericon onclick='FJ0001_layerdisplay("client_home");'>
-					<img src='logotest.png'>
-					<!-- ↑アプリのロゴの画像を設置 -->
-				</div>
-			</div>
+      <section id="member-search" class="screen" data-auth="member">
+        <div class="bg-white/10 rounded-3xl p-6 border border-white/10 space-y-4">
+          <h1 class="text-2xl font-semibold">他会員検索</h1>
+          <div class="flex flex-wrap gap-2">
+            <button class="px-4 py-2 rounded-xl bg-white/10" data-open-dialog="member-search-dialog">検索ダイアログを開く</button>
+            <button class="px-4 py-2 rounded-xl bg-white/10" data-open-dialog="member-sort-dialog">並び替えダイアログを開く</button>
+            <button class="ml-auto px-4 py-2 rounded-xl bg-white/10" data-screen-target="member-home">戻る</button>
+          </div>
+          <div class="grid gap-4" MA-database id="member-search-list" data-template="tpl-member-search"></div>
+          <button class="w-full py-3 rounded-xl bg-white/10">次の30件を表示</button>
+        </div>
+      </section>
 
-			<!-- ここにログイン後のレイヤーをすべて追加↓ -->
+      <section id="member-detail" class="screen" data-auth="member">
+        <div class="max-w-4xl mx-auto bg-white/10 rounded-3xl p-8 border border-white/10 space-y-4">
+          <h1 class="text-2xl font-semibold">他会員プロフィール詳細</h1>
+          <div class="flex items-center gap-4">
+            <img src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?auto=format&fit=crop&w=300&q=60" class="w-20 h-20 rounded-full object-cover" alt="profile" />
+            <div>
+              <div class="flex items-center gap-2">
+                <i data-lucide="star"></i>
+                <span>信頼度バッジ</span>
+              </div>
+              <p class="text-sm text-white/70">プロフィール全項目の表示テキスト</p>
+            </div>
+          </div>
+          <div class="grid sm:grid-cols-2 gap-3">
+            <button class="py-3 rounded-xl bg-white/10">フォロー</button>
+            <button class="py-3 rounded-xl bg-white/10">フォローバック</button>
+            <button class="py-3 rounded-xl bg-white/10">お気に入り</button>
+            <button class="py-3 rounded-xl bg-white/10">1on1済み</button>
+            <button class="py-3 rounded-xl bg-rose-500 text-white" data-screen-target="dm-thread">DMへ移動</button>
+            <button class="py-3 rounded-xl bg-white/10" data-screen-target="dm-memo-list">DMメモ一覧を表示</button>
+            <button class="py-3 rounded-xl bg-white/10" data-open-dialog="block-dialog">ブロック</button>
+            <button class="py-3 rounded-xl bg-white/10" data-open-dialog="report-dialog">通報</button>
+          </div>
+          <p class="text-emerald-200 text-sm hidden" data-error="member-detail-states">ボタン状態切り替えの表示</p>
+          <button class="w-full py-3 rounded-xl bg-white/10" data-screen-target="member-search">戻る</button>
+          <div class="flex gap-2" MA-dev>
+            <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="member-detail-states">状態表示</button>
+          </div>
+        </div>
+      </section>
 
+      <section id="dm-thread" class="screen" data-auth="member admin">
+        <div class="bg-white/10 rounded-3xl p-6 border border-white/10 space-y-4">
+          <h1 class="text-2xl font-semibold">DMスレッド</h1>
+          <div class="grid gap-3" MA-database id="dm-messages" data-template="tpl-dm-message"></div>
+          <div class="space-y-3">
+            <textarea placeholder="メッセージ入力欄" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10"></textarea>
+            <p class="text-rose-300 text-sm hidden" data-error="dm-validation">入力エラーメッセージ（バリデーション）</p>
+            <div class="flex gap-3">
+              <button class="flex-1 py-3 rounded-xl bg-rose-500 text-white font-semibold">送信</button>
+              <button class="flex-1 py-3 rounded-xl bg-white/10" data-screen-target="dm-history">戻る</button>
+            </div>
+          </div>
+          <div class="flex gap-2" MA-dev>
+            <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="dm-validation">入力エラー表示</button>
+          </div>
+        </div>
+      </section>
 
-			<!-- ここにログイン後のレイヤーをすべて追加↑ -->
+      <section id="dm-history" class="screen" data-auth="member">
+        <div class="bg-white/10 rounded-3xl p-6 border border-white/10 space-y-4">
+          <h1 class="text-2xl font-semibold">DM履歴</h1>
+          <div class="flex flex-wrap gap-2">
+            <button class="px-4 py-2 rounded-xl bg-white/10" data-open-dialog="dm-search-dialog">検索ダイアログを開く</button>
+            <button class="px-4 py-2 rounded-xl bg-white/10" data-open-dialog="dm-sort-dialog">並び替えダイアログを開く</button>
+            <button class="ml-auto px-4 py-2 rounded-xl bg-white/10" data-screen-target="member-home">戻る</button>
+          </div>
+          <div class="grid gap-3" MA-database id="dm-history-list" data-template="tpl-dm-row"></div>
+          <button class="w-full py-3 rounded-xl bg-white/10">次の30件を表示</button>
+        </div>
+      </section>
 
-			<div MA_footer> <!-- フッター -->
-				<!-- 必要であれば適宜変更↓ -->
-				<div MA_footericon>
-					<!-- アイコン -->
-				</div>
-				<div MA_footericon>
-					<!-- アイコン -->
-				</div>
-				<div MA_footericon>
-					<!-- アイコン -->
-				</div>
-				<div MA_footericon>
-					<!-- アイコン -->
-				</div>
-				<div MA_footericon>
-					<!-- アイコン -->
-				</div>
-				<!-- 必要であれば適宜変更↑ -->
-			</div>
-		</div>
-			<div>	<!-- 管理アカウントのログイン後レイヤー群。ヘッダーと、ログイン後レイヤーを格納 -->
-			<div MA_header> <!-- ヘッダー -->
-				<div MA_hamburger onclick='FJ0003_menudisplay("on");'>
-					<!-- ハンバーガーメニューのアイコンを設置 -->
-				</div>
-				<div MA_headericon onclick='FJ0001_layerdisplay("admin_home");'>
-					<img src='logotest.png'>
-					<!-- ↑アプリのロゴの画像を設置 -->
-				</div>
-			</div>
+      <section id="dm-memo-list" class="screen" data-auth="member">
+        <div class="bg-white/10 rounded-3xl p-6 border border-white/10 space-y-4">
+          <h1 class="text-2xl font-semibold">DMメモ一覧</h1>
+          <div class="flex flex-wrap gap-2">
+            <button class="px-4 py-2 rounded-xl bg-white/10" data-open-dialog="dm-memo-search-dialog">検索ダイアログを開く</button>
+            <button class="px-4 py-2 rounded-xl bg-white/10" data-screen-target="dm-memo-create">新規メモ作成</button>
+            <button class="ml-auto px-4 py-2 rounded-xl bg-white/10" data-screen-target="member-detail">戻る</button>
+          </div>
+          <div class="grid gap-3" MA-database id="dm-memo-list-items" data-template="tpl-memo-row"></div>
+          <button class="w-full py-3 rounded-xl bg-white/10">次の30件を表示</button>
+        </div>
+      </section>
 
-			<!-- ここにログイン後のレイヤーをすべて追加↓ -->
+      <section id="dm-memo-create" class="screen" data-auth="member">
+        <div class="max-w-3xl mx-auto bg-white/10 rounded-3xl p-8 border border-white/10">
+          <h1 class="text-2xl font-semibold mb-6">DMメモ作成</h1>
+          <div class="space-y-4">
+            <textarea placeholder="メモ本文" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10"></textarea>
+            <p class="text-rose-300 text-sm hidden" data-error="memo-validation">入力エラーメッセージ（バリデーション）</p>
+            <p class="text-emerald-200 text-sm hidden" data-error="memo-saved">保存完了メッセージ</p>
+            <div class="flex gap-3">
+              <button class="flex-1 py-3 rounded-xl bg-rose-500 text-white font-semibold">保存</button>
+              <button class="flex-1 py-3 rounded-xl bg-white/10" data-screen-target="dm-memo-list">戻る</button>
+            </div>
+            <div class="flex gap-2" MA-dev>
+              <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="memo-validation">入力エラー表示</button>
+              <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="memo-saved">保存完了表示</button>
+            </div>
+          </div>
+        </div>
+      </section>
 
+      <section id="follow-list" class="screen" data-auth="member">
+        <div class="bg-white/10 rounded-3xl p-6 border border-white/10 space-y-4">
+          <h1 class="text-2xl font-semibold">フォロー/お気に入り/1on1リスト</h1>
+          <div class="flex flex-wrap gap-2">
+            <button class="px-3 py-2 rounded-xl bg-white/20" data-tab="follow" data-tab-group="follow">フォロー済み</button>
+            <button class="px-3 py-2 rounded-xl bg-white/5" data-tab="followback" data-tab-group="follow">フォローバック済み</button>
+            <button class="px-3 py-2 rounded-xl bg-white/5" data-tab="favorite" data-tab-group="follow">お気に入り済み</button>
+            <button class="px-3 py-2 rounded-xl bg-white/5" data-tab="oneonone" data-tab-group="follow">1on1済み</button>
+            <button class="ml-auto px-3 py-2 rounded-xl bg-white/10" data-open-dialog="follow-search-dialog">検索ダイアログを開く</button>
+            <button class="px-3 py-2 rounded-xl bg-white/10" data-open-dialog="follow-sort-dialog">並び替えダイアログを開く</button>
+            <button class="px-3 py-2 rounded-xl bg-white/10" data-screen-target="member-home">戻る</button>
+          </div>
+          <div class="grid gap-4" MA-database id="follow-list-items" data-template="tpl-follow-card"></div>
+          <button class="w-full py-3 rounded-xl bg-white/10">次の30件を表示</button>
+        </div>
+      </section>
 
-			<!-- ここにログイン後のレイヤーをすべて追加↑ -->
-		</div>
+      <section id="events" class="screen" data-auth="member">
+        <div class="bg-white/10 rounded-3xl p-6 border border-white/10 space-y-4">
+          <h1 class="text-2xl font-semibold">イベント一覧</h1>
+          <div class="flex flex-wrap gap-2">
+            <button class="px-4 py-2 rounded-xl bg-white/10" data-open-dialog="event-search-dialog">検索ダイアログを開く</button>
+            <button class="px-4 py-2 rounded-xl bg-white/10" data-open-dialog="event-sort-dialog">並び替えダイアログを開く</button>
+            <button class="ml-auto px-4 py-2 rounded-xl bg-white/10" data-screen-target="member-home">戻る</button>
+          </div>
+          <div class="grid gap-3" MA-database id="event-list" data-template="tpl-event-row"></div>
+          <button class="w-full py-3 rounded-xl bg-white/10">次の30件を表示</button>
+        </div>
+      </section>
 
+      <section id="event-detail" class="screen" data-auth="member">
+        <div class="max-w-3xl mx-auto bg-white/10 rounded-3xl p-8 border border-white/10 space-y-4">
+          <h1 class="text-2xl font-semibold">イベント詳細</h1>
+          <p>イベント詳細テキスト</p>
+          <button class="w-full py-3 rounded-xl bg-white/10" data-screen-target="events">戻る</button>
+        </div>
+      </section>
 
-		<!-- ここに簡易UI上のダイアログをすべて追加。ダイアログはここ以外に設置しない↓ -->
+      <section id="event-apply" class="screen" data-auth="member">
+        <div class="max-w-3xl mx-auto bg-white/10 rounded-3xl p-8 border border-white/10">
+          <h1 class="text-2xl font-semibold mb-6">イベント掲載申請</h1>
+          <textarea placeholder="イベント情報入力欄" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10"></textarea>
+          <p class="text-rose-300 text-sm hidden" data-error="event-apply-validation">入力エラーメッセージ（バリデーション）</p>
+          <p class="text-emerald-200 text-sm hidden" data-error="event-apply-done">申請完了メッセージ</p>
+          <div class="flex gap-3 mt-4">
+            <button class="flex-1 py-3 rounded-xl bg-rose-500 text-white font-semibold">申請</button>
+            <button class="flex-1 py-3 rounded-xl bg-white/10" data-screen-target="events">戻る</button>
+          </div>
+          <div class="flex gap-2 mt-3" MA-dev>
+            <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="event-apply-validation">入力エラー表示</button>
+            <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="event-apply-done">申請完了表示</button>
+          </div>
+        </div>
+      </section>
 
+      <section id="ad-apply" class="screen" data-auth="member">
+        <div class="max-w-3xl mx-auto bg-white/10 rounded-3xl p-8 border border-white/10">
+          <h1 class="text-2xl font-semibold mb-6">広告掲載申請</h1>
+          <select class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10">
+            <option>バナー広告</option>
+            <option>フッター広告</option>
+          </select>
+          <textarea placeholder="掲載内容入力欄" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10 mt-4"></textarea>
+          <p class="text-rose-300 text-sm hidden" data-error="ad-apply-validation">入力エラーメッセージ（バリデーション）</p>
+          <p class="text-emerald-200 text-sm hidden" data-error="ad-apply-done">申請完了メッセージ</p>
+          <div class="flex gap-3 mt-4">
+            <button class="flex-1 py-3 rounded-xl bg-rose-500 text-white font-semibold">申請</button>
+            <button class="flex-1 py-3 rounded-xl bg-white/10" data-screen-target="member-home">戻る</button>
+          </div>
+          <div class="flex gap-2 mt-3" MA-dev>
+            <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="ad-apply-validation">入力エラー表示</button>
+            <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="ad-apply-done">申請完了表示</button>
+          </div>
+        </div>
+      </section>
 
-		<!-- ここに簡易UI上のダイアログをすべて追加↑ -->
+      <section id="invite" class="screen" data-auth="member">
+        <div class="bg-white/10 rounded-3xl p-6 border border-white/10 space-y-4">
+          <h1 class="text-2xl font-semibold">招待コード管理</h1>
+          <div class="flex flex-wrap gap-2">
+            <button class="px-4 py-2 rounded-xl bg-rose-500 text-white" data-open-dialog="invite-create-dialog">招待コード新規作成</button>
+            <button class="px-4 py-2 rounded-xl bg-white/10" data-open-dialog="invite-search-dialog">検索ダイアログを開く</button>
+            <button class="ml-auto px-4 py-2 rounded-xl bg-white/10" data-screen-target="member-home">戻る</button>
+          </div>
+          <div class="grid gap-3" MA-database id="invite-list" data-template="tpl-invite-row"></div>
+          <p class="text-rose-200 text-sm hidden" data-error="invite-lock">使用済みのため削除できません</p>
+          <button class="w-full py-3 rounded-xl bg-white/10">次の30件を表示</button>
+          <div class="flex gap-2" MA-dev>
+            <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="invite-lock">削除不可表示</button>
+          </div>
+        </div>
+      </section>
 
-		<div MA_menu MA_client>	<!-- 一般アカウントでハンバーガーメニューボタンを押した後のメニュー -->
-			<div>
-			<!-- 必要であれば適宜変更↓ -->
-				<div MA_menuclose onclick='FJ0003_menudisplay("off");'>
-					<!-- ハンバーガーメニューを閉じるアイコン -->
-				</div>
-				<div MA_menuinner>
-					ログイン情報変更
-				</div>
-				<div MA_menuinner>
-					利用規約
-				</div>
-				<div MA_menuinner>
-					ログアウト
-				</div>
-			<!-- 必要であれば適宜変更↑ -->
-			</div>
-		</div>
+      <section id="recommend" class="screen" data-auth="member">
+        <div class="bg-white/10 rounded-3xl p-6 border border-white/10 space-y-4">
+          <h1 class="text-2xl font-semibold">おすすめ会員一覧</h1>
+          <div class="grid gap-4" MA-database id="recommend-list" data-template="tpl-recommend-card"></div>
+          <button class="w-full py-3 rounded-xl bg-white/10">次の30件を表示</button>
+          <button class="w-full py-3 rounded-xl bg-white/10" data-screen-target="member-home">戻る</button>
+        </div>
+      </section>
 
-		<div MA_menu MA_admin>	<!-- 管理アカウントでハンバーガーメニューボタンを押した後のメニュー -->
-			<div>
-			<!-- 必要であれば適宜変更↓ -->
-				<div MA_menuclose onclick='FJ0003_menudisplay("off");'>
-					<!-- ハンバーガーメニューを閉じるアイコン -->
-				</div>
-				<div MA_menuinner>
-					ログイン情報変更
-				</div>
-				<div MA_menuinner>
-					利用規約
-				</div>
-				<div MA_menuinner>
-					ログアウト
-				</div>
-			<!-- 必要であれば適宜変更↑ -->
-			</div>
-		</div>
-		<script>//ここは変更&追記不可		
-			//引数に入れた名前のレイヤーを表示する。現在表示されているレイヤーと、ダイアログと、ハンバーガーメニューは非表示になる	
-			function FJ0001_layerdisplay(layername){
-				const predialog = document.querySelectorAll('div[MA_dialog][MA_show="on"]');
-				for(let i = 0; i < predialog.length; i++){
-					predialog[i].setAttribute('MA_show', 'off');
-					break;
-				}
-				document.querySelectorAll('div[MA_menu][MA_client]')[0].setAttribute('MA_show', 'off');
-				document.querySelectorAll('div[MA_menu][MA_admin]')[0].setAttribute('MA_show', 'off');
-				document.querySelectorAll('div[MA_layer][MA_show="on"]')[0].setAttribute('MA_show', 'off');
-				document.querySelectorAll('div[MA_layer="' + layername + '"]')[0].setAttribute('MA_show', 'on');
-			}
+      <section id="news-list" class="screen" data-auth="member">
+        <div class="bg-white/10 rounded-3xl p-6 border border-white/10 space-y-4">
+          <h1 class="text-2xl font-semibold">公式のお知らせ</h1>
+          <div class="flex flex-wrap gap-2">
+            <button class="px-4 py-2 rounded-xl bg-white/10" data-open-dialog="news-search-dialog">検索ダイアログを開く</button>
+            <button class="px-4 py-2 rounded-xl bg-white/10" data-open-dialog="news-sort-dialog">並び替えダイアログを開く</button>
+            <button class="ml-auto px-4 py-2 rounded-xl bg-white/10" data-screen-target="member-home">戻る</button>
+          </div>
+          <div class="grid gap-3" MA-database id="news-list-items" data-template="tpl-news-row"></div>
+          <button class="w-full py-3 rounded-xl bg-white/10">次の30件を表示</button>
+        </div>
+      </section>
 
-			//一つ目の引数に入れた名前のダイアログの表示を操作する。二つ目の引数に文字列「on」もしくは「off」を入れることでそのダイアログを非表示・もしくは表示するか決める。ハンバーガーメニューが開いている場合は同時に非表示にする。
-			function FJ0002_dialogdisplay(dialogname, status){
-				document.querySelectorAll('div[MA_menu][MA_client]')[0].setAttribute('MA_show', 'off');
-				document.querySelectorAll('div[MA_menu][MA_admin]')[0].setAttribute('MA_show', 'off');
-				document.querySelectorAll('div[MA_dialog="' + dialogname + '"]')[0].setAttribute('MA_show', status);
-			}
+      <section id="news-detail" class="screen" data-auth="member">
+        <div class="max-w-3xl mx-auto bg-white/10 rounded-3xl p-8 border border-white/10 space-y-4">
+          <h1 class="text-2xl font-semibold">公式お知らせ詳細</h1>
+          <img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=900&q=60" class="rounded-xl" alt="news" />
+          <p>お知らせ全文テキスト</p>
+          <button class="w-full py-3 rounded-xl bg-white/10" data-screen-target="news-list">戻る</button>
+        </div>
+      </section>
 
-			//ハンバーガーメニューを操作する。引数に文字列「on」もしくは「off」を入れることでハンバーガーメニューを非表示・もしくは表示するか決める。一般アカウントと管理アカウントは関数内で区別。
-			function FJ0003_menudisplay(status){
-				let layertype = 'MA_client';
-				const prelayer = document.querySelectorAll('div[MA_layer][MA_show="on"]');
-				for(let i = 0; i < prelayer.length; i++){
-					if(prelayer[i].hasAttribute('MA_admin')){
-						layertype = 'MA_admin';
-					}
-					break;
-				}
-				document.querySelectorAll('div[MA_menu][' + layertype + ']')[0].setAttribute('MA_show', status);
-			}
-		</script>
-		<!-- scriptタグが追加で必要な場合はここに追記可能↓ -->
+      <section id="login-info" class="screen" data-auth="member admin">
+        <div class="max-w-3xl mx-auto bg-white/10 rounded-3xl p-8 border border-white/10">
+          <h1 class="text-2xl font-semibold mb-6">ログイン情報変更</h1>
+          <div class="space-y-4">
+            <input type="email" placeholder="メールアドレス" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10" />
+            <input type="tel" placeholder="電話番号" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10" />
+            <input type="password" placeholder="パスワード" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10" />
+            <input type="password" placeholder="パスワード確認" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10" />
+            <p class="text-rose-300 text-sm hidden" data-error="logininfo-validation">入力エラーメッセージ（バリデーション）</p>
+            <p class="text-emerald-200 text-sm hidden" data-error="logininfo-saved">保存完了メッセージ</p>
+            <div class="grid sm:grid-cols-2 gap-3">
+              <button class="py-3 rounded-xl bg-rose-500 text-white font-semibold">保存</button>
+              <button class="py-3 rounded-xl bg-white/10" data-open-dialog="withdraw-dialog">退会</button>
+            </div>
+            <button class="w-full py-3 rounded-xl bg-white/10" data-screen-target="member-home">戻る</button>
+            <div class="flex gap-2" MA-dev>
+              <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="logininfo-validation">入力エラー表示</button>
+              <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="logininfo-saved">保存完了表示</button>
+            </div>
+          </div>
+        </div>
+      </section>
 
-		<!-- scriptタグが追加で必要な場合はここに追記可能↑ -->
-	</body>
-</html>		
+      <section id="admin-home" class="screen" data-auth="admin">
+        <div class="bg-white/10 rounded-3xl p-6 border border-white/10 space-y-4">
+          <h1 class="text-2xl font-semibold">管理者ホーム</h1>
+          <div class="grid gap-3">
+            <div class="bg-white/5 rounded-2xl p-4 flex justify-between">
+              <span>やるべきタスク 1</span>
+              <span>12件</span>
+            </div>
+            <div class="bg-white/5 rounded-2xl p-4 flex justify-between">
+              <span>やるべきタスク 2</span>
+              <span>6件</span>
+            </div>
+            <div class="bg-white/5 rounded-2xl p-4 flex justify-between">
+              <span>やるべきタスク 3</span>
+              <span>4件</span>
+            </div>
+            <div class="bg-white/5 rounded-2xl p-4 flex justify-between">
+              <span>やるべきタスク 4</span>
+              <span>9件</span>
+            </div>
+            <div class="bg-white/5 rounded-2xl p-4 flex justify-between">
+              <span>やるべきタスク 5</span>
+              <span>2件</span>
+            </div>
+            <div class="bg-white/5 rounded-2xl p-4 flex justify-between">
+              <span>やるべきタスク 6</span>
+              <span>7件</span>
+            </div>
+            <div class="bg-white/5 rounded-2xl p-4 flex justify-between">
+              <span>やるべきタスク 7</span>
+              <span>1件</span>
+            </div>
+            <div class="bg-white/5 rounded-2xl p-4 flex justify-between">
+              <span>やるべきタスク 8</span>
+              <span>11件</span>
+            </div>
+            <div class="bg-white/5 rounded-2xl p-4 flex justify-between">
+              <span>やるべきタスク 9</span>
+              <span>3件</span>
+            </div>
+            <div class="bg-white/5 rounded-2xl p-4 flex justify-between">
+              <span>やるべきタスク 10</span>
+              <span>5件</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="admin-members" class="screen" data-auth="admin">
+        <div class="bg-white/10 rounded-3xl p-6 border border-white/10 space-y-4">
+          <h1 class="text-2xl font-semibold">会員一覧</h1>
+          <div class="flex flex-wrap gap-2">
+            <button class="px-4 py-2 rounded-xl bg-white/10" data-open-dialog="admin-member-search">検索ダイアログを開く</button>
+            <button class="px-4 py-2 rounded-xl bg-white/10" data-open-dialog="admin-member-sort">並び替えダイアログを開く</button>
+            <button class="ml-auto px-4 py-2 rounded-xl bg-white/10" data-screen-target="admin-home">戻る</button>
+          </div>
+          <div class="grid gap-3" MA-database id="admin-member-list" data-template="tpl-admin-member-row"></div>
+          <button class="w-full py-3 rounded-xl bg-white/10">次の30件を表示</button>
+        </div>
+      </section>
+
+      <section id="admin-member-detail" class="screen" data-auth="admin">
+        <div class="bg-white/10 rounded-3xl p-6 border border-white/10 space-y-4">
+          <h1 class="text-2xl font-semibold">会員詳細</h1>
+          <p>会員プロフィール全項目の表示テキスト</p>
+          <div class="flex gap-2">
+            <button class="px-4 py-2 rounded-xl bg-white/10" data-open-dialog="badge-dialog">信頼度バッジ変更</button>
+            <button class="px-4 py-2 rounded-xl bg-white/10" data-open-dialog="admin-stop-dialog">停止</button>
+            <button class="px-4 py-2 rounded-xl bg-white/10" data-open-dialog="admin-unstop-dialog">停止解除</button>
+          </div>
+          <div class="grid gap-3" MA-database id="admin-usage" data-template="tpl-admin-usage-row"></div>
+          <button class="w-full py-3 rounded-xl bg-white/10" data-screen-target="admin-members">戻る</button>
+        </div>
+      </section>
+
+      <section id="admin-official-dm" class="screen" data-auth="admin">
+        <div class="bg-white/10 rounded-3xl p-6 border border-white/10 space-y-4">
+          <h1 class="text-2xl font-semibold">公式DM一覧</h1>
+          <div class="grid gap-3" MA-database id="official-dm-list" data-template="tpl-official-dm-row"></div>
+          <button class="w-full py-3 rounded-xl bg-white/10">次の30件を表示</button>
+          <button class="w-full py-3 rounded-xl bg-white/10" data-screen-target="admin-home">戻る</button>
+        </div>
+      </section>
+
+      <section id="admin-join-approve" class="screen" data-auth="admin">
+        <div class="bg-white/10 rounded-3xl p-6 border border-white/10 space-y-4">
+          <h1 class="text-2xl font-semibold">新規入会承認</h1>
+          <div class="grid gap-3" MA-database id="join-approve-list" data-template="tpl-join-row"></div>
+          <button class="w-full py-3 rounded-xl bg-white/10">次の30件を表示</button>
+          <button class="w-full py-3 rounded-xl bg-white/10" data-screen-target="admin-home">戻る</button>
+        </div>
+      </section>
+
+      <section id="admin-event-approve" class="screen" data-auth="admin">
+        <div class="bg-white/10 rounded-3xl p-6 border border-white/10 space-y-4">
+          <h1 class="text-2xl font-semibold">イベント掲載承認</h1>
+          <div class="grid gap-3" MA-database id="event-approve-list" data-template="tpl-event-approve-row"></div>
+          <button class="w-full py-3 rounded-xl bg-white/10">次の30件を表示</button>
+          <button class="w-full py-3 rounded-xl bg-white/10" data-screen-target="admin-home">戻る</button>
+        </div>
+      </section>
+
+      <section id="admin-ad-approve" class="screen" data-auth="admin">
+        <div class="bg-white/10 rounded-3xl p-6 border border-white/10 space-y-4">
+          <h1 class="text-2xl font-semibold">広告掲載承認</h1>
+          <div class="grid gap-3" MA-database id="ad-approve-list" data-template="tpl-ad-approve-row"></div>
+          <button class="w-full py-3 rounded-xl bg-white/10">次の30件を表示</button>
+          <button class="w-full py-3 rounded-xl bg-white/10" data-screen-target="admin-home">戻る</button>
+        </div>
+      </section>
+
+      <section id="admin-kyc-approve" class="screen" data-auth="admin">
+        <div class="bg-white/10 rounded-3xl p-6 border border-white/10 space-y-4">
+          <h1 class="text-2xl font-semibold">本人確認承認</h1>
+          <div class="grid gap-3" MA-database id="kyc-approve-list" data-template="tpl-kyc-row"></div>
+          <button class="w-full py-3 rounded-xl bg-white/10">次の30件を表示</button>
+          <button class="w-full py-3 rounded-xl bg-white/10" data-screen-target="admin-home">戻る</button>
+        </div>
+      </section>
+
+      <section id="admin-profile-fields" class="screen" data-auth="admin">
+        <div class="bg-white/10 rounded-3xl p-6 border border-white/10 space-y-4">
+          <h1 class="text-2xl font-semibold">プロフィール項目設定</h1>
+          <button class="px-4 py-2 rounded-xl bg-rose-500 text-white">新規項目追加</button>
+          <div class="grid gap-3" MA-database id="profile-field-list" data-template="tpl-profile-field-row"></div>
+          <button class="w-full py-3 rounded-xl bg-white/10" data-screen-target="admin-home">戻る</button>
+        </div>
+      </section>
+
+      <section id="admin-profile-add" class="screen" data-auth="admin">
+        <div class="max-w-3xl mx-auto bg-white/10 rounded-3xl p-8 border border-white/10">
+          <h1 class="text-2xl font-semibold mb-6">プロフィール項目追加</h1>
+          <input type="text" placeholder="見出し" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10" />
+          <select class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10 mt-4">
+            <option>Input</option>
+            <option>textarea</option>
+          </select>
+          <p class="text-rose-300 text-sm hidden" data-error="profile-add-validation">入力エラーメッセージ（バリデーション）</p>
+          <div class="flex gap-3 mt-4">
+            <button class="flex-1 py-3 rounded-xl bg-rose-500 text-white font-semibold">追加</button>
+            <button class="flex-1 py-3 rounded-xl bg-white/10" data-screen-target="admin-profile-fields">戻る</button>
+          </div>
+          <div class="flex gap-2 mt-3" MA-dev>
+            <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="profile-add-validation">入力エラー表示</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="admin-profile-edit" class="screen" data-auth="admin">
+        <div class="max-w-3xl mx-auto bg-white/10 rounded-3xl p-8 border border-white/10">
+          <h1 class="text-2xl font-semibold mb-6">プロフィール項目編集</h1>
+          <input type="text" placeholder="見出し" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10" />
+          <select class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10 mt-4">
+            <option>Input</option>
+            <option>textarea</option>
+          </select>
+          <p class="text-rose-300 text-sm hidden" data-error="profile-edit-validation">入力エラーメッセージ（バリデーション）</p>
+          <div class="flex gap-3 mt-4">
+            <button class="flex-1 py-3 rounded-xl bg-rose-500 text-white font-semibold">保存</button>
+            <button class="flex-1 py-3 rounded-xl bg-white/10" data-screen-target="admin-profile-fields">戻る</button>
+          </div>
+          <div class="flex gap-2 mt-3" MA-dev>
+            <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="profile-edit-validation">入力エラー表示</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="admin-news" class="screen" data-auth="admin">
+        <div class="bg-white/10 rounded-3xl p-6 border border-white/10 space-y-4">
+          <h1 class="text-2xl font-semibold">公式お知らせ管理</h1>
+          <div class="flex flex-wrap gap-2">
+            <button class="px-4 py-2 rounded-xl bg-white/10" data-open-dialog="admin-news-search">検索ダイアログを開く</button>
+            <button class="px-4 py-2 rounded-xl bg-white/10" data-open-dialog="admin-news-sort">並び替えダイアログを開く</button>
+            <button class="px-4 py-2 rounded-xl bg-rose-500 text-white" data-screen-target="admin-news-create">新規作成</button>
+            <button class="ml-auto px-4 py-2 rounded-xl bg-white/10" data-screen-target="admin-home">戻る</button>
+          </div>
+          <div class="grid gap-3" MA-database id="admin-news-list" data-template="tpl-news-row"></div>
+          <button class="w-full py-3 rounded-xl bg-white/10">次の30件を表示</button>
+        </div>
+      </section>
+
+      <section id="admin-news-create" class="screen" data-auth="admin">
+        <div class="max-w-3xl mx-auto bg-white/10 rounded-3xl p-8 border border-white/10">
+          <h1 class="text-2xl font-semibold mb-6">公式お知らせ新規作成</h1>
+          <input type="text" placeholder="タイトル" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10" />
+          <textarea placeholder="本文" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10 mt-4"></textarea>
+          <select class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10 mt-4">
+            <option>カテゴリ</option>
+          </select>
+          <select class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10 mt-4">
+            <option>公開設定</option>
+          </select>
+          <p class="text-rose-300 text-sm hidden" data-error="admin-news-create-validation">入力エラーメッセージ（バリデーション）</p>
+          <p class="text-emerald-200 text-sm hidden" data-error="admin-news-create-saved">保存完了メッセージ</p>
+          <div class="flex gap-3 mt-4">
+            <button class="flex-1 py-3 rounded-xl bg-rose-500 text-white font-semibold">保存</button>
+            <button class="flex-1 py-3 rounded-xl bg-white/10" data-screen-target="admin-news">戻る</button>
+          </div>
+          <div class="flex gap-2 mt-3" MA-dev>
+            <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="admin-news-create-validation">入力エラー表示</button>
+            <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="admin-news-create-saved">保存完了表示</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="admin-news-edit" class="screen" data-auth="admin">
+        <div class="max-w-3xl mx-auto bg-white/10 rounded-3xl p-8 border border-white/10">
+          <h1 class="text-2xl font-semibold mb-6">公式お知らせ編集</h1>
+          <input type="text" placeholder="タイトル" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10" />
+          <textarea placeholder="本文" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10 mt-4"></textarea>
+          <select class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10 mt-4">
+            <option>カテゴリ</option>
+          </select>
+          <select class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10 mt-4">
+            <option>公開設定</option>
+          </select>
+          <p class="text-rose-300 text-sm hidden" data-error="admin-news-edit-validation">入力エラーメッセージ（バリデーション）</p>
+          <p class="text-emerald-200 text-sm hidden" data-error="admin-news-edit-saved">保存完了メッセージ</p>
+          <div class="flex gap-3 mt-4">
+            <button class="flex-1 py-3 rounded-xl bg-rose-500 text-white font-semibold">保存</button>
+            <button class="flex-1 py-3 rounded-xl bg-white/10" data-screen-target="admin-news">戻る</button>
+          </div>
+          <div class="flex gap-2 mt-3" MA-dev>
+            <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="admin-news-edit-validation">入力エラー表示</button>
+            <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="admin-news-edit-saved">保存完了表示</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="admin-reports" class="screen" data-auth="admin">
+        <div class="bg-white/10 rounded-3xl p-6 border border-white/10 space-y-4">
+          <h1 class="text-2xl font-semibold">通報管理</h1>
+          <div class="grid gap-3" MA-database id="report-list" data-template="tpl-report-row"></div>
+          <button class="w-full py-3 rounded-xl bg-white/10">次の30件を表示</button>
+          <div class="flex gap-3">
+            <button class="flex-1 py-3 rounded-xl bg-white/10" data-open-dialog="report-stop-dialog">停止</button>
+            <button class="flex-1 py-3 rounded-xl bg-white/10" data-open-dialog="report-unstop-dialog">停止解除</button>
+          </div>
+          <button class="w-full py-3 rounded-xl bg-white/10" data-screen-target="admin-home">戻る</button>
+        </div>
+      </section>
+
+      <section id="admin-invite-history" class="screen" data-auth="admin">
+        <div class="bg-white/10 rounded-3xl p-6 border border-white/10 space-y-4">
+          <h1 class="text-2xl font-semibold">招待コード履歴</h1>
+          <div class="grid gap-3" MA-database id="invite-history-list" data-template="tpl-invite-history-row"></div>
+          <button class="w-full py-3 rounded-xl bg-white/10">次の30件を表示</button>
+          <button class="w-full py-3 rounded-xl bg-white/10" data-screen-target="admin-home">戻る</button>
+        </div>
+      </section>
+
+      <section id="admin-usage-history" class="screen" data-auth="admin">
+        <div class="bg-white/10 rounded-3xl p-6 border border-white/10 space-y-4">
+          <h1 class="text-2xl font-semibold">全管理者利用履歴</h1>
+          <div class="flex flex-wrap gap-2">
+            <button class="px-4 py-2 rounded-xl bg-white/10" data-open-dialog="admin-usage-search">検索ダイアログを開く</button>
+            <button class="px-4 py-2 rounded-xl bg-white/10" data-open-dialog="admin-usage-sort">並び替えダイアログを開く</button>
+            <button class="ml-auto px-4 py-2 rounded-xl bg-white/10" data-screen-target="admin-home">戻る</button>
+          </div>
+          <div class="grid gap-3" MA-database id="admin-usage-list" data-template="tpl-admin-usage-row"></div>
+          <button class="w-full py-3 rounded-xl bg-white/10">次の30件を表示</button>
+        </div>
+      </section>
+
+      <section id="admin-payments" class="screen" data-auth="admin">
+        <div class="bg-white/10 rounded-3xl p-6 border border-white/10 space-y-4">
+          <h1 class="text-2xl font-semibold">全会員支払履歴</h1>
+          <div class="flex flex-wrap gap-2">
+            <button class="px-4 py-2 rounded-xl bg-white/10" data-open-dialog="admin-pay-search">検索ダイアログを開く</button>
+            <button class="px-4 py-2 rounded-xl bg-white/10" data-open-dialog="admin-pay-sort">並び替えダイアログを開く</button>
+            <button class="ml-auto px-4 py-2 rounded-xl bg-white/10" data-screen-target="admin-home">戻る</button>
+          </div>
+          <div class="grid gap-3" MA-database id="admin-pay-list" data-template="tpl-admin-pay-row"></div>
+          <button class="w-full py-3 rounded-xl bg-white/10">次の30件を表示</button>
+        </div>
+      </section>
+
+      <section id="admin-ad-points" class="screen" data-auth="admin">
+        <div class="max-w-3xl mx-auto bg-white/10 rounded-3xl p-8 border border-white/10">
+          <h1 class="text-2xl font-semibold mb-6">広告ポイント配分設定</h1>
+          <input type="number" placeholder="バナー広告ポイント設定" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10" />
+          <input type="number" placeholder="フッター広告ポイント設定" class="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10 mt-4" />
+          <p class="text-rose-300 text-sm hidden" data-error="ad-points-validation">入力エラーメッセージ（バリデーション）</p>
+          <p class="text-emerald-200 text-sm hidden" data-error="ad-points-saved">保存完了メッセージ</p>
+          <div class="flex gap-3 mt-4">
+            <button class="flex-1 py-3 rounded-xl bg-rose-500 text-white font-semibold">保存</button>
+            <button class="flex-1 py-3 rounded-xl bg-white/10" data-screen-target="admin-home">戻る</button>
+          </div>
+          <div class="flex gap-2 mt-3" MA-dev>
+            <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="ad-points-validation">入力エラー表示</button>
+            <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="ad-points-saved">保存完了表示</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <nav id="hamburger-menu" class="fixed inset-0 z-50 bg-black/60 backdrop-blur hidden">
+    <div class="absolute right-0 top-0 h-full w-80 bg-slate-900 p-6 flex flex-col gap-3">
+      <button class="self-end p-2 rounded-full bg-white/10" data-close-menu>
+        <i data-lucide="x"></i>
+      </button>
+      <button class="text-left py-2 px-3 rounded-xl bg-white/10" data-open-dialog="logout-dialog">ログアウト</button>
+      <button class="text-left py-2 px-3 rounded-xl bg-white/10" data-screen-target="terms">利用規約を読む</button>
+      <div class="text-xs uppercase text-white/50 mt-4">会員機能</div>
+      <button class="text-left py-2 px-3 rounded-xl bg-white/5" data-screen-target="login-info">ログイン情報変更</button>
+      <button class="text-left py-2 px-3 rounded-xl bg-white/5" data-screen-target="profile">プロフィール管理</button>
+      <button class="text-left py-2 px-3 rounded-xl bg-white/5" data-screen-target="verification">本人確認書類</button>
+      <button class="text-left py-2 px-3 rounded-xl bg-white/5" data-screen-target="billing">支払情報</button>
+      <button class="text-left py-2 px-3 rounded-xl bg-white/5" data-screen-target="charge">従量課金チャージ</button>
+      <button class="text-left py-2 px-3 rounded-xl bg-white/5" data-screen-target="member-search">他会員検索</button>
+      <button class="text-left py-2 px-3 rounded-xl bg-white/5" data-screen-target="dm-history">DM</button>
+      <button class="text-left py-2 px-3 rounded-xl bg-white/5" data-screen-target="dm-history">DM履歴</button>
+      <button class="text-left py-2 px-3 rounded-xl bg-white/5" data-screen-target="dm-memo-list">DMメモ</button>
+      <button class="text-left py-2 px-3 rounded-xl bg-white/5" data-screen-target="follow-list">フォロー/お気に入り/1on1リスト</button>
+      <button class="text-left py-2 px-3 rounded-xl bg-white/5" data-screen-target="events">イベント一覧</button>
+      <button class="text-left py-2 px-3 rounded-xl bg-white/5" data-screen-target="event-apply">イベント掲載申請</button>
+      <button class="text-left py-2 px-3 rounded-xl bg-white/5" data-screen-target="ad-apply">広告掲載申請</button>
+      <button class="text-left py-2 px-3 rounded-xl bg-white/5" data-screen-target="invite">招待コード管理</button>
+      <button class="text-left py-2 px-3 rounded-xl bg-white/5" data-screen-target="recommend">おすすめ会員一覧</button>
+      <button class="text-left py-2 px-3 rounded-xl bg-white/5" data-screen-target="news-list">公式のお知らせ</button>
+      <div class="text-xs uppercase text-white/50 mt-4">管理者機能</div>
+      <button class="text-left py-2 px-3 rounded-xl bg-white/5" data-screen-target="admin-members">会員一覧</button>
+      <button class="text-left py-2 px-3 rounded-xl bg-white/5" data-screen-target="admin-official-dm">公式DM</button>
+      <button class="text-left py-2 px-3 rounded-xl bg-white/5" data-screen-target="admin-join-approve">新規入会承認</button>
+      <button class="text-left py-2 px-3 rounded-xl bg-white/5" data-screen-target="admin-event-approve">イベント掲載承認</button>
+      <button class="text-left py-2 px-3 rounded-xl bg-white/5" data-screen-target="admin-ad-approve">広告掲載承認</button>
+      <button class="text-left py-2 px-3 rounded-xl bg-white/5" data-screen-target="admin-kyc-approve">本人確認承認</button>
+      <button class="text-left py-2 px-3 rounded-xl bg-white/5" data-screen-target="admin-profile-fields">プロフィール項目設定</button>
+      <button class="text-left py-2 px-3 rounded-xl bg-white/5" data-screen-target="admin-news">公式お知らせ管理</button>
+      <button class="text-left py-2 px-3 rounded-xl bg-white/5" data-screen-target="admin-reports">通報管理</button>
+      <button class="text-left py-2 px-3 rounded-xl bg-white/5" data-screen-target="admin-invite-history">招待コード履歴</button>
+      <button class="text-left py-2 px-3 rounded-xl bg-white/5" data-screen-target="admin-usage-history">全管理者利用履歴</button>
+      <button class="text-left py-2 px-3 rounded-xl bg-white/5" data-screen-target="admin-payments">全会員支払履歴</button>
+      <button class="text-left py-2 px-3 rounded-xl bg-white/5" data-screen-target="admin-ad-points">広告ポイント配分設定</button>
+    </div>
+  </nav>
+
+  <div id="loading-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 text-center">
+      <div class="w-12 h-12 border-4 border-white/30 border-t-rose-400 rounded-full animate-spin mx-auto mb-3"></div>
+      <p>読み込み中</p>
+    </div>
+  </div>
+
+  <div id="logout-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 text-center space-y-4">
+      <p>ログアウト確認メッセージ</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white" data-screen-target="login-existing">はい</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>いいえ</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="withdraw-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 text-center space-y-4">
+      <p>退会確認メッセージ</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">はい</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>いいえ</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="block-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 text-center space-y-4">
+      <p>ブロック確認メッセージ</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">はい</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>いいえ</button>
+      </div>
+      <p class="text-emerald-200 text-sm hidden" data-error="block-done">ブロック済み表示</p>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="block-done">ブロック済み表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="report-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 text-center space-y-4">
+      <p>通報理由入力欄</p>
+      <textarea class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10"></textarea>
+      <p class="text-rose-300 text-sm hidden" data-error="report-validation">入力エラーメッセージ（バリデーション）</p>
+      <p class="text-emerald-200 text-sm hidden" data-error="report-done">通報完了メッセージ</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">送信</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>戻る</button>
+      </div>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="report-validation">入力エラー表示</button>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="report-done">通報完了表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="billing-history-search" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 space-y-4 w-full max-w-lg">
+      <h2 class="text-lg font-semibold">支払履歴検索</h2>
+      <input type="date" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <input type="number" placeholder="金額範囲" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>支払方法</option>
+      </select>
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>更新費用/従量課金</option>
+      </select>
+      <p class="text-rose-300 text-sm hidden" data-error="billing-history-search-error">入力エラーメッセージ（バリデーション）</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">検索</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>戻る</button>
+      </div>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="billing-history-search-error">入力エラー表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="billing-history-sort" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 space-y-4 w-full max-w-lg">
+      <h2 class="text-lg font-semibold">支払履歴並び替え</h2>
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>支払日</option>
+        <option>金額</option>
+        <option>支払方法</option>
+        <option>更新費用/従量課金</option>
+      </select>
+      <div class="flex gap-3">
+        <label class="flex items-center gap-2"><input type="radio" name="billing-sort" checked />昇順</label>
+        <label class="flex items-center gap-2"><input type="radio" name="billing-sort" />降順</label>
+      </div>
+      <p class="text-rose-300 text-sm hidden" data-error="billing-history-sort-error">入力エラーメッセージ（バリデーション）</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">適用</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>戻る</button>
+      </div>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="billing-history-sort-error">入力エラー表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="member-search-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 space-y-4 w-full max-w-lg">
+      <h2 class="text-lg font-semibold">会員検索</h2>
+      <input type="text" placeholder="氏名" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <input type="text" placeholder="会社名" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>業種</option>
+      </select>
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>職種</option>
+      </select>
+      <input type="text" placeholder="所在地" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>信頼度バッジ</option>
+      </select>
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>フォロー/お気に入り/1on1</option>
+      </select>
+      <input type="date" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <input type="text" placeholder="管理者追加項目" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <p class="text-rose-300 text-sm hidden" data-error="member-search-error">入力エラーメッセージ（バリデーション）</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">検索</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>戻る</button>
+      </div>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="member-search-error">入力エラー表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="member-sort-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 space-y-4 w-full max-w-lg">
+      <h2 class="text-lg font-semibold">会員並び替え</h2>
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>最終ログイン日時</option>
+        <option>信頼度バッジ</option>
+        <option>氏名</option>
+        <option>会社名</option>
+        <option>フォロー/お気に入り/1on1</option>
+      </select>
+      <div class="flex gap-3">
+        <label class="flex items-center gap-2"><input type="radio" name="member-sort" checked />昇順</label>
+        <label class="flex items-center gap-2"><input type="radio" name="member-sort" />降順</label>
+      </div>
+      <p class="text-rose-300 text-sm hidden" data-error="member-sort-error">入力エラーメッセージ（バリデーション）</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">適用</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>戻る</button>
+      </div>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="member-sort-error">入力エラー表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="dm-search-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 space-y-4 w-full max-w-lg">
+      <h2 class="text-lg font-semibold">DM検索</h2>
+      <input type="text" placeholder="会員名" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <input type="text" placeholder="キーワード" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>未読/既読</option>
+      </select>
+      <input type="date" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <p class="text-rose-300 text-sm hidden" data-error="dm-search-error">入力エラーメッセージ（バリデーション）</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">検索</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>戻る</button>
+      </div>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="dm-search-error">入力エラー表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="dm-sort-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 space-y-4 w-full max-w-lg">
+      <h2 class="text-lg font-semibold">DM並び替え</h2>
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>最終メッセージ日時</option>
+        <option>未読件数</option>
+        <option>会員名</option>
+      </select>
+      <div class="flex gap-3">
+        <label class="flex items-center gap-2"><input type="radio" name="dm-sort" checked />昇順</label>
+        <label class="flex items-center gap-2"><input type="radio" name="dm-sort" />降順</label>
+      </div>
+      <p class="text-rose-300 text-sm hidden" data-error="dm-sort-error">入力エラーメッセージ（バリデーション）</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">適用</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>戻る</button>
+      </div>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="dm-sort-error">入力エラー表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="dm-memo-search-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 space-y-4 w-full max-w-lg">
+      <h2 class="text-lg font-semibold">DMメモ検索</h2>
+      <input type="text" placeholder="メモ本文キーワード" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <input type="date" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <p class="text-rose-300 text-sm hidden" data-error="dm-memo-search-error">入力エラーメッセージ（バリデーション）</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">検索</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>戻る</button>
+      </div>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="dm-memo-search-error">入力エラー表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="follow-search-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 space-y-4 w-full max-w-lg">
+      <h2 class="text-lg font-semibold">フォロー検索</h2>
+      <input type="text" placeholder="氏名" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <input type="text" placeholder="会社名" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>業種</option>
+      </select>
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>職種</option>
+      </select>
+      <input type="text" placeholder="所在地" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>信頼度バッジ</option>
+      </select>
+      <input type="date" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <input type="text" placeholder="管理者追加項目" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <p class="text-rose-300 text-sm hidden" data-error="follow-search-error">入力エラーメッセージ（バリデーション）</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">検索</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>戻る</button>
+      </div>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="follow-search-error">入力エラー表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="follow-sort-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 space-y-4 w-full max-w-lg">
+      <h2 class="text-lg font-semibold">フォロー並び替え</h2>
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>最終ログイン日時</option>
+        <option>信頼度バッジ</option>
+        <option>氏名</option>
+        <option>会社名</option>
+      </select>
+      <div class="flex gap-3">
+        <label class="flex items-center gap-2"><input type="radio" name="follow-sort" checked />昇順</label>
+        <label class="flex items-center gap-2"><input type="radio" name="follow-sort" />降順</label>
+      </div>
+      <p class="text-rose-300 text-sm hidden" data-error="follow-sort-error">入力エラーメッセージ（バリデーション）</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">適用</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>戻る</button>
+      </div>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="follow-sort-error">入力エラー表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="event-search-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 space-y-4 w-full max-w-lg">
+      <h2 class="text-lg font-semibold">イベント検索</h2>
+      <input type="text" placeholder="イベント名" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <input type="date" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <input type="text" placeholder="開催場所" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>カテゴリ</option>
+      </select>
+      <input type="text" placeholder="キーワード" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <p class="text-rose-300 text-sm hidden" data-error="event-search-error">入力エラーメッセージ（バリデーション）</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">検索</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>戻る</button>
+      </div>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="event-search-error">入力エラー表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="event-sort-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 space-y-4 w-full max-w-lg">
+      <h2 class="text-lg font-semibold">イベント並び替え</h2>
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>開催日</option>
+        <option>作成日</option>
+        <option>カテゴリ</option>
+      </select>
+      <div class="flex gap-3">
+        <label class="flex items-center gap-2"><input type="radio" name="event-sort" checked />昇順</label>
+        <label class="flex items-center gap-2"><input type="radio" name="event-sort" />降順</label>
+      </div>
+      <p class="text-rose-300 text-sm hidden" data-error="event-sort-error">入力エラーメッセージ（バリデーション）</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">適用</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>戻る</button>
+      </div>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="event-sort-error">入力エラー表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="invite-search-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 space-y-4 w-full max-w-lg">
+      <h2 class="text-lg font-semibold">招待コード検索</h2>
+      <input type="text" placeholder="コード" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <input type="date" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>使用状況</option>
+      </select>
+      <p class="text-rose-300 text-sm hidden" data-error="invite-search-error">入力エラーメッセージ（バリデーション）</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">検索</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>戻る</button>
+      </div>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="invite-search-error">入力エラー表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="invite-create-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 text-center space-y-4">
+      <p>招待コード作成確認メッセージ</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">はい</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>いいえ</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="invite-delete-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 text-center space-y-4">
+      <p>削除確認メッセージ</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">はい</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>いいえ</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="news-search-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 space-y-4 w-full max-w-lg">
+      <h2 class="text-lg font-semibold">公式お知らせ検索</h2>
+      <input type="text" placeholder="タイトル" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <input type="date" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>カテゴリ</option>
+      </select>
+      <input type="text" placeholder="キーワード" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <p class="text-rose-300 text-sm hidden" data-error="news-search-error">入力エラーメッセージ（バリデーション）</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">検索</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>戻る</button>
+      </div>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="news-search-error">入力エラー表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="news-sort-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 space-y-4 w-full max-w-lg">
+      <h2 class="text-lg font-semibold">公式お知らせ並び替え</h2>
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>公開日</option>
+        <option>カテゴリ</option>
+        <option>タイトル</option>
+      </select>
+      <div class="flex gap-3">
+        <label class="flex items-center gap-2"><input type="radio" name="news-sort" checked />昇順</label>
+        <label class="flex items-center gap-2"><input type="radio" name="news-sort" />降順</label>
+      </div>
+      <p class="text-rose-300 text-sm hidden" data-error="news-sort-error">入力エラーメッセージ（バリデーション）</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">適用</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>戻る</button>
+      </div>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="news-sort-error">入力エラー表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="admin-member-search" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 space-y-4 w-full max-w-lg">
+      <h2 class="text-lg font-semibold">管理者会員検索</h2>
+      <input type="text" placeholder="氏名" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <input type="text" placeholder="会社名" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>業種</option>
+      </select>
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>職種</option>
+      </select>
+      <input type="text" placeholder="所在地" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>信頼度バッジ</option>
+      </select>
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>ステータス</option>
+      </select>
+      <input type="date" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <input type="text" placeholder="管理者追加項目" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <p class="text-rose-300 text-sm hidden" data-error="admin-member-search-error">入力エラーメッセージ（バリデーション）</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">検索</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>戻る</button>
+      </div>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="admin-member-search-error">入力エラー表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="admin-member-sort" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 space-y-4 w-full max-w-lg">
+      <h2 class="text-lg font-semibold">管理者会員並び替え</h2>
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>最終ログイン日時</option>
+        <option>信頼度バッジ</option>
+        <option>氏名</option>
+        <option>会社名</option>
+        <option>ステータス</option>
+      </select>
+      <div class="flex gap-3">
+        <label class="flex items-center gap-2"><input type="radio" name="admin-member-sort" checked />昇順</label>
+        <label class="flex items-center gap-2"><input type="radio" name="admin-member-sort" />降順</label>
+      </div>
+      <p class="text-rose-300 text-sm hidden" data-error="admin-member-sort-error">入力エラーメッセージ（バリデーション）</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">適用</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>戻る</button>
+      </div>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="admin-member-sort-error">入力エラー表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="badge-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 space-y-4 w-full max-w-md">
+      <h2 class="text-lg font-semibold">信頼度バッジ変更</h2>
+      <div class="flex gap-2 justify-center">
+        <button class="px-2 py-1 rounded bg-white/10">★1</button>
+        <button class="px-2 py-1 rounded bg-white/10">★2</button>
+        <button class="px-2 py-1 rounded bg-white/10">★3</button>
+        <button class="px-2 py-1 rounded bg-white/10">★4</button>
+        <button class="px-2 py-1 rounded bg-white/10">★5</button>
+      </div>
+      <p class="text-rose-300 text-sm hidden" data-error="badge-error">入力エラーメッセージ（バリデーション）</p>
+      <p class="text-emerald-200 text-sm hidden" data-error="badge-done">変更完了メッセージ</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">適用</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>戻る</button>
+      </div>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="badge-error">入力エラー表示</button>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="badge-done">変更完了表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="admin-stop-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 text-center space-y-4">
+      <p>停止確認メッセージ</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">はい</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>いいえ</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="admin-unstop-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 text-center space-y-4">
+      <p>停止解除確認メッセージ</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">はい</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>いいえ</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="report-stop-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 text-center space-y-4">
+      <p>停止確認メッセージ</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">はい</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>いいえ</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="report-unstop-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 text-center space-y-4">
+      <p>停止解除確認メッセージ</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">はい</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>いいえ</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="admin-news-search" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 space-y-4 w-full max-w-lg">
+      <h2 class="text-lg font-semibold">管理者公式お知らせ検索</h2>
+      <input type="text" placeholder="タイトル" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <input type="date" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>カテゴリ</option>
+      </select>
+      <input type="text" placeholder="キーワード" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>公開設定</option>
+      </select>
+      <p class="text-rose-300 text-sm hidden" data-error="admin-news-search-error">入力エラーメッセージ（バリデーション）</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">検索</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>戻る</button>
+      </div>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="admin-news-search-error">入力エラー表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="admin-news-sort" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 space-y-4 w-full max-w-lg">
+      <h2 class="text-lg font-semibold">管理者公式お知らせ並び替え</h2>
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>公開日</option>
+        <option>カテゴリ</option>
+        <option>タイトル</option>
+        <option>公開設定</option>
+      </select>
+      <div class="flex gap-3">
+        <label class="flex items-center gap-2"><input type="radio" name="admin-news-sort" checked />昇順</label>
+        <label class="flex items-center gap-2"><input type="radio" name="admin-news-sort" />降順</label>
+      </div>
+      <p class="text-rose-300 text-sm hidden" data-error="admin-news-sort-error">入力エラーメッセージ（バリデーション）</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">適用</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>戻る</button>
+      </div>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="admin-news-sort-error">入力エラー表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="admin-usage-search" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 space-y-4 w-full max-w-lg">
+      <h2 class="text-lg font-semibold">全管理者利用履歴検索</h2>
+      <input type="text" placeholder="管理者名" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>操作種別</option>
+      </select>
+      <input type="text" placeholder="対象" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <input type="date" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <p class="text-rose-300 text-sm hidden" data-error="admin-usage-search-error">入力エラーメッセージ（バリデーション）</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">検索</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>戻る</button>
+      </div>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="admin-usage-search-error">入力エラー表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="admin-usage-sort" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 space-y-4 w-full max-w-lg">
+      <h2 class="text-lg font-semibold">全管理者利用履歴並び替え</h2>
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>日時</option>
+        <option>管理者名</option>
+        <option>操作種別</option>
+      </select>
+      <div class="flex gap-3">
+        <label class="flex items-center gap-2"><input type="radio" name="admin-usage-sort" checked />昇順</label>
+        <label class="flex items-center gap-2"><input type="radio" name="admin-usage-sort" />降順</label>
+      </div>
+      <p class="text-rose-300 text-sm hidden" data-error="admin-usage-sort-error">入力エラーメッセージ（バリデーション）</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">適用</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>戻る</button>
+      </div>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="admin-usage-sort-error">入力エラー表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="admin-pay-search" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 space-y-4 w-full max-w-lg">
+      <h2 class="text-lg font-semibold">全会員支払履歴検索</h2>
+      <input type="text" placeholder="会員名" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <input type="date" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <input type="number" placeholder="金額範囲" class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10" />
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>支払方法</option>
+      </select>
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>更新費用/従量課金</option>
+      </select>
+      <p class="text-rose-300 text-sm hidden" data-error="admin-pay-search-error">入力エラーメッセージ（バリデーション）</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">検索</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>戻る</button>
+      </div>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="admin-pay-search-error">入力エラー表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="admin-pay-sort" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 space-y-4 w-full max-w-lg">
+      <h2 class="text-lg font-semibold">全会員支払履歴並び替え</h2>
+      <select class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10">
+        <option>支払日</option>
+        <option>金額</option>
+        <option>会員名</option>
+        <option>更新費用/従量課金</option>
+      </select>
+      <div class="flex gap-3">
+        <label class="flex items-center gap-2"><input type="radio" name="admin-pay-sort" checked />昇順</label>
+        <label class="flex items-center gap-2"><input type="radio" name="admin-pay-sort" />降順</label>
+      </div>
+      <p class="text-rose-300 text-sm hidden" data-error="admin-pay-sort-error">入力エラーメッセージ（バリデーション）</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">適用</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>戻る</button>
+      </div>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="admin-pay-sort-error">入力エラー表示</button>
+      </div>
+    </div>
+  </div>
+
+  <template id="tpl-notification">
+    <div class="bg-white/5 rounded-2xl p-4 flex justify-between items-center">
+      <div>
+        <p class="font-semibold">新着通知項目</p>
+        <p class="text-sm text-white/70">DM / イベント / 公式のお知らせ / 申請結果</p>
+      </div>
+      <button class="px-3 py-1 rounded-xl bg-white/10" data-screen-target="news-detail">詳細</button>
+    </div>
+  </template>
+
+  <template id="tpl-banner">
+    <a class="min-w-[240px] bg-white/5 rounded-2xl overflow-hidden border border-white/10" href="https://example.com" target="_blank" rel="noreferrer">
+      <img src="https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=600&q=60" class="h-32 w-full object-cover" alt="banner" />
+    </a>
+  </template>
+
+  <template id="tpl-footer-ad">
+    <div class="min-w-[120px] h-10 bg-white/10 rounded-xl flex items-center justify-center text-xs">フッター広告</div>
+  </template>
+
+  <template id="tpl-member-card">
+    <button class="bg-white/5 rounded-2xl p-4 flex items-center gap-4" data-screen-target="member-detail">
+      <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=60" class="w-12 h-12 rounded-full object-cover" alt="profile" />
+      <div>
+        <p class="font-semibold">山田太郎</p>
+        <p class="text-sm text-white/70">会社名</p>
+      </div>
+    </button>
+  </template>
+
+  <template id="tpl-payment-row">
+    <div class="bg-white/5 rounded-2xl p-4 grid sm:grid-cols-4 gap-2 text-sm">
+      <span>支払日</span>
+      <span>金額</span>
+      <span>支払方法</span>
+      <span>更新費用/従量課金</span>
+    </div>
+  </template>
+
+  <template id="tpl-charge-btn">
+    <button class="py-3 rounded-xl bg-rose-500/80 text-white">1000円分</button>
+  </template>
+
+  <template id="tpl-member-search">
+    <div class="bg-white/5 rounded-2xl p-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-1 text-yellow-300">
+          <i data-lucide="star"></i>
+          <span>4</span>
+        </div>
+        <img src="https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=200&q=60" class="w-10 h-10 rounded-full object-cover" alt="profile" />
+        <div>
+          <p class="font-semibold">氏名</p>
+          <p class="text-xs text-white/70">会社名</p>
+          <p class="text-xs text-white/70">直近ログイン日時</p>
+        </div>
+      </div>
+      <button class="px-3 py-1 rounded-xl bg-white/10" data-screen-target="member-detail">詳細</button>
+    </div>
+  </template>
+
+  <template id="tpl-dm-message">
+    <div class="bg-white/5 rounded-2xl p-4">
+      <p class="text-sm text-white/60">送信者名</p>
+      <p class="font-semibold">メッセージ本文</p>
+      <p class="text-xs text-white/50">送信日時</p>
+    </div>
+  </template>
+
+  <template id="tpl-dm-row">
+    <div class="bg-white/5 rounded-2xl p-4 flex items-center justify-between">
+      <div>
+        <p class="font-semibold">会員名</p>
+        <p class="text-xs text-white/70">最終メッセージ</p>
+      </div>
+      <span class="px-2 py-1 rounded-full bg-rose-500 text-xs">3</span>
+    </div>
+  </template>
+
+  <template id="tpl-memo-row">
+    <div class="bg-white/5 rounded-2xl p-4 grid sm:grid-cols-3 gap-2 text-sm">
+      <span>会員紐づけテキスト</span>
+      <span>作成日時</span>
+      <span>内容抜粋テキスト</span>
+    </div>
+  </template>
+
+  <template id="tpl-follow-card">
+    <div class="bg-white/5 rounded-2xl p-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <i data-lucide="star" class="text-yellow-300"></i>
+        <div>
+          <p class="font-semibold">氏名</p>
+          <p class="text-xs text-white/70">会社名</p>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="tpl-event-row">
+    <div class="bg-white/5 rounded-2xl p-4 flex items-center justify-between">
+      <div>
+        <p class="font-semibold">イベント名</p>
+        <p class="text-xs text-white/70">開催日 / カテゴリ</p>
+      </div>
+      <button class="px-3 py-1 rounded-xl bg-white/10" data-screen-target="event-detail">詳細</button>
+    </div>
+  </template>
+
+  <template id="tpl-invite-row">
+    <div class="bg-white/5 rounded-2xl p-4 grid sm:grid-cols-4 gap-2 text-sm">
+      <span>コード</span>
+      <span>作成日</span>
+      <span>使用状況</span>
+      <button class="px-3 py-1 rounded-xl bg-white/10" data-open-dialog="invite-delete-dialog">削除</button>
+    </div>
+  </template>
+
+  <template id="tpl-recommend-card">
+    <div class="bg-white/5 rounded-2xl p-4 flex items-center gap-3">
+      <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=200&q=60" class="w-10 h-10 rounded-full object-cover" alt="profile" />
+      <div>
+        <p class="font-semibold">氏名</p>
+        <p class="text-xs text-white/70">会社名</p>
+      </div>
+    </div>
+  </template>
+
+  <template id="tpl-news-row">
+    <div class="bg-white/5 rounded-2xl p-4 grid sm:grid-cols-3 gap-2 text-sm">
+      <span>タイトル</span>
+      <span>公開日</span>
+      <span>カテゴリ</span>
+    </div>
+  </template>
+
+  <template id="tpl-admin-member-row">
+    <div class="bg-white/5 rounded-2xl p-4 grid sm:grid-cols-5 gap-2 text-sm">
+      <span>氏名</span>
+      <span>会社名</span>
+      <span>信頼度バッジ</span>
+      <span>ステータス</span>
+      <span>最終ログイン日時</span>
+    </div>
+  </template>
+
+  <template id="tpl-admin-usage-row">
+    <div class="bg-white/5 rounded-2xl p-4 grid sm:grid-cols-3 gap-2 text-sm">
+      <span>操作種別</span>
+      <span>対象</span>
+      <span>日時</span>
+    </div>
+  </template>
+
+  <template id="tpl-official-dm-row">
+    <div class="bg-white/5 rounded-2xl p-4 flex items-center justify-between">
+      <div>
+        <p class="font-semibold">会員名</p>
+        <p class="text-xs text-white/70">最終メッセージ</p>
+      </div>
+      <button class="px-3 py-1 rounded-xl bg-white/10" data-screen-target="dm-thread">開く</button>
+    </div>
+  </template>
+
+  <template id="tpl-join-row">
+    <div class="bg-white/5 rounded-2xl p-4 grid sm:grid-cols-6 gap-2 text-sm">
+      <span>申請者名</span>
+      <span>申請日</span>
+      <span>メールアドレス</span>
+      <span>会社名</span>
+      <span>招待コード</span>
+      <div class="flex gap-2">
+        <button class="px-2 py-1 rounded bg-white/10" data-open-dialog="join-approve-dialog">承認</button>
+        <button class="px-2 py-1 rounded bg-white/10" data-open-dialog="join-reject-dialog">却下</button>
+      </div>
+    </div>
+  </template>
+
+  <template id="tpl-event-approve-row">
+    <div class="bg-white/5 rounded-2xl p-4 grid sm:grid-cols-5 gap-2 text-sm">
+      <span>イベント名</span>
+      <span>申請者名</span>
+      <span>申請日</span>
+      <span>開催日</span>
+      <div class="flex gap-2">
+        <button class="px-2 py-1 rounded bg-white/10" data-open-dialog="event-approve-dialog">承認</button>
+        <button class="px-2 py-1 rounded bg-white/10" data-open-dialog="event-reject-dialog">却下</button>
+      </div>
+    </div>
+  </template>
+
+  <template id="tpl-ad-approve-row">
+    <div class="bg-white/5 rounded-2xl p-4 grid sm:grid-cols-5 gap-2 text-sm">
+      <span>広告種別</span>
+      <span>申請者名</span>
+      <span>申請日</span>
+      <span>掲載内容</span>
+      <div class="flex gap-2">
+        <button class="px-2 py-1 rounded bg-white/10" data-open-dialog="ad-approve-dialog">承認</button>
+        <button class="px-2 py-1 rounded bg-white/10" data-open-dialog="ad-reject-dialog">却下</button>
+      </div>
+    </div>
+  </template>
+
+  <template id="tpl-kyc-row">
+    <div class="bg-white/5 rounded-2xl p-4 grid sm:grid-cols-4 gap-2 text-sm items-center">
+      <span>会員名</span>
+      <span>申請日</span>
+      <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=300&q=60" class="w-16 h-10 rounded" alt="doc" />
+      <div class="flex gap-2">
+        <button class="px-2 py-1 rounded bg-white/10" data-open-dialog="kyc-approve-dialog">承認</button>
+        <button class="px-2 py-1 rounded bg-white/10" data-open-dialog="kyc-reject-dialog">却下</button>
+      </div>
+    </div>
+  </template>
+
+  <template id="tpl-profile-field-row">
+    <div class="bg-white/5 rounded-2xl p-4 grid sm:grid-cols-4 gap-2 text-sm">
+      <span>見出し</span>
+      <span>Input</span>
+      <button class="px-2 py-1 rounded bg-white/10" data-screen-target="admin-profile-edit">編集</button>
+      <button class="px-2 py-1 rounded bg-white/10" data-open-dialog="profile-delete-dialog">削除</button>
+    </div>
+  </template>
+
+  <template id="tpl-report-row">
+    <div class="bg-white/5 rounded-2xl p-4 grid sm:grid-cols-4 gap-2 text-sm">
+      <span>通報対象会員</span>
+      <span>通報理由</span>
+      <span>通報日時</span>
+      <span>ステータス</span>
+    </div>
+  </template>
+
+  <template id="tpl-invite-history-row">
+    <div class="bg-white/5 rounded-2xl p-4 grid sm:grid-cols-4 gap-2 text-sm">
+      <span>コード</span>
+      <span>発行日</span>
+      <span>利用会員</span>
+      <span>利用日</span>
+    </div>
+  </template>
+
+  <template id="tpl-admin-pay-row">
+    <div class="bg-white/5 rounded-2xl p-4 grid sm:grid-cols-5 gap-2 text-sm">
+      <span>会員名</span>
+      <span>金額</span>
+      <span>支払日</span>
+      <span>支払方法</span>
+      <span>更新費用/従量課金</span>
+    </div>
+  </template>
+
+  <div id="join-approve-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 text-center space-y-4">
+      <p>承認確認メッセージ</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">はい</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>いいえ</button>
+      </div>
+      <p class="text-emerald-200 text-sm hidden" data-error="join-approved">承認済み表示</p>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="join-approved">承認済み表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="join-reject-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 text-center space-y-4">
+      <p>却下確認メッセージ</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">はい</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>いいえ</button>
+      </div>
+      <p class="text-emerald-200 text-sm hidden" data-error="join-rejected">却下済み表示</p>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="join-rejected">却下済み表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="event-approve-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 text-center space-y-4">
+      <p>承認確認メッセージ</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">はい</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>いいえ</button>
+      </div>
+      <p class="text-emerald-200 text-sm hidden" data-error="event-approved">承認済み表示</p>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="event-approved">承認済み表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="event-reject-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 text-center space-y-4">
+      <p>却下確認メッセージ</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">はい</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>いいえ</button>
+      </div>
+      <p class="text-emerald-200 text-sm hidden" data-error="event-rejected">却下済み表示</p>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="event-rejected">却下済み表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="ad-approve-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 text-center space-y-4">
+      <p>承認確認メッセージ</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">はい</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>いいえ</button>
+      </div>
+      <p class="text-emerald-200 text-sm hidden" data-error="ad-approved">承認済み表示</p>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="ad-approved">承認済み表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="ad-reject-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 text-center space-y-4">
+      <p>却下確認メッセージ</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">はい</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>いいえ</button>
+      </div>
+      <p class="text-emerald-200 text-sm hidden" data-error="ad-rejected">却下済み表示</p>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="ad-rejected">却下済み表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="kyc-approve-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 text-center space-y-4">
+      <p>承認確認メッセージ</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">はい</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>いいえ</button>
+      </div>
+      <p class="text-emerald-200 text-sm hidden" data-error="kyc-approved">承認済み表示</p>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="kyc-approved">承認済み表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="kyc-reject-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 text-center space-y-4">
+      <p>却下確認メッセージ</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">はい</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>いいえ</button>
+      </div>
+      <p class="text-emerald-200 text-sm hidden" data-error="kyc-rejected">却下済み表示</p>
+      <div class="flex gap-2" MA-dev>
+        <button class="px-2 py-1 text-xs rounded bg-white/10" data-toggle="kyc-rejected">却下済み表示</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="profile-delete-dialog" class="modal fixed inset-0 z-50 items-center justify-center bg-black/70">
+    <div class="bg-white/10 rounded-3xl px-8 py-6 border border-white/10 text-center space-y-4">
+      <p>削除確認メッセージ</p>
+      <div class="flex gap-3">
+        <button class="flex-1 py-2 rounded-xl bg-rose-500 text-white">はい</button>
+        <button class="flex-1 py-2 rounded-xl bg-white/10" data-close-dialog>いいえ</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const screens = document.querySelectorAll('.screen');
+    const header = document.getElementById('app-header');
+    const footer = document.getElementById('app-footer');
+    const homeButton = document.querySelector('[data-home-button]');
+    const menu = document.getElementById('hamburger-menu');
+
+    let currentRole = 'member';
+
+    const showScreen = (id) => {
+      screens.forEach((screen) => screen.classList.toggle('active', screen.id === id));
+      const active = document.getElementById(id);
+      const auth = active?.dataset.auth || 'public';
+      const roles = auth.split(' ');
+      if (roles.includes('admin') && !roles.includes('member')) currentRole = 'admin';
+      if (roles.includes('member') && !roles.includes('admin')) currentRole = 'member';
+      header.classList.toggle('hidden', auth === 'public');
+      footer.classList.toggle('hidden', currentRole !== 'member' || auth === 'public');
+      if (homeButton) {
+        homeButton.dataset.screenTarget = currentRole === 'admin' ? 'admin-home' : 'member-home';
+      }
+      menu.classList.add('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    document.querySelectorAll('[data-screen-target]').forEach((button) => {
+      button.addEventListener('click', () => showScreen(button.dataset.screenTarget));
+    });
+
+    document.querySelectorAll('[data-open-dialog]').forEach((button) => {
+      button.addEventListener('click', () => {
+        document.getElementById(button.dataset.openDialog).classList.add('active');
+      });
+    });
+
+    document.querySelectorAll('[data-close-dialog]').forEach((button) => {
+      button.addEventListener('click', () => {
+        button.closest('.modal')?.classList.remove('active');
+      });
+    });
+
+    document.querySelectorAll('[data-open-menu]').forEach((button) => {
+      button.addEventListener('click', () => menu.classList.remove('hidden'));
+    });
+    document.querySelectorAll('[data-close-menu]').forEach((button) => {
+      button.addEventListener('click', () => menu.classList.add('hidden'));
+    });
+    menu.addEventListener('click', (event) => {
+      if (event.target === menu) {
+        menu.classList.add('hidden');
+      }
+    });
+
+    document.querySelectorAll('[data-toggle]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const target = document.querySelector(`[data-error="${button.dataset.toggle}"]`);
+        if (target) target.classList.toggle('hidden');
+      });
+    });
+
+    const fillList = (containerId, templateId, count = 50) => {
+      const container = document.getElementById(containerId);
+      const template = document.getElementById(templateId);
+      if (!container || !template) return;
+      const fragment = document.createDocumentFragment();
+      for (let i = 0; i < count; i += 1) {
+        fragment.appendChild(template.content.cloneNode(true));
+      }
+      container.appendChild(fragment);
+    };
+
+    const listConfigs = [
+      ['notifications', 'tpl-notification'],
+      ['banner-ads', 'tpl-banner'],
+      ['recent-members', 'tpl-member-card'],
+      ['recommended-members', 'tpl-member-card'],
+      ['footer-ads', 'tpl-footer-ad'],
+      ['billing-history-list', 'tpl-payment-row'],
+      ['charge-buttons', 'tpl-charge-btn'],
+      ['member-search-list', 'tpl-member-search'],
+      ['dm-messages', 'tpl-dm-message'],
+      ['dm-history-list', 'tpl-dm-row'],
+      ['dm-memo-list-items', 'tpl-memo-row'],
+      ['follow-list-items', 'tpl-follow-card'],
+      ['event-list', 'tpl-event-row'],
+      ['invite-list', 'tpl-invite-row'],
+      ['recommend-list', 'tpl-recommend-card'],
+      ['news-list-items', 'tpl-news-row'],
+      ['admin-member-list', 'tpl-admin-member-row'],
+      ['admin-usage', 'tpl-admin-usage-row'],
+      ['official-dm-list', 'tpl-official-dm-row'],
+      ['join-approve-list', 'tpl-join-row'],
+      ['event-approve-list', 'tpl-event-approve-row'],
+      ['ad-approve-list', 'tpl-ad-approve-row'],
+      ['kyc-approve-list', 'tpl-kyc-row'],
+      ['profile-field-list', 'tpl-profile-field-row'],
+      ['admin-news-list', 'tpl-news-row'],
+      ['report-list', 'tpl-report-row'],
+      ['invite-history-list', 'tpl-invite-history-row'],
+      ['admin-usage-list', 'tpl-admin-usage-row'],
+      ['admin-pay-list', 'tpl-admin-pay-row']
+    ];
+
+    listConfigs.forEach(([containerId, templateId]) => fillList(containerId, templateId));
+
+    lucide.createIcons();
+  </script>
+</body>
+</html>
