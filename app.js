@@ -12,6 +12,8 @@ const dialogTitle = document.getElementById('dialog-title');
 const dialogMessage = document.getElementById('dialog-message');
 const dialogSearch = document.getElementById('dialog-search');
 const dialogSort = document.getElementById('dialog-sort');
+const dialogProfile = document.getElementById('dialog-profile');
+const dialogMemoList = document.getElementById('dialog-memo-list');
 
 const state = {
   activeScreen: 'screen-login',
@@ -40,6 +42,13 @@ const dataSets = {
     id: i + 1,
     title: `メモタイトル ${i + 1}`,
     avatar: `https://images.unsplash.com/photo-${1500000000100 + i}?auto=format&fit=crop&w=120&q=80`,
+  })),
+  promos: Array.from({ length: 50 }, (_, i) => ({
+    id: i + 1,
+    title: `投稿タイトル ${i + 1}`,
+    date: `2024/07/${(i % 28) + 1}`,
+    type: ['タイムライン', 'お知らせ', '宣伝', '広告'][i % 4],
+    thumb: `https://images.unsplash.com/photo-${1500000000200 + i}?auto=format&fit=crop&w=120&q=80`,
   })),
 };
 
@@ -137,14 +146,33 @@ const tabs = {
 };
 
 function showScreen(id, role = state.activeRole) {
+  const nextScreen = document.getElementById(id);
+  const previousScreen = document.querySelector('.screen.active');
   state.activeScreen = id;
-  screens.forEach((screen) => screen.classList.toggle('hidden', screen.id !== id));
   state.activeRole = role;
+  screens.forEach((screen) => {
+    if (screen.id === id) {
+      screen.classList.remove('hidden');
+      requestAnimationFrame(() => screen.classList.add('active'));
+    } else if (screen.classList.contains('active')) {
+      screen.classList.remove('active');
+      setTimeout(() => {
+        if (!screen.classList.contains('active') && screen.id !== id) {
+          screen.classList.add('hidden');
+        }
+      }, 300);
+    } else {
+      screen.classList.add('hidden');
+    }
+  });
   const showHeader = id.startsWith('screen-admin') || id.startsWith('screen-member') || id.startsWith('screen-profile') || id.startsWith('screen-payment') || id.startsWith('screen-invite') || id.startsWith('screen-search') || id.startsWith('screen-dm') || id.startsWith('screen-memo') || id.startsWith('screen-promo') || id.startsWith('screen-login-settings') || id.startsWith('screen-terms');
   header.classList.toggle('hidden', !showHeader);
   footer.classList.toggle('hidden', !(showHeader && role === 'member' && !id.startsWith('screen-terms-admin') && !id.startsWith('screen-admin')));
   closeDialogs();
   resetPagination();
+  if (nextScreen) {
+    nextScreen.classList.add('active');
+  }
 }
 
 function closeDialogs() {
@@ -155,6 +183,7 @@ function closeDialogs() {
 function openDialog(dialog) {
   overlay.classList.remove('hidden');
   dialog.classList.remove('hidden');
+  lucide.createIcons();
 }
 
 function resetPagination() {
@@ -205,6 +234,33 @@ function renderMemoCard(memo) {
         <img src="${memo.avatar}" alt="member" class="h-12 w-12 rounded-full object-cover" />
       </button>
     </div>
+  `;
+}
+
+function renderMemberDm(row) {
+  return `
+    <div class="grid items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 md:grid-cols-[56px_1fr_auto]">
+      <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=120&q=80" alt="${row.name}" class="h-12 w-12 rounded-full object-cover" />
+      <button data-action="open-dm-detail" class="text-left">
+        <div class="text-sm font-semibold">${row.name}</div>
+        <div class="text-xs text-slate-500">最新メッセージの冒頭テキスト</div>
+        <div class="text-xs text-slate-500">さらに続くテキストが表示されます。</div>
+      </button>
+      <button data-action="open-dm-settings" class="rounded-xl border border-slate-200 px-3 py-2"><i data-lucide="settings" class="h-4 w-4"></i></button>
+    </div>
+  `;
+}
+
+function renderPromoRow(item) {
+  return `
+    <button data-action="open-member-promo-detail" class="grid gap-4 rounded-2xl border border-slate-200 bg-white p-4 text-left md:grid-cols-[80px_1fr]">
+      <img src="${item.thumb}" alt="${item.title}" class="h-20 w-20 rounded-xl object-cover" />
+      <div>
+        <div class="text-sm font-semibold">${item.title}</div>
+        <div class="mt-1 text-xs text-slate-500">投稿日：${item.date}</div>
+        <div class="mt-1 inline-flex rounded-full bg-slate-100 px-2 py-1 text-xs">${item.type}</div>
+      </div>
+    </button>
   `;
 }
 
@@ -357,12 +413,12 @@ function renderAllLists() {
 
   const dmList = document.getElementById('dm-list');
   if (dmList) {
-    dmList.innerHTML = paginate('dm', adminData.dm, renderAdminDm);
+    dmList.innerHTML = paginate('dm', adminData.dm, renderMemberDm);
   }
 
   const promoList = document.getElementById('promo-list');
   if (promoList) {
-    promoList.innerHTML = paginate('promo', adminData.news, renderAdminNews);
+    promoList.innerHTML = paginate('promo', dataSets.promos, renderPromoRow);
   }
 
   const adminMemberList = document.getElementById('admin-member-list');
@@ -451,6 +507,16 @@ function showDialog(title, message, primaryText = 'OK') {
   openDialog(dialogGeneric);
 }
 
+function openProfileDialog(isSelf) {
+  const actions = document.getElementById('profile-actions');
+  if (isSelf) {
+    actions.classList.add('is-disabled');
+  } else {
+    actions.classList.remove('is-disabled');
+  }
+  openDialog(dialogProfile);
+}
+
 function setTab(group, value) {
   tabs[group] = value;
 }
@@ -513,7 +579,7 @@ function handleAction(action, target) {
       showScreen('screen-profile-edit', 'member');
       break;
     case 'open-profile-preview':
-      showDialog('プロフィール詳細', 'プロフィール詳細ダイアログを表示中', '閉じる');
+      openProfileDialog(true);
       break;
     case 'open-verify':
       showScreen('screen-verify', 'member');
@@ -713,7 +779,30 @@ function handleAction(action, target) {
       showDialog('Stripe', '別ウィンドウでStripe画面に移動します。', 'OK');
       break;
     case 'open-profile-dialog':
-      showDialog('プロフィール詳細', 'プロフィール詳細ダイアログを表示中', '閉じる');
+      openProfileDialog(false);
+      break;
+    case 'close-profile-dialog':
+      closeDialogs();
+      break;
+    case 'open-memo-dialog':
+      closeDialogs();
+      openDialog(dialogMemoList);
+      break;
+    case 'close-memo-dialog':
+      closeDialogs();
+      break;
+    case 'create-memo-from-dialog':
+      closeDialogs();
+      showScreen('screen-memo-detail', 'member');
+      break;
+    case 'open-member-promo-detail':
+      showScreen('screen-promo-detail', 'member');
+      break;
+    case 'open-dm-detail':
+      showScreen('screen-dm-detail', 'member');
+      break;
+    case 'open-external-link':
+      showDialog('外部リンク', '別ウィンドウで開きます。', 'OK');
       break;
     case 'back':
     case 'back-to-home':

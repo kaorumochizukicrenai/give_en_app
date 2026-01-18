@@ -25,8 +25,7 @@
     <div id="member-footer" class="fixed bottom-0 left-0 right-0 z-30 hidden">
       <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
         <div class="w-full overflow-hidden rounded-2xl bg-white/80 px-4 py-3 shadow">
-          <div class="flex items-center gap-4">
-            <span class="text-sm font-semibold">承認済み広告</span>
+          <div class="flex items-center gap-4 overflow-x-auto">
             <div class="flex-1">
               <div class="flex gap-3 overflow-x-auto pb-2" id="footer-ads" MA-database>
                 <!-- JS inject -->
@@ -109,7 +108,8 @@
             <button data-action="signup" class="w-full rounded-xl bg-slate-900 px-4 py-3 text-white">登録申請</button>
           </div>
 
-          <div class="mt-6 flex justify-end">
+          <div class="mt-6 flex items-center justify-between">
+            <button MA-dev data-action="open-admin-home" class="text-xs text-slate-400">管理者ホームへ</button>
             <button MA-dev data-dev="toggle-login-error" class="text-xs text-slate-400">ログインエラー切替</button>
             <button MA-dev data-dev="toggle-signup-error" class="ml-4 text-xs text-slate-400">登録エラー切替</button>
           </div>
@@ -241,7 +241,7 @@
           </div>
 
           <div class="grid gap-6 lg:grid-cols-2">
-            <div class="rounded-3xl bg-white/90 p-6 shadow">
+            <div class="rounded-3xl bg-white/90 p-6 shadow max-w-[calc(100vw-32px)]">
               <div class="flex items-center justify-between">
                 <h2 class="text-lg font-semibold">新着通知</h2>
                 <span class="text-xs text-slate-500">最大5件</span>
@@ -625,6 +625,30 @@
             </div>
             <div class="mt-6" id="promo-list" MA-database data-list="promo"></div>
             <button data-action="load-more" data-target="promo" class="mt-4 w-full rounded-xl border border-slate-300 px-4 py-3">次の30件を表示</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-promo-detail" class="screen hidden min-h-screen px-4 pt-24">
+        <div class="mx-auto max-w-4xl pb-32">
+          <div class="action-bar">
+            <button data-action="open-promo" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
+          </div>
+          <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
+            <h1 class="text-2xl font-semibold">お知らせ詳細</h1>
+            <div class="mt-6 space-y-4">
+              <div class="flex items-center gap-3">
+                <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=120&q=80" alt="member" class="h-12 w-12 rounded-full object-cover" />
+                <div>
+                  <div class="text-sm font-semibold">高橋 翔太</div>
+                  <div class="text-xs text-slate-500">投稿日：2024/07/20</div>
+                </div>
+              </div>
+              <img src="https://images.unsplash.com/photo-1515169067865-5387ec356754?auto=format&fit=crop&w=600&q=80" alt="thumbnail" class="h-60 w-full rounded-2xl object-cover" />
+              <div class="text-lg font-semibold">投稿タイトル</div>
+              <div class="text-sm text-slate-600">投稿本文が表示されます。お知らせやタイムラインの詳細内容が入ります。</div>
+              <button data-action="open-external-link" class="text-sm text-slate-700 underline">https://example.com</button>
+            </div>
           </div>
         </div>
       </section>
@@ -1335,6 +1359,57 @@
           <button data-action="open-admin-points" class="menu-item">広告ポイント配分設定</button>
           <button data-action="open-terms-admin" class="menu-item"><i data-lucide="file-text" class="h-4 w-4"></i>利用規約を読む</button>
           <button data-action="logout" class="menu-item text-rose-500"><i data-lucide="log-out" class="h-4 w-4"></i>ログアウト</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-profile" class="modal hidden">
+      <div class="modal-card">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-semibold">プロフィール詳細</h2>
+          <button data-action="close-profile-dialog" class="rounded-full bg-slate-100 p-2"><i data-lucide="x" class="h-5 w-5"></i></button>
+        </div>
+        <div class="mt-6 space-y-4">
+          <div class="flex items-center gap-4">
+            <div class="relative">
+              <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=200&q=80" alt="profile" class="h-20 w-20 rounded-2xl object-cover" />
+              <span class="absolute -bottom-1 -right-1 inline-flex h-6 w-6 items-center justify-center rounded-full bg-amber-400 text-xs font-bold text-white">★</span>
+            </div>
+            <div>
+              <div class="text-lg font-semibold">相原 美咲</div>
+              <div class="text-sm text-slate-500">30代 / 東京 / IT</div>
+              <div class="text-sm text-slate-500">本人確認書類：提出済み</div>
+            </div>
+          </div>
+          <div class="rounded-2xl border border-slate-200 bg-white p-4 text-sm text-slate-600">
+            追加プロフィール項目：自己紹介テキストが入ります。
+          </div>
+          <div id="profile-actions" class="grid grid-cols-3 gap-3">
+            <button class="rounded-xl border border-slate-200 px-3 py-2 text-sm"><i data-lucide="heart" class="mr-1 inline-block h-4 w-4"></i>お気に入り</button>
+            <button class="rounded-xl border border-slate-200 px-3 py-2 text-sm"><i data-lucide="handshake" class="mr-1 inline-block h-4 w-4"></i>1on1</button>
+            <button class="rounded-xl border border-slate-200 px-3 py-2 text-sm"><i data-lucide="user-plus" class="mr-1 inline-block h-4 w-4"></i>フォロー</button>
+            <button data-action="open-dm-detail" class="rounded-xl border border-slate-200 px-3 py-2 text-sm"><i data-lucide="message-circle" class="mr-1 inline-block h-4 w-4"></i>DM</button>
+            <button data-action="open-memo-dialog" class="rounded-xl border border-slate-200 px-3 py-2 text-sm"><i data-lucide="notebook" class="mr-1 inline-block h-4 w-4"></i>メモ</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-memo-list" class="modal hidden">
+      <div class="modal-card">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-semibold">会員メモ一覧</h2>
+          <button data-action="close-memo-dialog" class="rounded-full bg-slate-100 p-2"><i data-lucide="x" class="h-5 w-5"></i></button>
+        </div>
+        <div class="mt-4 flex items-center gap-3">
+          <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=120&q=80" alt="member" class="h-12 w-12 rounded-full object-cover" />
+          <button data-action="create-memo-from-dialog" class="rounded-xl border border-slate-200 px-3 py-2 text-sm"><i data-lucide="plus" class="mr-1 inline-block h-4 w-4"></i>新規追加</button>
+        </div>
+        <div class="mt-4 grid gap-3 md:grid-cols-2" MA-database>
+          <button data-action="open-memo-detail" class="rounded-xl border border-slate-200 px-3 py-3 text-sm">メモタイトル 1</button>
+          <button data-action="open-memo-detail" class="rounded-xl border border-slate-200 px-3 py-3 text-sm">メモタイトル 2</button>
+          <button data-action="open-memo-detail" class="rounded-xl border border-slate-200 px-3 py-3 text-sm">メモタイトル 3</button>
+          <button data-action="open-memo-detail" class="rounded-xl border border-slate-200 px-3 py-3 text-sm">メモタイトル 4</button>
         </div>
       </div>
     </div>
