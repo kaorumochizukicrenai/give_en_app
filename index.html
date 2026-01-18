@@ -1,0 +1,1904 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Give縁 - UI Mock</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --brand: #5b4a2f;
+      --brand-dark: #3e2f1b;
+      --accent: #d6a437;
+      --accent-soft: #f6e3b4;
+      --bg: #f6efe6;
+    }
+    body {
+      background: var(--bg);
+      font-family: "Inter", "Noto Sans JP", system-ui, sans-serif;
+    }
+    .bg-animated {
+      position: fixed;
+      inset: -20vh;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .bg-animated::before,
+    .bg-animated::after {
+      content: "";
+      position: absolute;
+      width: 120vmax;
+      height: 120vmax;
+      background: radial-gradient(circle at top, rgba(255, 227, 170, 0.5), rgba(255, 255, 255, 0));
+      border-radius: 50%;
+      animation: drift 18s linear infinite;
+      transform: translate(-30%, -20%);
+    }
+    .bg-animated::after {
+      background: radial-gradient(circle at bottom, rgba(138, 96, 40, 0.4), rgba(255, 255, 255, 0));
+      animation: drift 24s linear infinite reverse;
+      transform: translate(30%, 40%);
+    }
+    @keyframes drift {
+      0% {
+        transform: translate(-40%, -30%);
+      }
+      50% {
+        transform: translate(40%, 20%);
+      }
+      100% {
+        transform: translate(-40%, -30%);
+      }
+    }
+    .screen { display: none; }
+    .screen.active { display: block; }
+    .modal { display: none; }
+    .modal.active { display: flex; }
+    .lock-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(27, 22, 14, 0.6);
+      backdrop-filter: blur(2px);
+    }
+  </style>
+</head>
+<body class="text-slate-900">
+  <div class="bg-animated" aria-hidden="true"></div>
+  <div id="app" class="min-h-screen pb-24">
+    <header id="global-header" class="fixed top-0 inset-x-0 z-40 hidden">
+      <div class="bg-white/90 backdrop-blur border-b border-slate-200">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+          <button data-nav-to="member-home" class="flex items-center gap-3">
+            <img src="logotest.png" alt="Give縁" class="h-8" />
+          </button>
+          <button data-modal-open="member-menu" class="p-2 rounded-lg border border-slate-200 hover:bg-slate-50">
+            <i data-lucide="menu" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <footer id="global-footer" class="fixed bottom-0 inset-x-0 z-30 hidden">
+      <div class="bg-white/90 backdrop-blur border-t border-slate-200">
+        <div class="max-w-6xl mx-auto px-4 py-2">
+          <div class="rounded-xl bg-amber-100/70 px-4 py-3 flex items-center justify-between">
+            <div class="text-sm font-semibold">フッター広告枠</div>
+            <button class="text-xs text-amber-900 underline">広告を見る</button>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <main class="pt-20">
+      <!-- ログイン前画面群 -->
+      <section id="screen-expired-link" class="screen" data-header="none" data-footer="none">
+        <div class="max-w-md mx-auto mt-12 bg-white rounded-2xl shadow-lg p-8">
+          <p class="text-lg font-semibold">リンクの有効期限が切れています。このまま画面を閉じてください。</p>
+          <button data-nav-to="login" class="mt-6 w-full rounded-xl border border-slate-300 py-3">閉じる</button>
+        </div>
+      </section>
+
+      <section id="screen-new-password" class="screen" data-header="none" data-footer="none">
+        <div class="max-w-md mx-auto mt-12 bg-white rounded-2xl shadow-lg p-8 space-y-4">
+          <h1 class="text-xl font-semibold">新パスワード登録</h1>
+          <input type="password" placeholder="新パスワード" class="w-full border rounded-xl px-4 py-3" />
+          <input type="password" placeholder="パスワード確認" class="w-full border rounded-xl px-4 py-3" />
+          <div id="new-password-error" class="hidden text-sm text-red-600">入力内容に誤りがあります。</div>
+          <button data-nav-to="new-password-done" class="w-full rounded-xl bg-amber-700 text-white py-3">新パスワードを登録する</button>
+          <button data-nav-to="login" class="w-full rounded-xl border py-3">閉じる</button>
+          <button MA-dev class="text-xs text-slate-400" data-toggle="new-password-error">開発: エラー表示切替</button>
+        </div>
+      </section>
+
+      <section id="screen-detail-register" class="screen" data-header="none" data-footer="none">
+        <div class="max-w-md mx-auto mt-12 bg-white rounded-2xl shadow-lg p-8 space-y-4">
+          <h1 class="text-xl font-semibold">詳細登録</h1>
+          <input type="text" placeholder="電話番号" class="w-full border rounded-xl px-4 py-3" />
+          <input type="text" placeholder="お名前" class="w-full border rounded-xl px-4 py-3" />
+          <input type="text" placeholder="会社名" class="w-full border rounded-xl px-4 py-3" />
+          <input type="text" placeholder="招待コード（任意）" class="w-full border rounded-xl px-4 py-3" />
+          <div id="detail-register-error" class="hidden text-sm text-red-600">入力内容に誤りがあります。</div>
+          <button data-nav-to="detail-register-done" class="w-full rounded-xl bg-amber-700 text-white py-3">詳細情報を送信する</button>
+          <button MA-dev class="text-xs text-slate-400" data-toggle="detail-register-error">開発: エラー表示切替</button>
+        </div>
+      </section>
+
+      <section id="screen-detail-register-done" class="screen" data-header="none" data-footer="none">
+        <div class="max-w-md mx-auto mt-12 bg-white rounded-2xl shadow-lg p-8 space-y-4">
+          <p class="text-lg font-semibold">後日パスワードが送付されたメールが届きますので、そちらでログインください。このままブラウザを閉じてください。</p>
+          <button data-nav-to="login" class="w-full rounded-xl border py-3">閉じる</button>
+        </div>
+      </section>
+
+      <section id="screen-auto-login" class="screen" data-header="none" data-footer="none">
+        <div class="max-w-md mx-auto mt-12 bg-white rounded-2xl shadow-lg p-8 space-y-4 text-center">
+          <div class="mx-auto h-12 w-12 rounded-full border-4 border-amber-500 border-t-transparent animate-spin"></div>
+          <p class="font-medium">自動ログイン中...</p>
+        </div>
+      </section>
+
+      <section id="screen-login" class="screen active" data-header="none" data-footer="none">
+        <div class="max-w-xl mx-auto mt-10 bg-white rounded-2xl shadow-xl p-8">
+          <div class="flex items-center justify-center mb-6">
+            <img src="logotest.png" alt="Give縁" class="h-10" />
+          </div>
+          <div class="flex gap-2 mb-6">
+            <button id="tab-login-existing" class="flex-1 rounded-xl border border-amber-600 bg-amber-50 py-2" data-tab="login" data-tab-target="existing">アカウント作成済みの方</button>
+            <button id="tab-login-new" class="flex-1 rounded-xl border border-slate-200 py-2" data-tab="login" data-tab-target="new">アカウント未作成の方</button>
+          </div>
+          <div id="login-existing" class="space-y-4">
+            <input type="email" placeholder="メールアドレス" class="w-full border rounded-xl px-4 py-3" />
+            <input type="password" placeholder="パスワード" class="w-full border rounded-xl px-4 py-3" />
+            <div id="login-error" class="hidden text-sm text-red-600">ログイン情報が間違っています。</div>
+            <button data-nav-to="member-home" class="w-full rounded-xl bg-amber-700 text-white py-3">ログイン</button>
+            <button data-nav-to="password-reset" class="w-full rounded-xl border py-3">パスワードリセット</button>
+          </div>
+          <div id="login-new" class="space-y-4 hidden">
+            <input type="email" placeholder="メールアドレス" class="w-full border rounded-xl px-4 py-3" />
+            <p class="text-sm text-slate-600">認証用のメールを送付するので、受け取れるメールアドレスをご入力ください。</p>
+            <div id="login-new-error" class="hidden text-sm text-red-600">入力内容に誤りがあります。</div>
+            <button data-nav-to="register-request-done" class="w-full rounded-xl bg-amber-700 text-white py-3">新規アカウント登録申請</button>
+          </div>
+          <div class="mt-6 space-y-2">
+            <button MA-dev class="text-xs text-slate-400" data-toggle="login-error">開発: ログインエラー表示切替</button>
+            <button MA-dev class="text-xs text-slate-400" data-toggle="login-new-error">開発: 未作成エラー表示切替</button>
+            <button MA-dev class="text-xs text-slate-400" data-nav-to="admin-home">開発: 管理者ログイン</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-register-request-done" class="screen" data-header="none" data-footer="none">
+        <div class="max-w-md mx-auto mt-12 bg-white rounded-2xl shadow-lg p-8 space-y-4 text-center">
+          <p class="text-lg font-semibold">送信完了しました。認証メールをご確認ください。</p>
+          <button data-nav-to="login" class="w-full rounded-xl border py-3">ログイン画面に戻る</button>
+        </div>
+      </section>
+
+      <section id="screen-password-reset" class="screen" data-header="none" data-footer="none">
+        <div class="max-w-md mx-auto mt-12 bg-white rounded-2xl shadow-lg p-8 space-y-4">
+          <h1 class="text-xl font-semibold">パスワードリセット</h1>
+          <input type="email" placeholder="メールアドレス" class="w-full border rounded-xl px-4 py-3" />
+          <input type="text" placeholder="電話番号" class="w-full border rounded-xl px-4 py-3" />
+          <p class="text-sm text-slate-600">認証用のメールを送付するので、登録されているメールアドレスと電話番号をご入力ください。</p>
+          <div id="reset-error" class="hidden text-sm text-red-600">入力内容に誤りがあります。</div>
+          <button data-nav-to="password-reset-done" class="w-full rounded-xl bg-amber-700 text-white py-3">パスワードリセット申請</button>
+          <button data-nav-to="login" class="w-full rounded-xl border py-3">戻る</button>
+          <button MA-dev class="text-xs text-slate-400" data-toggle="reset-error">開発: エラー表示切替</button>
+        </div>
+      </section>
+
+      <section id="screen-password-reset-done" class="screen" data-header="none" data-footer="none">
+        <div class="max-w-md mx-auto mt-12 bg-white rounded-2xl shadow-lg p-8 space-y-4 text-center">
+          <p class="text-lg font-semibold">パスワードリセット用メールを送付しました。</p>
+          <button data-nav-to="login" class="w-full rounded-xl border py-3">ログイン画面に戻る</button>
+        </div>
+      </section>
+
+      <section id="screen-new-password-done" class="screen" data-header="none" data-footer="none">
+        <div class="max-w-md mx-auto mt-12 bg-white rounded-2xl shadow-lg p-8 space-y-4">
+          <p class="text-lg font-semibold">パスワードをリセットしました。このままブラウザを閉じていただき、もう一度ログインしてください。</p>
+          <button data-nav-to="login" class="w-full rounded-xl border py-3">閉じる</button>
+        </div>
+      </section>
+
+      <!-- 会員チュートリアル -->
+      <section id="screen-tutorial" class="screen" data-header="member" data-footer="none">
+        <div class="max-w-4xl mx-auto mt-6 bg-white rounded-2xl shadow-lg p-8">
+          <div class="flex items-center justify-between mb-6">
+            <h1 class="text-2xl font-semibold">チュートリアル</h1>
+            <div class="flex gap-1" id="tutorial-indicators"></div>
+          </div>
+          <div class="grid md:grid-cols-2 gap-6 items-center">
+            <img id="tutorial-image" src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80" alt="tutorial" class="rounded-2xl" />
+            <div>
+              <p id="tutorial-text" class="text-lg font-medium">Give縁へようこそ。つながりを深める準備をしましょう。</p>
+              <button id="tutorial-next" class="mt-6 rounded-xl bg-amber-700 text-white px-6 py-3">次へ</button>
+              <button id="tutorial-finish" class="mt-6 rounded-xl bg-amber-700 text-white px-6 py-3 hidden" data-nav-to="payment-setup">完了</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-payment-setup" class="screen" data-header="member" data-footer="member">
+        <div class="max-w-3xl mx-auto mt-6 bg-white rounded-2xl shadow-lg p-8">
+          <h1 class="text-2xl font-semibold mb-6">支払い方法設定</h1>
+          <button data-nav-to="stripe-loading" class="rounded-xl bg-amber-700 text-white px-6 py-3">支払い方法を設定する</button>
+        </div>
+      </section>
+
+      <section id="screen-stripe-loading" class="screen" data-header="member" data-footer="member">
+        <div class="max-w-md mx-auto mt-12 bg-white rounded-2xl shadow-lg p-8 text-center">
+          <div class="mx-auto h-12 w-12 rounded-full border-4 border-amber-500 border-t-transparent animate-spin"></div>
+          <p class="mt-4 font-medium">Stripeに接続中...</p>
+        </div>
+      </section>
+
+      <!-- 会員ホーム -->
+      <section id="screen-member-home" class="screen" data-header="member" data-footer="member">
+        <div class="max-w-6xl mx-auto mt-6 grid lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-2 space-y-6">
+            <div class="bg-white rounded-2xl shadow p-6">
+              <h2 class="font-semibold text-lg mb-4">新着通知</h2>
+              <div MA-database data-list="notifications" class="grid gap-3"></div>
+            </div>
+            <div class="bg-white rounded-2xl shadow p-6">
+              <h2 class="font-semibold text-lg mb-4">バナー広告</h2>
+              <div MA-database data-list="banner-ads" class="flex gap-4 overflow-x-auto"></div>
+            </div>
+            <div class="bg-white rounded-2xl shadow p-6">
+              <h2 class="font-semibold text-lg mb-4">直近にログインした会員</h2>
+              <div MA-database data-list="recent-members" class="grid md:grid-cols-2 gap-3"></div>
+            </div>
+          </div>
+          <div class="space-y-6">
+            <div class="bg-white rounded-2xl shadow p-6">
+              <p class="text-sm text-slate-600 mb-3">おすすめ会員セクションの案内テキスト</p>
+              <button data-nav-to="recommended-members" class="rounded-xl bg-amber-700 text-white px-4 py-2">おすすめ会員へ</button>
+            </div>
+            <div class="bg-white rounded-2xl shadow p-6">
+              <h2 class="font-semibold text-lg mb-4">クイックアクセス</h2>
+              <div MA-database data-list="quick-access-member" class="grid gap-2"></div>
+            </div>
+            <div class="relative bg-white rounded-2xl shadow p-6">
+              <p class="font-semibold text-red-600">更新費用未払いのため一部機能がロックされています。</p>
+              <div class="lock-overlay rounded-2xl"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 会員プロフィール -->
+      <section id="screen-profile" class="screen" data-header="member" data-footer="member">
+        <div class="max-w-3xl mx-auto mt-6 bg-white rounded-2xl shadow p-8 space-y-4">
+          <h1 class="text-2xl font-semibold">プロフィール</h1>
+          <button data-modal-open="profile-detail" class="w-full rounded-xl border py-3">プロフィールプレビュー</button>
+          <button data-nav-to="profile-edit" class="w-full rounded-xl border py-3">プロフィール編集</button>
+          <button data-nav-to="identity-upload" class="w-full rounded-xl border py-3">本人確認書類提出</button>
+          <button data-nav-to="favorites" class="w-full rounded-xl border py-3">お気に入り一覧</button>
+          <button data-nav-to="oneonone" class="w-full rounded-xl border py-3">1on1一覧</button>
+          <button data-nav-to="following" class="w-full rounded-xl border py-3">フォローした一覧</button>
+          <button data-nav-to="followers" class="w-full rounded-xl border py-3">フォローされた一覧</button>
+          <button data-nav-to="member-home" class="w-full rounded-xl border py-3">戻る</button>
+        </div>
+      </section>
+
+      <section id="screen-profile-edit" class="screen" data-header="member" data-footer="member">
+        <div class="max-w-4xl mx-auto mt-6 bg-white rounded-2xl shadow p-8 space-y-4">
+          <h1 class="text-2xl font-semibold">プロフィール編集</h1>
+          <input type="text" placeholder="名前" class="w-full border rounded-xl px-4 py-3" />
+          <input type="date" class="w-full border rounded-xl px-4 py-3" />
+          <input type="file" class="w-full border rounded-xl px-4 py-3" />
+          <div MA-database data-list="profile-text-fields" class="grid gap-3"></div>
+          <div id="profile-edit-error" class="hidden text-sm text-red-600">入力内容に誤りがあります。</div>
+          <div id="profile-edit-success" class="hidden text-sm text-green-600">保存が完了しました。</div>
+          <div class="flex gap-3">
+            <button data-toggle="profile-edit-success" class="rounded-xl bg-amber-700 text-white px-6 py-3">保存</button>
+            <button data-nav-to="profile" class="rounded-xl border px-6 py-3">戻る</button>
+          </div>
+          <button MA-dev class="text-xs text-slate-400" data-toggle="profile-edit-error">開発: エラー表示切替</button>
+        </div>
+      </section>
+
+      <section id="screen-identity-upload" class="screen" data-header="member" data-footer="member">
+        <div class="max-w-3xl mx-auto mt-6 bg-white rounded-2xl shadow p-8 space-y-4">
+          <h1 class="text-2xl font-semibold">本人確認書類提出</h1>
+          <input type="file" class="w-full border rounded-xl px-4 py-3" />
+          <select class="w-full border rounded-xl px-4 py-3">
+            <option>運転免許証</option>
+            <option>マイナンバーカード</option>
+            <option>パスポート</option>
+          </select>
+          <div id="identity-error" class="hidden text-sm text-red-600">入力内容に誤りがあります。</div>
+          <div id="identity-success" class="hidden text-sm text-green-600">送信完了しました。</div>
+          <div class="flex gap-3">
+            <button data-toggle="identity-success" class="rounded-xl bg-amber-700 text-white px-6 py-3">送信</button>
+            <button data-nav-to="profile" class="rounded-xl border px-6 py-3">戻る</button>
+          </div>
+          <button MA-dev class="text-xs text-slate-400" data-toggle="identity-error">開発: エラー表示切替</button>
+        </div>
+      </section>
+
+      <!-- 会員一覧画面共通 -->
+      <section id="screen-favorites" class="screen" data-header="member" data-footer="member">
+        <div class="max-w-6xl mx-auto mt-6 bg-white rounded-2xl shadow p-6">
+          <div class="flex flex-wrap gap-3 mb-4">
+            <button data-modal-open="member-search" class="rounded-xl border px-4 py-2">検索条件</button>
+            <button data-modal-open="member-sort" class="rounded-xl border px-4 py-2">並び替え</button>
+          </div>
+          <div class="sticky top-20 bg-white border-b py-2 text-sm text-slate-500">お気に入り一覧</div>
+          <div MA-database data-list="member-list" class="divide-y"></div>
+          <button class="mt-4 w-full rounded-xl border py-2">次の30件を表示</button>
+          <button data-nav-to="profile" class="mt-2 w-full rounded-xl border py-2">戻る</button>
+        </div>
+      </section>
+
+      <section id="screen-oneonone" class="screen" data-header="member" data-footer="member">
+        <div class="max-w-6xl mx-auto mt-6 bg-white rounded-2xl shadow p-6">
+          <div class="flex flex-wrap gap-3 mb-4">
+            <button data-modal-open="member-search" class="rounded-xl border px-4 py-2">検索条件</button>
+            <button data-modal-open="member-sort" class="rounded-xl border px-4 py-2">並び替え</button>
+          </div>
+          <div class="sticky top-20 bg-white border-b py-2 text-sm text-slate-500">1on1一覧</div>
+          <div MA-database data-list="member-list" class="divide-y"></div>
+          <button class="mt-4 w-full rounded-xl border py-2">次の30件を表示</button>
+          <button data-nav-to="profile" class="mt-2 w-full rounded-xl border py-2">戻る</button>
+        </div>
+      </section>
+
+      <section id="screen-following" class="screen" data-header="member" data-footer="member">
+        <div class="max-w-6xl mx-auto mt-6 bg-white rounded-2xl shadow p-6">
+          <div class="flex flex-wrap gap-3 mb-4">
+            <button data-modal-open="member-search" class="rounded-xl border px-4 py-2">検索条件</button>
+            <button data-modal-open="member-sort" class="rounded-xl border px-4 py-2">並び替え</button>
+          </div>
+          <div class="sticky top-20 bg-white border-b py-2 text-sm text-slate-500">フォローした一覧</div>
+          <div MA-database data-list="member-list" class="divide-y"></div>
+          <button class="mt-4 w-full rounded-xl border py-2">次の30件を表示</button>
+          <button data-nav-to="profile" class="mt-2 w-full rounded-xl border py-2">戻る</button>
+        </div>
+      </section>
+
+      <section id="screen-followers" class="screen" data-header="member" data-footer="member">
+        <div class="max-w-6xl mx-auto mt-6 bg-white rounded-2xl shadow p-6">
+          <div class="flex flex-wrap gap-3 mb-4">
+            <button data-modal-open="member-search" class="rounded-xl border px-4 py-2">検索条件</button>
+            <button data-modal-open="member-sort" class="rounded-xl border px-4 py-2">並び替え</button>
+          </div>
+          <div class="sticky top-20 bg-white border-b py-2 text-sm text-slate-500">フォローされた一覧</div>
+          <div MA-database data-list="member-list" class="divide-y"></div>
+          <button class="mt-4 w-full rounded-xl border py-2">次の30件を表示</button>
+          <button data-nav-to="profile" class="mt-2 w-full rounded-xl border py-2">戻る</button>
+        </div>
+      </section>
+
+      <!-- 支払情報 -->
+      <section id="screen-payment" class="screen" data-header="member" data-footer="member">
+        <div class="max-w-4xl mx-auto mt-6 bg-white rounded-2xl shadow p-8 space-y-4">
+          <h1 class="text-2xl font-semibold">支払情報</h1>
+          <button data-nav-to="payment-setup" class="w-full rounded-xl border py-3">支払い方法設定</button>
+          <div class="bg-amber-50 rounded-xl p-4 flex justify-between items-center">
+            <div>
+              <p class="text-sm text-slate-500">現在ポイント</p>
+              <p class="text-2xl font-semibold">12,400 pt</p>
+            </div>
+            <div class="flex gap-2">
+              <button data-nav-to="usage-charge" class="rounded-xl bg-amber-700 text-white px-4 py-2">1000円分</button>
+              <button data-nav-to="usage-charge" class="rounded-xl border px-4 py-2">2000円分</button>
+            </div>
+          </div>
+          <button data-nav-to="payment-history" class="w-full rounded-xl border py-3">支払履歴一覧</button>
+          <button data-nav-to="member-home" class="w-full rounded-xl border py-3">戻る</button>
+        </div>
+      </section>
+
+      <section id="screen-usage-charge" class="screen" data-header="member" data-footer="member">
+        <div class="max-w-4xl mx-auto mt-6 bg-white rounded-2xl shadow p-8 space-y-4">
+          <h1 class="text-2xl font-semibold">従量課金チャージ</h1>
+          <div class="bg-amber-50 rounded-xl p-4 flex justify-between items-center">
+            <div>
+              <p class="text-sm text-slate-500">現在ポイント</p>
+              <p class="text-2xl font-semibold">12,400 pt</p>
+            </div>
+            <div class="flex gap-2">
+              <button class="rounded-xl bg-amber-700 text-white px-4 py-2">1000円分</button>
+              <button class="rounded-xl border px-4 py-2">2000円分</button>
+            </div>
+          </div>
+          <button class="w-full rounded-xl bg-amber-700 text-white py-3">Stripe支払い画面へ</button>
+          <button data-nav-to="payment" class="w-full rounded-xl border py-3">戻る</button>
+        </div>
+      </section>
+
+      <section id="screen-payment-history" class="screen" data-header="member" data-footer="member">
+        <div class="max-w-6xl mx-auto mt-6 bg-white rounded-2xl shadow p-6">
+          <div class="flex flex-wrap gap-3 mb-4">
+            <button data-modal-open="payment-search" class="rounded-xl border px-4 py-2">検索条件</button>
+            <button data-modal-open="payment-sort" class="rounded-xl border px-4 py-2">並び替え</button>
+          </div>
+          <div class="sticky top-20 bg-white border-b py-2 text-sm text-slate-500">支払履歴</div>
+          <div MA-database data-list="payment-history" class="divide-y"></div>
+          <button class="mt-4 w-full rounded-xl border py-2">次の30件を表示</button>
+          <button data-nav-to="payment" class="mt-2 w-full rounded-xl border py-2">戻る</button>
+        </div>
+      </section>
+
+      <!-- 招待コード -->
+      <section id="screen-invite" class="screen" data-header="member" data-footer="member">
+        <div class="max-w-6xl mx-auto mt-6 bg-white rounded-2xl shadow p-6">
+          <div class="flex flex-wrap gap-3 mb-4">
+            <button data-modal-open="invite-create" class="rounded-xl bg-amber-700 text-white px-4 py-2">招待コード新規作成</button>
+            <button data-modal-open="invite-search" class="rounded-xl border px-4 py-2">検索条件</button>
+            <button data-modal-open="invite-sort" class="rounded-xl border px-4 py-2">並び替え</button>
+          </div>
+          <div class="sticky top-20 bg-white border-b py-2 text-sm text-slate-500">招待コード一覧</div>
+          <div MA-database data-list="invite-list" class="divide-y"></div>
+          <button class="mt-4 w-full rounded-xl border py-2">次の30件を表示</button>
+          <button data-nav-to="member-home" class="mt-2 w-full rounded-xl border py-2">戻る</button>
+        </div>
+      </section>
+
+      <!-- 仲間を調べる -->
+      <section id="screen-search" class="screen" data-header="member" data-footer="member">
+        <div class="max-w-6xl mx-auto mt-6 bg-white rounded-2xl shadow p-6">
+          <div class="flex flex-wrap gap-3 mb-4">
+            <button data-tab="search" data-tab-target="search" class="rounded-xl border px-4 py-2">会員検索</button>
+            <button data-tab="search" data-tab-target="recommended" class="rounded-xl border px-4 py-2">おすすめ会員</button>
+            <button data-tab="search" data-tab-target="new" class="rounded-xl border px-4 py-2">新規入会した会員</button>
+          </div>
+          <div id="tab-search" class="space-y-4">
+            <div class="flex flex-wrap gap-3">
+              <button data-modal-open="member-search" class="rounded-xl border px-4 py-2">検索条件</button>
+              <button data-modal-open="member-sort" class="rounded-xl border px-4 py-2">並び替え</button>
+            </div>
+            <div MA-database data-list="member-search-results" class="divide-y"></div>
+            <button class="w-full rounded-xl border py-2">次の30件を表示</button>
+          </div>
+          <div id="tab-recommended" class="space-y-4 hidden">
+            <button data-modal-open="recommended-sort" class="rounded-xl border px-4 py-2">並び替え</button>
+            <div MA-database data-list="recommended-cards" class="grid md:grid-cols-2 gap-4"></div>
+            <button class="w-full rounded-xl border py-2">次の30件を表示</button>
+          </div>
+          <div id="tab-new" class="space-y-4 hidden">
+            <button data-modal-open="new-sort" class="rounded-xl border px-4 py-2">並び替え</button>
+            <div MA-database data-list="new-members" class="grid md:grid-cols-2 gap-4"></div>
+            <button class="w-full rounded-xl border py-2">次の30件を表示</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-recommended-members" class="screen" data-header="member" data-footer="member">
+        <div class="max-w-6xl mx-auto mt-6 bg-white rounded-2xl shadow p-6 space-y-4">
+          <h1 class="text-2xl font-semibold">おすすめ会員</h1>
+          <div MA-database data-list="recommended-list" class="grid md:grid-cols-2 gap-4"></div>
+          <button data-nav-to="member-home" class="w-full rounded-xl border py-2">戻る</button>
+        </div>
+      </section>
+
+      <!-- DM -->
+      <section id="screen-dm" class="screen" data-header="member" data-footer="member">
+        <div class="max-w-6xl mx-auto mt-6 bg-white rounded-2xl shadow p-6">
+          <div class="flex flex-wrap gap-3 mb-4">
+            <button data-tab="dm" data-tab-target="dm-list" class="rounded-xl border px-4 py-2">DM一覧</button>
+            <button data-tab="dm" data-tab-target="dm-blocked" class="rounded-xl border px-4 py-2">ブロック済み一覧</button>
+          </div>
+          <div id="tab-dm-list" class="space-y-4">
+            <div class="flex gap-3">
+              <button data-modal-open="dm-search" class="rounded-xl border px-4 py-2">検索条件</button>
+              <button data-modal-open="dm-sort" class="rounded-xl border px-4 py-2">並び替え</button>
+            </div>
+            <div MA-database data-list="dm-list" class="divide-y"></div>
+            <button class="w-full rounded-xl border py-2">次の30件を表示</button>
+          </div>
+          <div id="tab-dm-blocked" class="space-y-4 hidden">
+            <div class="flex gap-3">
+              <button data-modal-open="dm-blocked-search" class="rounded-xl border px-4 py-2">検索条件</button>
+              <button data-modal-open="dm-blocked-sort" class="rounded-xl border px-4 py-2">並び替え</button>
+            </div>
+            <div MA-database data-list="dm-blocked-list" class="divide-y"></div>
+            <button class="w-full rounded-xl border py-2">次の30件を表示</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-dm-detail" class="screen" data-header="member" data-footer="none">
+        <div class="max-w-5xl mx-auto mt-6 bg-white rounded-2xl shadow p-6 space-y-4">
+          <div class="sticky top-20 bg-white flex items-center justify-between border-b pb-3">
+            <button data-nav-to="dm" class="p-2 rounded-lg border"><i data-lucide="arrow-left" class="w-4 h-4"></i></button>
+            <p class="text-sm text-red-600">マダーフォローしてません</p>
+            <button data-modal-open="dm-actions" class="p-2 rounded-lg border"><i data-lucide="settings" class="w-4 h-4"></i></button>
+          </div>
+          <div class="flex items-start gap-3">
+            <button data-modal-open="profile-detail" class="h-12 w-12 rounded-full overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80" alt="member" />
+            </button>
+            <div class="bg-amber-50 rounded-2xl p-4">最近のメッセージ内容のサンプルです。</div>
+          </div>
+        </div>
+        <div class="fixed bottom-0 inset-x-0 bg-white border-t">
+          <div id="dm-compose" class="max-w-5xl mx-auto px-4 py-3 flex gap-2 items-center">
+            <button data-toggle="dm-memo" class="p-2 rounded-lg border"><i data-lucide="sticky-note" class="w-4 h-4"></i></button>
+            <textarea class="flex-1 border rounded-xl px-4 py-2" placeholder="メッセージ"></textarea>
+            <button class="p-2 rounded-lg bg-amber-700 text-white"><i data-lucide="send" class="w-4 h-4"></i></button>
+          </div>
+          <div id="dm-memo" class="hidden max-w-5xl mx-auto px-4 py-3 flex gap-2 items-center">
+            <div MA-database data-list="dm-memo-list" class="flex-1 grid gap-2"></div>
+            <button class="p-2 rounded-lg border" data-modal-open="memo-detail"><i data-lucide="plus" class="w-4 h-4"></i></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 会員メモ -->
+      <section id="screen-memo" class="screen" data-header="member" data-footer="member">
+        <div class="max-w-6xl mx-auto mt-6 bg-white rounded-2xl shadow p-6">
+          <div class="flex gap-3 mb-4">
+            <button data-modal-open="memo-search" class="rounded-xl border px-4 py-2">検索条件</button>
+            <button data-modal-open="memo-sort" class="rounded-xl border px-4 py-2">並び替え</button>
+          </div>
+          <div MA-database data-list="memo-list" class="divide-y"></div>
+          <button class="mt-4 w-full rounded-xl border py-2">次の30件を表示</button>
+        </div>
+      </section>
+
+      <section id="screen-memo-detail" class="screen" data-header="member" data-footer="none">
+        <div class="max-w-5xl mx-auto mt-6 bg-white rounded-2xl shadow p-6 space-y-4">
+          <button data-nav-to="memo" class="rounded-xl border px-4 py-2">戻る</button>
+          <input type="text" placeholder="タイトル" class="w-full border rounded-xl px-4 py-3" />
+          <textarea class="w-full border rounded-xl px-4 py-3 h-40" placeholder="メモ内容"></textarea>
+          <div class="flex gap-3">
+            <button data-modal-open="profile-detail" class="h-14 w-14 rounded-full overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=200&q=80" alt="member" />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 宣伝・イベント・お知らせ -->
+      <section id="screen-promo" class="screen" data-header="member" data-footer="member">
+        <div class="max-w-6xl mx-auto mt-6 bg-white rounded-2xl shadow p-6">
+          <div class="flex flex-wrap gap-3 mb-4">
+            <button data-tab="promo" data-tab-target="timeline" class="rounded-xl border px-4 py-2">タイムライン</button>
+            <button data-tab="promo" data-tab-target="notice" class="rounded-xl border px-4 py-2">お知らせ</button>
+            <button data-tab="promo" data-tab-target="promotion" class="rounded-xl border px-4 py-2">宣伝</button>
+            <button data-tab="promo" data-tab-target="ads" class="rounded-xl border px-4 py-2">広告</button>
+          </div>
+          <div id="tab-timeline" class="space-y-4">
+            <button data-modal-open="timeline-search" class="rounded-xl border px-4 py-2">検索絞り込み</button>
+            <div MA-database data-list="timeline-list" class="grid gap-3"></div>
+          </div>
+          <div id="tab-notice" class="space-y-4 hidden">
+            <div MA-database data-list="notice-list" class="grid gap-3"></div>
+          </div>
+          <div id="tab-promotion" class="space-y-4 hidden">
+            <button data-nav-to="promotion-new" class="rounded-xl bg-amber-700 text-white px-4 py-2">新規投稿</button>
+            <div MA-database data-list="promotion-history" class="divide-y"></div>
+          </div>
+          <div id="tab-ads" class="space-y-4 hidden">
+            <button data-nav-to="ads-new" class="rounded-xl bg-amber-700 text-white px-4 py-2">新規申請</button>
+            <div MA-database data-list="ads-history" class="divide-y"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-promotion-new" class="screen" data-header="member" data-footer="member">
+        <div class="max-w-3xl mx-auto mt-6 bg-white rounded-2xl shadow p-8 space-y-4">
+          <h1 class="text-2xl font-semibold">宣伝 新規投稿</h1>
+          <input type="file" class="w-full border rounded-xl px-4 py-3" />
+          <textarea class="w-full border rounded-xl px-4 py-3 h-40" placeholder="テキスト"></textarea>
+          <input type="url" placeholder="URL" class="w-full border rounded-xl px-4 py-3" />
+          <button data-nav-to="promo" class="rounded-xl border px-6 py-3">戻る</button>
+        </div>
+      </section>
+
+      <section id="screen-ads-new" class="screen" data-header="member" data-footer="member">
+        <div class="max-w-3xl mx-auto mt-6 bg-white rounded-2xl shadow p-8 space-y-4">
+          <h1 class="text-2xl font-semibold">広告 新規申請</h1>
+          <input type="file" class="w-full border rounded-xl px-4 py-3" />
+          <textarea class="w-full border rounded-xl px-4 py-3 h-40" placeholder="テキスト"></textarea>
+          <input type="url" placeholder="URL" class="w-full border rounded-xl px-4 py-3" />
+          <select class="w-full border rounded-xl px-4 py-3">
+            <option>バナー広告</option>
+            <option>フッター広告</option>
+          </select>
+          <button data-nav-to="promo" class="rounded-xl border px-6 py-3">戻る</button>
+        </div>
+      </section>
+
+      <!-- ログイン情報変更 -->
+      <section id="screen-login-info" class="screen" data-header="member" data-footer="member">
+        <div class="max-w-4xl mx-auto mt-6 bg-white rounded-2xl shadow p-8 space-y-4">
+          <h1 class="text-2xl font-semibold">ログイン情報変更</h1>
+          <input type="email" placeholder="メールアドレス" class="w-full border rounded-xl px-4 py-3" />
+          <input type="text" placeholder="電話番号" class="w-full border rounded-xl px-4 py-3" />
+          <input type="password" placeholder="パスワード" class="w-full border rounded-xl px-4 py-3" />
+          <input type="password" placeholder="パスワード確認" class="w-full border rounded-xl px-4 py-3" />
+          <div id="login-info-error" class="hidden text-sm text-red-600">入力内容に誤りがあります。</div>
+          <div id="login-info-success" class="hidden text-sm text-green-600">保存完了しました。</div>
+          <div class="flex gap-3">
+            <button data-toggle="login-info-success" class="rounded-xl bg-amber-700 text-white px-6 py-3">保存</button>
+            <button data-modal-open="withdraw" class="rounded-xl border px-6 py-3">会員退会</button>
+            <button data-nav-to="member-home" class="rounded-xl border px-6 py-3">戻る</button>
+          </div>
+          <button MA-dev class="text-xs text-slate-400" data-toggle="login-info-error">開発: エラー表示切替</button>
+        </div>
+      </section>
+
+      <!-- 管理者ホーム -->
+      <section id="screen-admin-home" class="screen" data-header="admin" data-footer="none">
+        <div class="max-w-5xl mx-auto mt-6 bg-white rounded-2xl shadow p-6 space-y-6">
+          <h1 class="text-2xl font-semibold">管理者ホーム</h1>
+          <div MA-database data-list="admin-tasks" class="divide-y"></div>
+          <div>
+            <h2 class="font-semibold mb-2">クイックアクセス</h2>
+            <div MA-database data-list="quick-access-admin" class="grid gap-2"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 管理者画面群 -->
+      <section id="screen-admin-members" class="screen" data-header="admin" data-footer="none">
+        <div class="max-w-6xl mx-auto mt-6 bg-white rounded-2xl shadow p-6">
+          <div class="flex flex-wrap gap-3 mb-4">
+            <button data-modal-open="admin-member-search" class="rounded-xl border px-4 py-2">検索条件</button>
+            <button data-modal-open="admin-member-sort" class="rounded-xl border px-4 py-2">並び替え</button>
+          </div>
+          <div MA-database data-list="admin-member-list" class="divide-y"></div>
+          <button class="mt-4 w-full rounded-xl border py-2">次の30件を表示</button>
+          <button data-nav-to="admin-home" class="mt-2 w-full rounded-xl border py-2">戻る</button>
+        </div>
+      </section>
+
+      <section id="screen-admin-member-edit" class="screen" data-header="admin" data-footer="none">
+        <div class="max-w-4xl mx-auto mt-6 bg-white rounded-2xl shadow p-8 space-y-4">
+          <h1 class="text-2xl font-semibold">会員編集</h1>
+          <input type="text" placeholder="会員名" class="w-full border rounded-xl px-4 py-3" />
+          <input type="text" placeholder="会社名" class="w-full border rounded-xl px-4 py-3" />
+          <div class="flex items-center gap-4">
+            <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=200&q=80" alt="profile" class="h-16 w-16 rounded-full" />
+            <select class="border rounded-xl px-4 py-3">
+              <option>信頼度 ★★★★★</option>
+              <option>信頼度 ★★★★</option>
+              <option>信頼度 ★★★</option>
+            </select>
+          </div>
+          <select class="w-full border rounded-xl px-4 py-3">
+            <option>停止解除</option>
+            <option>停止</option>
+          </select>
+          <div id="admin-member-error" class="hidden text-sm text-red-600">入力内容に誤りがあります。</div>
+          <div id="admin-member-success" class="hidden text-sm text-green-600">保存完了しました。</div>
+          <div class="flex gap-3">
+            <button data-toggle="admin-member-success" class="rounded-xl bg-amber-700 text-white px-6 py-3">保存</button>
+            <button data-nav-to="admin-members" class="rounded-xl border px-6 py-3">戻る</button>
+          </div>
+          <button MA-dev class="text-xs text-slate-400" data-toggle="admin-member-error">開発: エラー表示切替</button>
+        </div>
+      </section>
+
+      <section id="screen-admin-history" class="screen" data-header="admin" data-footer="none">
+        <div class="max-w-6xl mx-auto mt-6 bg-white rounded-2xl shadow p-6">
+          <div class="flex flex-wrap gap-3 mb-4">
+            <button data-modal-open="admin-history-search" class="rounded-xl border px-4 py-2">検索条件</button>
+            <button data-modal-open="admin-history-sort" class="rounded-xl border px-4 py-2">並び替え</button>
+          </div>
+          <div MA-database data-list="admin-history" class="divide-y"></div>
+          <button class="mt-4 w-full rounded-xl border py-2">次の30件を表示</button>
+          <button data-nav-to="admin-home" class="mt-2 w-full rounded-xl border py-2">戻る</button>
+        </div>
+      </section>
+
+      <section id="screen-official-dm" class="screen" data-header="admin" data-footer="none">
+        <div class="max-w-6xl mx-auto mt-6 bg-white rounded-2xl shadow p-6">
+          <div class="flex gap-3 mb-4">
+            <button data-modal-open="official-dm-search" class="rounded-xl border px-4 py-2">検索条件</button>
+            <button data-modal-open="official-dm-sort" class="rounded-xl border px-4 py-2">並び替え</button>
+          </div>
+          <div MA-database data-list="official-dm-list" class="divide-y"></div>
+          <button class="mt-4 w-full rounded-xl border py-2">次の30件を表示</button>
+          <button data-nav-to="admin-home" class="mt-2 w-full rounded-xl border py-2">戻る</button>
+        </div>
+      </section>
+
+      <section id="screen-official-dm-detail" class="screen" data-header="admin" data-footer="none">
+        <div class="max-w-5xl mx-auto mt-6 bg-white rounded-2xl shadow p-6 space-y-4">
+          <button data-nav-to="official-dm" class="rounded-xl border px-4 py-2">戻る</button>
+          <div class="flex items-start gap-3">
+            <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=200&q=80" alt="member" class="h-12 w-12 rounded-full" />
+            <div class="bg-amber-50 rounded-2xl p-4">公式DMのメッセージサンプル。</div>
+          </div>
+          <textarea class="w-full border rounded-xl px-4 py-3 h-32" placeholder="メッセージ入力"></textarea>
+          <button class="rounded-full bg-amber-700 text-white p-3"><i data-lucide="send" class="w-4 h-4"></i></button>
+        </div>
+      </section>
+
+      <section id="screen-approval-signup" class="screen" data-header="admin" data-footer="none">
+        <div class="max-w-6xl mx-auto mt-6 bg-white rounded-2xl shadow p-6">
+          <div class="flex gap-3 mb-4">
+            <button data-modal-open="approval-signup-search" class="rounded-xl border px-4 py-2">検索条件</button>
+            <button data-modal-open="approval-signup-sort" class="rounded-xl border px-4 py-2">並び替え</button>
+          </div>
+          <div MA-database data-list="approval-signup" class="divide-y"></div>
+          <button data-modal-open="approval-signup-dialog" class="mt-4 w-full rounded-xl border py-2">承認/却下</button>
+          <button class="mt-2 w-full rounded-xl border py-2">次の30件を表示</button>
+          <button data-nav-to="admin-home" class="mt-2 w-full rounded-xl border py-2">戻る</button>
+        </div>
+      </section>
+
+      <section id="screen-approval-event" class="screen" data-header="admin" data-footer="none">
+        <div class="max-w-6xl mx-auto mt-6 bg-white rounded-2xl shadow p-6">
+          <div class="flex gap-3 mb-4">
+            <button data-modal-open="approval-event-search" class="rounded-xl border px-4 py-2">検索条件</button>
+            <button data-modal-open="approval-event-sort" class="rounded-xl border px-4 py-2">並び替え</button>
+          </div>
+          <div MA-database data-list="approval-event" class="divide-y"></div>
+          <button data-modal-open="approval-event-dialog" class="mt-4 w-full rounded-xl border py-2">承認/却下</button>
+          <button class="mt-2 w-full rounded-xl border py-2">次の30件を表示</button>
+          <button data-nav-to="admin-home" class="mt-2 w-full rounded-xl border py-2">戻る</button>
+        </div>
+      </section>
+
+      <section id="screen-approval-ad" class="screen" data-header="admin" data-footer="none">
+        <div class="max-w-6xl mx-auto mt-6 bg-white rounded-2xl shadow p-6">
+          <div class="flex gap-3 mb-4">
+            <button data-modal-open="approval-ad-search" class="rounded-xl border px-4 py-2">検索条件</button>
+            <button data-modal-open="approval-ad-sort" class="rounded-xl border px-4 py-2">並び替え</button>
+          </div>
+          <div MA-database data-list="approval-ad" class="divide-y"></div>
+          <button data-modal-open="approval-ad-dialog" class="mt-4 w-full rounded-xl border py-2">承認/却下</button>
+          <button class="mt-2 w-full rounded-xl border py-2">次の30件を表示</button>
+          <button data-nav-to="admin-home" class="mt-2 w-full rounded-xl border py-2">戻る</button>
+        </div>
+      </section>
+
+      <section id="screen-approval-identity" class="screen" data-header="admin" data-footer="none">
+        <div class="max-w-6xl mx-auto mt-6 bg-white rounded-2xl shadow p-6">
+          <div class="flex gap-3 mb-4">
+            <button data-modal-open="approval-identity-search" class="rounded-xl border px-4 py-2">検索条件</button>
+            <button data-modal-open="approval-identity-sort" class="rounded-xl border px-4 py-2">並び替え</button>
+          </div>
+          <div MA-database data-list="approval-identity" class="divide-y"></div>
+          <button data-modal-open="approval-identity-dialog" class="mt-4 w-full rounded-xl border py-2">承認/却下</button>
+          <button class="mt-2 w-full rounded-xl border py-2">次の30件を表示</button>
+          <button data-nav-to="admin-home" class="mt-2 w-full rounded-xl border py-2">戻る</button>
+        </div>
+      </section>
+
+      <section id="screen-profile-fields" class="screen" data-header="admin" data-footer="none">
+        <div class="max-w-4xl mx-auto mt-6 bg-white rounded-2xl shadow p-6 space-y-4">
+          <h1 class="text-2xl font-semibold">プロフィール項目管理</h1>
+          <div MA-database data-list="profile-fields" class="divide-y"></div>
+          <div class="flex gap-3">
+            <button data-nav-to="profile-fields-new" class="rounded-xl bg-amber-700 text-white px-4 py-2">新規追加</button>
+            <button data-nav-to="profile-fields-edit" class="rounded-xl border px-4 py-2">編集</button>
+            <button data-modal-open="profile-fields-delete" class="rounded-xl border px-4 py-2">削除</button>
+          </div>
+          <button data-nav-to="admin-home" class="w-full rounded-xl border py-2">戻る</button>
+        </div>
+      </section>
+
+      <section id="screen-profile-fields-new" class="screen" data-header="admin" data-footer="none">
+        <div class="max-w-4xl mx-auto mt-6 bg-white rounded-2xl shadow p-8 space-y-4">
+          <h1 class="text-2xl font-semibold">プロフィール項目 新規追加</h1>
+          <input type="text" placeholder="項目名" class="w-full border rounded-xl px-4 py-3" />
+          <select class="w-full border rounded-xl px-4 py-3">
+            <option>input</option>
+            <option>textarea</option>
+          </select>
+          <div id="profile-fields-new-error" class="hidden text-sm text-red-600">入力内容に誤りがあります。</div>
+          <div id="profile-fields-new-success" class="hidden text-sm text-green-600">保存完了しました。</div>
+          <div class="flex gap-3">
+            <button data-toggle="profile-fields-new-success" class="rounded-xl bg-amber-700 text-white px-6 py-3">保存</button>
+            <button data-nav-to="profile-fields" class="rounded-xl border px-6 py-3">戻る</button>
+          </div>
+          <button MA-dev class="text-xs text-slate-400" data-toggle="profile-fields-new-error">開発: エラー表示切替</button>
+        </div>
+      </section>
+
+      <section id="screen-profile-fields-edit" class="screen" data-header="admin" data-footer="none">
+        <div class="max-w-4xl mx-auto mt-6 bg-white rounded-2xl shadow p-8 space-y-4">
+          <h1 class="text-2xl font-semibold">プロフィール項目 編集</h1>
+          <input type="text" placeholder="項目名" class="w-full border rounded-xl px-4 py-3" />
+          <select class="w-full border rounded-xl px-4 py-3">
+            <option>input</option>
+            <option>textarea</option>
+          </select>
+          <div id="profile-fields-edit-error" class="hidden text-sm text-red-600">入力内容に誤りがあります。</div>
+          <div id="profile-fields-edit-success" class="hidden text-sm text-green-600">保存完了しました。</div>
+          <div class="flex gap-3">
+            <button data-toggle="profile-fields-edit-success" class="rounded-xl bg-amber-700 text-white px-6 py-3">保存</button>
+            <button data-nav-to="profile-fields" class="rounded-xl border px-6 py-3">戻る</button>
+          </div>
+          <button MA-dev class="text-xs text-slate-400" data-toggle="profile-fields-edit-error">開発: エラー表示切替</button>
+        </div>
+      </section>
+
+      <section id="screen-notice-manage" class="screen" data-header="admin" data-footer="none">
+        <div class="max-w-6xl mx-auto mt-6 bg-white rounded-2xl shadow p-6">
+          <div class="flex gap-3 mb-4">
+            <button data-modal-open="notice-search" class="rounded-xl border px-4 py-2">検索条件</button>
+            <button data-modal-open="notice-sort" class="rounded-xl border px-4 py-2">並び替え</button>
+          </div>
+          <div MA-database data-list="notice-manage" class="divide-y"></div>
+          <div class="flex gap-3 mt-4">
+            <button data-nav-to="notice-new" class="rounded-xl bg-amber-700 text-white px-4 py-2">新規作成</button>
+            <button data-nav-to="notice-edit" class="rounded-xl border px-4 py-2">編集</button>
+          </div>
+          <button class="mt-4 w-full rounded-xl border py-2">次の30件を表示</button>
+          <button data-nav-to="admin-home" class="mt-2 w-full rounded-xl border py-2">戻る</button>
+        </div>
+      </section>
+
+      <section id="screen-notice-new" class="screen" data-header="admin" data-footer="none">
+        <div class="max-w-4xl mx-auto mt-6 bg-white rounded-2xl shadow p-8 space-y-4">
+          <h1 class="text-2xl font-semibold">公式お知らせ 新規作成</h1>
+          <input type="text" placeholder="タイトル" class="w-full border rounded-xl px-4 py-3" />
+          <textarea class="w-full border rounded-xl px-4 py-3 h-40" placeholder="本文"></textarea>
+          <select class="w-full border rounded-xl px-4 py-3">
+            <option>公開</option>
+            <option>下書き</option>
+          </select>
+          <div id="notice-new-error" class="hidden text-sm text-red-600">入力内容に誤りがあります。</div>
+          <div id="notice-new-success" class="hidden text-sm text-green-600">保存完了しました。</div>
+          <div class="flex gap-3">
+            <button data-toggle="notice-new-success" class="rounded-xl bg-amber-700 text-white px-6 py-3">保存</button>
+            <button data-nav-to="notice-manage" class="rounded-xl border px-6 py-3">戻る</button>
+          </div>
+          <button MA-dev class="text-xs text-slate-400" data-toggle="notice-new-error">開発: エラー表示切替</button>
+        </div>
+      </section>
+
+      <section id="screen-notice-edit" class="screen" data-header="admin" data-footer="none">
+        <div class="max-w-4xl mx-auto mt-6 bg-white rounded-2xl shadow p-8 space-y-4">
+          <h1 class="text-2xl font-semibold">公式お知らせ 編集</h1>
+          <input type="text" placeholder="タイトル" class="w-full border rounded-xl px-4 py-3" />
+          <textarea class="w-full border rounded-xl px-4 py-3 h-40" placeholder="本文"></textarea>
+          <select class="w-full border rounded-xl px-4 py-3">
+            <option>公開</option>
+            <option>下書き</option>
+          </select>
+          <div id="notice-edit-error" class="hidden text-sm text-red-600">入力内容に誤りがあります。</div>
+          <div id="notice-edit-success" class="hidden text-sm text-green-600">保存完了しました。</div>
+          <div class="flex gap-3">
+            <button data-toggle="notice-edit-success" class="rounded-xl bg-amber-700 text-white px-6 py-3">保存</button>
+            <button data-nav-to="notice-manage" class="rounded-xl border px-6 py-3">戻る</button>
+          </div>
+          <button MA-dev class="text-xs text-slate-400" data-toggle="notice-edit-error">開発: エラー表示切替</button>
+        </div>
+      </section>
+
+      <section id="screen-report" class="screen" data-header="admin" data-footer="none">
+        <div class="max-w-6xl mx-auto mt-6 bg-white rounded-2xl shadow p-6">
+          <div class="flex gap-3 mb-4">
+            <button data-modal-open="report-search" class="rounded-xl border px-4 py-2">検索条件</button>
+            <button data-modal-open="report-sort" class="rounded-xl border px-4 py-2">並び替え</button>
+          </div>
+          <div MA-database data-list="report-list" class="divide-y"></div>
+          <button data-modal-open="report-stop" class="mt-4 w-full rounded-xl border py-2">停止</button>
+          <button class="mt-2 w-full rounded-xl border py-2">次の30件を表示</button>
+          <button data-nav-to="admin-home" class="mt-2 w-full rounded-xl border py-2">戻る</button>
+        </div>
+      </section>
+
+      <section id="screen-invite-history" class="screen" data-header="admin" data-footer="none">
+        <div class="max-w-6xl mx-auto mt-6 bg-white rounded-2xl shadow p-6">
+          <div class="flex gap-3 mb-4">
+            <button data-modal-open="invite-history-search" class="rounded-xl border px-4 py-2">検索条件</button>
+            <button data-modal-open="invite-history-sort" class="rounded-xl border px-4 py-2">並び替え</button>
+          </div>
+          <div MA-database data-list="invite-history" class="divide-y"></div>
+          <button class="mt-4 w-full rounded-xl border py-2">次の30件を表示</button>
+          <button data-nav-to="admin-home" class="mt-2 w-full rounded-xl border py-2">戻る</button>
+        </div>
+      </section>
+
+      <section id="screen-admin-usage" class="screen" data-header="admin" data-footer="none">
+        <div class="max-w-6xl mx-auto mt-6 bg-white rounded-2xl shadow p-6">
+          <div class="flex gap-3 mb-4">
+            <button data-modal-open="admin-usage-search" class="rounded-xl border px-4 py-2">検索条件</button>
+            <button data-modal-open="admin-usage-sort" class="rounded-xl border px-4 py-2">並び替え</button>
+          </div>
+          <div MA-database data-list="admin-usage" class="divide-y"></div>
+          <button class="mt-4 w-full rounded-xl border py-2">次の30件を表示</button>
+          <button data-nav-to="admin-home" class="mt-2 w-full rounded-xl border py-2">戻る</button>
+        </div>
+      </section>
+
+      <section id="screen-all-payments" class="screen" data-header="admin" data-footer="none">
+        <div class="max-w-6xl mx-auto mt-6 bg-white rounded-2xl shadow p-6">
+          <div class="flex gap-3 mb-4">
+            <button data-modal-open="all-payments-search" class="rounded-xl border px-4 py-2">検索条件</button>
+            <button data-modal-open="all-payments-sort" class="rounded-xl border px-4 py-2">並び替え</button>
+          </div>
+          <div MA-database data-list="all-payments" class="divide-y"></div>
+          <button class="mt-4 w-full rounded-xl border py-2">次の30件を表示</button>
+          <button data-nav-to="admin-home" class="mt-2 w-full rounded-xl border py-2">戻る</button>
+        </div>
+      </section>
+
+      <section id="screen-ad-point" class="screen" data-header="admin" data-footer="none">
+        <div class="max-w-4xl mx-auto mt-6 bg-white rounded-2xl shadow p-8 space-y-4">
+          <h1 class="text-2xl font-semibold">広告ポイント配分設定</h1>
+          <input type="number" placeholder="バナー広告ポイント消費" class="w-full border rounded-xl px-4 py-3" />
+          <input type="number" placeholder="フッター広告ポイント消費" class="w-full border rounded-xl px-4 py-3" />
+          <div id="ad-point-error" class="hidden text-sm text-red-600">入力内容に誤りがあります。</div>
+          <div id="ad-point-success" class="hidden text-sm text-green-600">保存完了しました。</div>
+          <div class="flex gap-3">
+            <button data-toggle="ad-point-success" class="rounded-xl bg-amber-700 text-white px-6 py-3">保存</button>
+            <button data-nav-to="admin-home" class="rounded-xl border px-6 py-3">戻る</button>
+          </div>
+          <button MA-dev class="text-xs text-slate-400" data-toggle="ad-point-error">開発: エラー表示切替</button>
+        </div>
+      </section>
+
+      <section id="screen-terms" class="screen" data-header="shared" data-footer="none">
+        <div class="max-w-4xl mx-auto mt-6 bg-white rounded-2xl shadow p-8 space-y-4">
+          <h1 class="text-2xl font-semibold">利用規約</h1>
+          <div class="border rounded-xl p-4 h-64 overflow-y-auto">
+            <p class="text-sm text-slate-600">利用規約本文テキストがここに表示されます。</p>
+          </div>
+          <button data-nav-to="admin-home" class="rounded-xl border px-6 py-3">戻る</button>
+        </div>
+      </section>
+
+      <!-- 共有ダイアログ群 -->
+      <div id="modal-member-menu" class="modal fixed inset-0 bg-black/40 items-start justify-end">
+        <div class="w-full max-w-sm bg-white h-full p-6 space-y-4">
+          <button data-modal-close="member-menu" class="flex items-center gap-2"><i data-lucide="x" class="w-4 h-4"></i>ハンバーガーメニューを閉じる</button>
+          <button data-nav-to="profile" class="w-full text-left">プロフィール</button>
+          <button data-nav-to="payment" class="w-full text-left">支払情報</button>
+          <button data-nav-to="invite" class="w-full text-left">招待コード</button>
+          <button data-nav-to="search" class="w-full text-left">仲間を調べる</button>
+          <button data-nav-to="dm" class="w-full text-left">DM</button>
+          <button data-nav-to="memo" class="w-full text-left">会員メモ</button>
+          <button data-nav-to="promo" class="w-full text-left">宣伝・イベント・お知らせ</button>
+          <button data-nav-to="terms" class="w-full text-left">利用規約を読む</button>
+          <button data-nav-to="login-info" class="w-full text-left">ログイン情報変更</button>
+          <button data-modal-open="logout" class="w-full text-left">ログアウト</button>
+        </div>
+      </div>
+
+      <div id="modal-admin-menu" class="modal fixed inset-0 bg-black/40 items-start justify-end">
+        <div class="w-full max-w-sm bg-white h-full p-6 space-y-4">
+          <button data-modal-close="admin-menu" class="flex items-center gap-2"><i data-lucide="x" class="w-4 h-4"></i>ハンバーガーメニューを閉じる</button>
+          <button data-nav-to="admin-members" class="w-full text-left">会員管理</button>
+          <button data-nav-to="official-dm" class="w-full text-left">公式DM</button>
+          <button data-nav-to="approval-signup" class="w-full text-left">新規入会申込承認</button>
+          <button data-nav-to="approval-event" class="w-full text-left">イベント掲載申込承認</button>
+          <button data-nav-to="approval-ad" class="w-full text-left">広告掲載申込承認</button>
+          <button data-nav-to="approval-identity" class="w-full text-left">本人確認書類承認</button>
+          <button data-nav-to="profile-fields" class="w-full text-left">プロフィール項目管理</button>
+          <button data-nav-to="notice-manage" class="w-full text-left">公式お知らせ管理</button>
+          <button data-nav-to="report" class="w-full text-left">通報管理</button>
+          <button data-nav-to="invite-history" class="w-full text-left">招待コード履歴</button>
+          <button data-nav-to="admin-usage" class="w-full text-left">全管理者利用履歴</button>
+          <button data-nav-to="all-payments" class="w-full text-left">全会員支払履歴</button>
+          <button data-nav-to="ad-point" class="w-full text-left">広告ポイント配分設定</button>
+          <button data-nav-to="terms" class="w-full text-left">利用規約を読む</button>
+          <button data-modal-open="logout" class="w-full text-left">ログアウト</button>
+        </div>
+      </div>
+
+      <div id="modal-profile-detail" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-lg w-full space-y-4">
+          <div class="flex items-center gap-4">
+            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80" alt="profile" class="h-16 w-16 rounded-full" />
+            <div>
+              <div class="flex gap-1 text-amber-500">★★★★★</div>
+              <p class="text-sm text-slate-500">信頼度バッジ</p>
+            </div>
+          </div>
+          <div MA-database data-list="profile-fields-display" class="grid gap-2"></div>
+          <div class="flex gap-4">
+            <button class="p-2 rounded-full border"><i data-lucide="star" class="w-4 h-4"></i></button>
+            <button class="p-2 rounded-full border"><i data-lucide="user-check" class="w-4 h-4"></i></button>
+            <button class="p-2 rounded-full border"><i data-lucide="user-plus" class="w-4 h-4"></i></button>
+            <button data-nav-to="dm-detail" class="p-2 rounded-full border"><i data-lucide="message-square" class="w-4 h-4"></i></button>
+            <button data-modal-open="memo-list" class="p-2 rounded-full border"><i data-lucide="sticky-note" class="w-4 h-4"></i></button>
+          </div>
+          <button data-modal-close="profile-detail" class="w-full rounded-xl border py-2">閉じる</button>
+        </div>
+      </div>
+
+      <div id="modal-memo-list" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-lg w-full space-y-4">
+          <div class="flex items-center gap-4">
+            <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=200&q=80" alt="member" class="h-12 w-12 rounded-full" />
+            <p class="font-semibold">会員メモ一覧</p>
+          </div>
+          <div MA-database data-list="memo-dialog-list" class="grid gap-2"></div>
+          <button data-modal-close="memo-list" data-modal-open="memo-detail" class="rounded-xl border px-4 py-2">新規追加</button>
+          <button data-modal-close="memo-list" class="w-full rounded-xl border py-2">閉じる</button>
+        </div>
+      </div>
+
+      <div id="modal-memo-detail" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-lg w-full space-y-4">
+          <button data-modal-close="memo-detail" data-modal-open="memo-list" class="rounded-xl border px-4 py-2">戻る</button>
+          <input type="text" placeholder="タイトル" class="w-full border rounded-xl px-4 py-3" />
+          <textarea class="w-full border rounded-xl px-4 py-3 h-32" placeholder="メモ内容"></textarea>
+          <button data-modal-close="memo-detail" data-modal-open="profile-detail" class="h-12 w-12 rounded-full overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80" alt="profile" />
+          </button>
+        </div>
+      </div>
+
+      <div id="modal-withdraw" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <p class="font-semibold">退会確認テキスト</p>
+          <div class="flex gap-3">
+            <button class="rounded-xl bg-amber-700 text-white px-4 py-2">退会する</button>
+            <button data-modal-close="withdraw" class="rounded-xl border px-4 py-2">キャンセル</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-logout" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <p class="font-semibold">ログアウト確認テキスト</p>
+          <div class="flex gap-3">
+            <button data-nav-to="login" class="rounded-xl bg-amber-700 text-white px-4 py-2">ログアウトする</button>
+            <button data-modal-close="logout" class="rounded-xl border px-4 py-2">キャンセル</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-favorite-remove" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <p class="font-semibold">お気に入り解除確認テキスト</p>
+          <div class="flex gap-3">
+            <button class="rounded-xl bg-amber-700 text-white px-4 py-2">解除する</button>
+            <button data-modal-close="favorite-remove" class="rounded-xl border px-4 py-2">キャンセル</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-member-search" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-2xl w-full space-y-3">
+          <h2 class="font-semibold">会員検索条件</h2>
+          <input type="text" placeholder="会員名" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="会社名" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="業種" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="役職" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="所在地（都道府県/市区町村）" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="活動エリア" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="得意分野" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="キーワード" class="w-full border rounded-xl px-4 py-2" />
+          <select class="w-full border rounded-xl px-4 py-2">
+            <option>信頼度バッジ</option>
+          </select>
+          <input type="text" placeholder="最終ログイン日時範囲" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="管理者が追加した検索用テキスト項目" class="w-full border rounded-xl px-4 py-2" />
+          <div class="flex gap-3">
+            <button class="rounded-xl bg-amber-700 text-white px-4 py-2">検索</button>
+            <button data-modal-close="member-search" class="rounded-xl border px-4 py-2">閉じる</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-member-sort" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <select class="w-full border rounded-xl px-4 py-2">
+            <option>会員名</option>
+            <option>会社名</option>
+            <option>信頼度バッジ</option>
+            <option>最終ログイン日時</option>
+          </select>
+          <div class="flex gap-3">
+            <button class="rounded-xl border px-4 py-2">昇順</button>
+            <button class="rounded-xl border px-4 py-2">降順</button>
+          </div>
+          <button class="w-full rounded-xl bg-amber-700 text-white py-2">並び替え</button>
+          <button data-modal-close="member-sort" class="w-full rounded-xl border py-2">閉じる</button>
+        </div>
+      </div>
+
+      <div id="modal-payment-search" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-3">
+          <input type="text" placeholder="支払日範囲" class="w-full border rounded-xl px-4 py-2" />
+          <select class="w-full border rounded-xl px-4 py-2"><option>支払種別</option></select>
+          <input type="text" placeholder="金額範囲" class="w-full border rounded-xl px-4 py-2" />
+          <div class="flex gap-3">
+            <button class="rounded-xl bg-amber-700 text-white px-4 py-2">検索</button>
+            <button data-modal-close="payment-search" class="rounded-xl border px-4 py-2">閉じる</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-payment-sort" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-3">
+          <select class="w-full border rounded-xl px-4 py-2">
+            <option>支払日</option>
+            <option>支払種別</option>
+            <option>金額</option>
+          </select>
+          <div class="flex gap-3">
+            <button class="rounded-xl border px-4 py-2">昇順</button>
+            <button class="rounded-xl border px-4 py-2">降順</button>
+          </div>
+          <button class="w-full rounded-xl bg-amber-700 text-white py-2">並び替え</button>
+          <button data-modal-close="payment-sort" class="w-full rounded-xl border py-2">閉じる</button>
+        </div>
+      </div>
+
+      <div id="modal-invite-create" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4 text-center">
+          <p class="text-lg font-semibold">新規生成された招待コード</p>
+          <p class="text-2xl font-bold">GE-4829-AB</p>
+          <p class="text-sm text-slate-600">作成完了しました。</p>
+          <button data-modal-close="invite-create" class="w-full rounded-xl border py-2">閉じる</button>
+        </div>
+      </div>
+
+      <div id="modal-invite-search" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-3">
+          <input type="text" placeholder="作成日範囲" class="w-full border rounded-xl px-4 py-2" />
+          <select class="w-full border rounded-xl px-4 py-2"><option>使用状況</option></select>
+          <div class="flex gap-3">
+            <button class="rounded-xl bg-amber-700 text-white px-4 py-2">検索</button>
+            <button data-modal-close="invite-search" class="rounded-xl border px-4 py-2">閉じる</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-invite-sort" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-3">
+          <select class="w-full border rounded-xl px-4 py-2">
+            <option>作成日</option>
+            <option>使用状況</option>
+            <option>有効期限</option>
+          </select>
+          <div class="flex gap-3">
+            <button class="rounded-xl border px-4 py-2">昇順</button>
+            <button class="rounded-xl border px-4 py-2">降順</button>
+          </div>
+          <button class="w-full rounded-xl bg-amber-700 text-white py-2">並び替え</button>
+          <button data-modal-close="invite-sort" class="w-full rounded-xl border py-2">閉じる</button>
+        </div>
+      </div>
+
+      <div id="modal-recommended-sort" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-3">
+          <select class="w-full border rounded-xl px-4 py-2">
+            <option>最終ログイン日時</option>
+            <option>信頼度バッジ</option>
+          </select>
+          <div class="flex gap-3">
+            <button class="rounded-xl border px-4 py-2">昇順</button>
+            <button class="rounded-xl border px-4 py-2">降順</button>
+          </div>
+          <button class="w-full rounded-xl bg-amber-700 text-white py-2">並び替え</button>
+          <button data-modal-close="recommended-sort" class="w-full rounded-xl border py-2">閉じる</button>
+        </div>
+      </div>
+
+      <div id="modal-new-sort" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-3">
+          <select class="w-full border rounded-xl px-4 py-2">
+            <option>入会日</option>
+            <option>信頼度バッジ</option>
+          </select>
+          <div class="flex gap-3">
+            <button class="rounded-xl border px-4 py-2">昇順</button>
+            <button class="rounded-xl border px-4 py-2">降順</button>
+          </div>
+          <button class="w-full rounded-xl bg-amber-700 text-white py-2">並び替え</button>
+          <button data-modal-close="new-sort" class="w-full rounded-xl border py-2">閉じる</button>
+        </div>
+      </div>
+
+      <!-- 管理者検索/並び替えダイアログなど -->
+      <div id="modal-admin-member-search" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-lg w-full space-y-3">
+          <input type="text" placeholder="会員名" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="会社名" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="業種" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="役職" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="所在地" class="w-full border rounded-xl px-4 py-2" />
+          <select class="w-full border rounded-xl px-4 py-2"><option>信頼度バッジ</option></select>
+          <select class="w-full border rounded-xl px-4 py-2"><option>ステータス</option></select>
+          <div class="flex gap-3">
+            <button class="rounded-xl bg-amber-700 text-white px-4 py-2">検索</button>
+            <button data-modal-close="admin-member-search" class="rounded-xl border px-4 py-2">閉じる</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-admin-member-sort" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-3">
+          <select class="w-full border rounded-xl px-4 py-2">
+            <option>会員名</option>
+            <option>最終ログイン日時</option>
+            <option>信頼度バッジ</option>
+            <option>ステータス</option>
+          </select>
+          <div class="flex gap-3">
+            <button class="rounded-xl border px-4 py-2">昇順</button>
+            <button class="rounded-xl border px-4 py-2">降順</button>
+          </div>
+          <button class="w-full rounded-xl bg-amber-700 text-white py-2">並び替え</button>
+          <button data-modal-close="admin-member-sort" class="w-full rounded-xl border py-2">閉じる</button>
+        </div>
+      </div>
+
+      <div id="modal-profile-fields-delete" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <p class="font-semibold">削除確認テキスト</p>
+          <div class="flex gap-3">
+            <button class="rounded-xl bg-amber-700 text-white px-4 py-2">削除する</button>
+            <button data-modal-close="profile-fields-delete" class="rounded-xl border px-4 py-2">キャンセル</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-invite-delete" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <p class="font-semibold">招待コード削除確認テキスト</p>
+          <div class="flex gap-3">
+            <button class="rounded-xl bg-amber-700 text-white px-4 py-2">削除する</button>
+            <button data-modal-close="invite-delete" class="rounded-xl border px-4 py-2">キャンセル</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-admin-stop" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <p class="font-semibold">停止確認テキスト</p>
+          <div class="flex gap-3">
+            <button class="rounded-xl bg-amber-700 text-white px-4 py-2">停止する</button>
+            <button data-modal-close="admin-stop" class="rounded-xl border px-4 py-2">キャンセル</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-report-stop" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <p class="font-semibold">停止確認テキスト</p>
+          <div class="flex gap-3">
+            <button class="rounded-xl bg-amber-700 text-white px-4 py-2">停止する</button>
+            <button data-modal-close="report-stop" class="rounded-xl border px-4 py-2">キャンセル</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-approval-signup-dialog" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <div class="flex gap-3">
+            <button class="rounded-xl bg-amber-700 text-white px-4 py-2">承認する</button>
+            <button class="rounded-xl border px-4 py-2">却下する</button>
+            <button data-modal-close="approval-signup-dialog" class="rounded-xl border px-4 py-2">キャンセル</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-approval-event-dialog" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <div class="flex gap-3">
+            <button class="rounded-xl bg-amber-700 text-white px-4 py-2">承認する</button>
+            <button class="rounded-xl border px-4 py-2">却下する</button>
+            <button data-modal-close="approval-event-dialog" class="rounded-xl border px-4 py-2">キャンセル</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-approval-ad-dialog" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <div class="flex gap-3">
+            <button class="rounded-xl bg-amber-700 text-white px-4 py-2">承認する</button>
+            <button class="rounded-xl border px-4 py-2">却下する</button>
+            <button data-modal-close="approval-ad-dialog" class="rounded-xl border px-4 py-2">キャンセル</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-approval-identity-dialog" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <div class="flex gap-3">
+            <button class="rounded-xl bg-amber-700 text-white px-4 py-2">承認する</button>
+            <button class="rounded-xl border px-4 py-2">却下する</button>
+            <button data-modal-close="approval-identity-dialog" class="rounded-xl border px-4 py-2">キャンセル</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 省略可能な検索/並び替えダイアログ群 -->
+      <div id="modal-timeline-search" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <input type="text" placeholder="検索キーワード" class="w-full border rounded-xl px-4 py-2" />
+          <div class="flex gap-3">
+            <button class="rounded-xl bg-amber-700 text-white px-4 py-2">検索</button>
+            <button data-modal-close="timeline-search" class="rounded-xl border px-4 py-2">閉じる</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-dm-search" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <input type="text" placeholder="会員名" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="キーワード" class="w-full border rounded-xl px-4 py-2" />
+          <div class="flex gap-3">
+            <button class="rounded-xl bg-amber-700 text-white px-4 py-2">検索</button>
+            <button data-modal-close="dm-search" class="rounded-xl border px-4 py-2">閉じる</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-dm-sort" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <select class="w-full border rounded-xl px-4 py-2">
+            <option>最終更新日時</option>
+            <option>会員名</option>
+          </select>
+          <div class="flex gap-3">
+            <button class="rounded-xl border px-4 py-2">昇順</button>
+            <button class="rounded-xl border px-4 py-2">降順</button>
+          </div>
+          <button class="w-full rounded-xl bg-amber-700 text-white py-2">並び替え</button>
+          <button data-modal-close="dm-sort" class="w-full rounded-xl border py-2">閉じる</button>
+        </div>
+      </div>
+
+      <div id="modal-dm-blocked-search" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <input type="text" placeholder="会員名" class="w-full border rounded-xl px-4 py-2" />
+          <div class="flex gap-3">
+            <button class="rounded-xl bg-amber-700 text-white px-4 py-2">検索</button>
+            <button data-modal-close="dm-blocked-search" class="rounded-xl border px-4 py-2">閉じる</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-dm-blocked-sort" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <select class="w-full border rounded-xl px-4 py-2">
+            <option>最終更新日時</option>
+            <option>会員名</option>
+          </select>
+          <div class="flex gap-3">
+            <button class="rounded-xl border px-4 py-2">昇順</button>
+            <button class="rounded-xl border px-4 py-2">降順</button>
+          </div>
+          <button class="w-full rounded-xl bg-amber-700 text-white py-2">並び替え</button>
+          <button data-modal-close="dm-blocked-sort" class="w-full rounded-xl border py-2">閉じる</button>
+        </div>
+      </div>
+
+      <div id="modal-memo-search" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <input type="text" placeholder="会員名" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="キーワード" class="w-full border rounded-xl px-4 py-2" />
+          <div class="flex gap-3">
+            <button class="rounded-xl bg-amber-700 text-white px-4 py-2">検索</button>
+            <button data-modal-close="memo-search" class="rounded-xl border px-4 py-2">閉じる</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-memo-sort" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <select class="w-full border rounded-xl px-4 py-2">
+            <option>更新日時</option>
+            <option>会員名</option>
+          </select>
+          <div class="flex gap-3">
+            <button class="rounded-xl border px-4 py-2">昇順</button>
+            <button class="rounded-xl border px-4 py-2">降順</button>
+          </div>
+          <button class="w-full rounded-xl bg-amber-700 text-white py-2">並び替え</button>
+          <button data-modal-close="memo-sort" class="w-full rounded-xl border py-2">閉じる</button>
+        </div>
+      </div>
+
+      <div id="modal-memo-delete" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <p class="font-semibold">メモ削除確認テキスト</p>
+          <div class="flex gap-3">
+            <button class="rounded-xl bg-amber-700 text-white px-4 py-2">削除</button>
+            <button data-modal-close="memo-delete" class="rounded-xl border px-4 py-2">キャンセル</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-receipt" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <p class="font-semibold">領収書ダウンロード案内テキスト</p>
+          <button class="w-full rounded-xl bg-amber-700 text-white py-2">ダウンロード</button>
+          <button data-modal-close="receipt" class="w-full rounded-xl border py-2">閉じる</button>
+        </div>
+      </div>
+
+      <div id="modal-notice-search" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <input type="text" placeholder="投稿日範囲" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="タイトル" class="w-full border rounded-xl px-4 py-2" />
+          <select class="w-full border rounded-xl px-4 py-2"><option>ステータス</option></select>
+          <div class="flex gap-3">
+            <button class="rounded-xl bg-amber-700 text-white px-4 py-2">検索</button>
+            <button data-modal-close="notice-search" class="rounded-xl border px-4 py-2">閉じる</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-notice-sort" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <select class="w-full border rounded-xl px-4 py-2">
+            <option>投稿日</option>
+            <option>タイトル</option>
+            <option>ステータス</option>
+          </select>
+          <div class="flex gap-3">
+            <button class="rounded-xl border px-4 py-2">昇順</button>
+            <button class="rounded-xl border px-4 py-2">降順</button>
+          </div>
+          <button class="w-full rounded-xl bg-amber-700 text-white py-2">並び替え</button>
+          <button data-modal-close="notice-sort" class="w-full rounded-xl border py-2">閉じる</button>
+        </div>
+      </div>
+
+      <div id="modal-report-search" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <input type="text" placeholder="通報日範囲" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="通報者" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="通報対象" class="w-full border rounded-xl px-4 py-2" />
+          <select class="w-full border rounded-xl px-4 py-2"><option>対応状況</option></select>
+          <input type="text" placeholder="キーワード" class="w-full border rounded-xl px-4 py-2" />
+          <div class="flex gap-3">
+            <button class="rounded-xl bg-amber-700 text-white px-4 py-2">検索</button>
+            <button data-modal-close="report-search" class="rounded-xl border px-4 py-2">閉じる</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-report-sort" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <select class="w-full border rounded-xl px-4 py-2">
+            <option>通報日</option>
+            <option>通報者</option>
+            <option>通報対象</option>
+            <option>対応状況</option>
+          </select>
+          <div class="flex gap-3">
+            <button class="rounded-xl border px-4 py-2">昇順</button>
+            <button class="rounded-xl border px-4 py-2">降順</button>
+          </div>
+          <button class="w-full rounded-xl bg-amber-700 text-white py-2">並び替え</button>
+          <button data-modal-close="report-sort" class="w-full rounded-xl border py-2">閉じる</button>
+        </div>
+      </div>
+
+      <div id="modal-invite-history-search" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <input type="text" placeholder="作成日範囲" class="w-full border rounded-xl px-4 py-2" />
+          <select class="w-full border rounded-xl px-4 py-2"><option>使用状況</option></select>
+          <input type="text" placeholder="作成者" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="登録会員" class="w-full border rounded-xl px-4 py-2" />
+          <div class="flex gap-3">
+            <button class="rounded-xl bg-amber-700 text-white px-4 py-2">検索</button>
+            <button data-modal-close="invite-history-search" class="rounded-xl border px-4 py-2">閉じる</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-invite-history-sort" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <select class="w-full border rounded-xl px-4 py-2">
+            <option>作成日</option>
+            <option>使用状況</option>
+            <option>作成者</option>
+            <option>登録会員</option>
+          </select>
+          <div class="flex gap-3">
+            <button class="rounded-xl border px-4 py-2">昇順</button>
+            <button class="rounded-xl border px-4 py-2">降順</button>
+          </div>
+          <button class="w-full rounded-xl bg-amber-700 text-white py-2">並び替え</button>
+          <button data-modal-close="invite-history-sort" class="w-full rounded-xl border py-2">閉じる</button>
+        </div>
+      </div>
+
+      <div id="modal-admin-usage-search" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <input type="text" placeholder="日時範囲" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="管理者名" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="操作内容キーワード" class="w-full border rounded-xl px-4 py-2" />
+          <div class="flex gap-3">
+            <button class="rounded-xl bg-amber-700 text-white px-4 py-2">検索</button>
+            <button data-modal-close="admin-usage-search" class="rounded-xl border px-4 py-2">閉じる</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-admin-usage-sort" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <select class="w-full border rounded-xl px-4 py-2">
+            <option>日時</option>
+            <option>管理者名</option>
+            <option>操作内容</option>
+          </select>
+          <div class="flex gap-3">
+            <button class="rounded-xl border px-4 py-2">昇順</button>
+            <button class="rounded-xl border px-4 py-2">降順</button>
+          </div>
+          <button class="w-full rounded-xl bg-amber-700 text-white py-2">並び替え</button>
+          <button data-modal-close="admin-usage-sort" class="w-full rounded-xl border py-2">閉じる</button>
+        </div>
+      </div>
+
+      <div id="modal-all-payments-search" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <input type="text" placeholder="支払日範囲" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="会員名" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="支払種別" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="金額範囲" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="決済方法" class="w-full border rounded-xl px-4 py-2" />
+          <div class="flex gap-3">
+            <button class="rounded-xl bg-amber-700 text-white px-4 py-2">検索</button>
+            <button data-modal-close="all-payments-search" class="rounded-xl border px-4 py-2">閉じる</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-all-payments-sort" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <select class="w-full border rounded-xl px-4 py-2">
+            <option>支払日</option>
+            <option>会員名</option>
+            <option>支払種別</option>
+            <option>金額</option>
+          </select>
+          <div class="flex gap-3">
+            <button class="rounded-xl border px-4 py-2">昇順</button>
+            <button class="rounded-xl border px-4 py-2">降順</button>
+          </div>
+          <button class="w-full rounded-xl bg-amber-700 text-white py-2">並び替え</button>
+          <button data-modal-close="all-payments-sort" class="w-full rounded-xl border py-2">閉じる</button>
+        </div>
+      </div>
+
+      <div id="modal-approval-signup-search" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <input type="text" placeholder="申請日範囲" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="会員名" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="メールアドレス" class="w-full border rounded-xl px-4 py-2" />
+          <select class="w-full border rounded-xl px-4 py-2"><option>ステータス</option></select>
+          <div class="flex gap-3">
+            <button class="rounded-xl bg-amber-700 text-white px-4 py-2">検索</button>
+            <button data-modal-close="approval-signup-search" class="rounded-xl border px-4 py-2">閉じる</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-approval-signup-sort" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <select class="w-full border rounded-xl px-4 py-2">
+            <option>申請日</option>
+            <option>会員名</option>
+            <option>ステータス</option>
+          </select>
+          <div class="flex gap-3">
+            <button class="rounded-xl border px-4 py-2">昇順</button>
+            <button class="rounded-xl border px-4 py-2">降順</button>
+          </div>
+          <button class="w-full rounded-xl bg-amber-700 text-white py-2">並び替え</button>
+          <button data-modal-close="approval-signup-sort" class="w-full rounded-xl border py-2">閉じる</button>
+        </div>
+      </div>
+
+      <div id="modal-approval-event-search" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <input type="text" placeholder="申請日範囲" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="会員名" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="タイトル" class="w-full border rounded-xl px-4 py-2" />
+          <select class="w-full border rounded-xl px-4 py-2"><option>ステータス</option></select>
+          <div class="flex gap-3">
+            <button class="rounded-xl bg-amber-700 text-white px-4 py-2">検索</button>
+            <button data-modal-close="approval-event-search" class="rounded-xl border px-4 py-2">閉じる</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-approval-event-sort" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <select class="w-full border rounded-xl px-4 py-2">
+            <option>申請日</option>
+            <option>会員名</option>
+            <option>ステータス</option>
+          </select>
+          <div class="flex gap-3">
+            <button class="rounded-xl border px-4 py-2">昇順</button>
+            <button class="rounded-xl border px-4 py-2">降順</button>
+          </div>
+          <button class="w-full rounded-xl bg-amber-700 text-white py-2">並び替え</button>
+          <button data-modal-close="approval-event-sort" class="w-full rounded-xl border py-2">閉じる</button>
+        </div>
+      </div>
+
+      <div id="modal-approval-ad-search" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <input type="text" placeholder="申請日範囲" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="会員名" class="w-full border rounded-xl px-4 py-2" />
+          <select class="w-full border rounded-xl px-4 py-2"><option>広告種別</option></select>
+          <select class="w-full border rounded-xl px-4 py-2"><option>ステータス</option></select>
+          <div class="flex gap-3">
+            <button class="rounded-xl bg-amber-700 text-white px-4 py-2">検索</button>
+            <button data-modal-close="approval-ad-search" class="rounded-xl border px-4 py-2">閉じる</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-approval-ad-sort" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <select class="w-full border rounded-xl px-4 py-2">
+            <option>申請日</option>
+            <option>会員名</option>
+            <option>ステータス</option>
+          </select>
+          <div class="flex gap-3">
+            <button class="rounded-xl border px-4 py-2">昇順</button>
+            <button class="rounded-xl border px-4 py-2">降順</button>
+          </div>
+          <button class="w-full rounded-xl bg-amber-700 text-white py-2">並び替え</button>
+          <button data-modal-close="approval-ad-sort" class="w-full rounded-xl border py-2">閉じる</button>
+        </div>
+      </div>
+
+      <div id="modal-approval-identity-search" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <input type="text" placeholder="申請日範囲" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="会員名" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="書類種別" class="w-full border rounded-xl px-4 py-2" />
+          <select class="w-full border rounded-xl px-4 py-2"><option>ステータス</option></select>
+          <div class="flex gap-3">
+            <button class="rounded-xl bg-amber-700 text-white px-4 py-2">検索</button>
+            <button data-modal-close="approval-identity-search" class="rounded-xl border px-4 py-2">閉じる</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-approval-identity-sort" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <select class="w-full border rounded-xl px-4 py-2">
+            <option>申請日</option>
+            <option>会員名</option>
+            <option>ステータス</option>
+          </select>
+          <div class="flex gap-3">
+            <button class="rounded-xl border px-4 py-2">昇順</button>
+            <button class="rounded-xl border px-4 py-2">降順</button>
+          </div>
+          <button class="w-full rounded-xl bg-amber-700 text-white py-2">並び替え</button>
+          <button data-modal-close="approval-identity-sort" class="w-full rounded-xl border py-2">閉じる</button>
+        </div>
+      </div>
+
+      <!-- 管理者検索/並び替え/他ダイアログ簡略 -->
+      <div id="modal-admin-history-search" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <input type="text" placeholder="日時範囲" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="操作内容キーワード" class="w-full border rounded-xl px-4 py-2" />
+          <div class="flex gap-3">
+            <button class="rounded-xl bg-amber-700 text-white px-4 py-2">検索</button>
+            <button data-modal-close="admin-history-search" class="rounded-xl border px-4 py-2">閉じる</button>
+          </div>
+        </div>
+      </div>
+      <div id="modal-admin-history-sort" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-3">
+          <select class="w-full border rounded-xl px-4 py-2"><option>日時</option><option>操作内容</option></select>
+          <div class="flex gap-3">
+            <button class="rounded-xl border px-4 py-2">昇順</button>
+            <button class="rounded-xl border px-4 py-2">降順</button>
+          </div>
+          <button class="w-full rounded-xl bg-amber-700 text-white py-2">並び替え</button>
+          <button data-modal-close="admin-history-sort" class="w-full rounded-xl border py-2">閉じる</button>
+        </div>
+      </div>
+      <div id="modal-dm-actions" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full space-y-4">
+          <button class="w-full rounded-xl border py-2">ブロック</button>
+          <button class="w-full rounded-xl border py-2">通報</button>
+          <button data-modal-close="dm-actions" class="w-full rounded-xl border py-2">閉じる</button>
+        </div>
+      </div>
+
+      <div id="modal-official-dm-search" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <input type="text" placeholder="会員名" class="w-full border rounded-xl px-4 py-2" />
+          <input type="text" placeholder="キーワード" class="w-full border rounded-xl px-4 py-2" />
+          <div class="flex gap-3">
+            <button class="rounded-xl bg-amber-700 text-white px-4 py-2">検索</button>
+            <button data-modal-close="official-dm-search" class="rounded-xl border px-4 py-2">閉じる</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-official-dm-sort" class="modal fixed inset-0 bg-black/40 items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full space-y-4">
+          <select class="w-full border rounded-xl px-4 py-2">
+            <option>最終更新日時</option>
+            <option>会員名</option>
+          </select>
+          <div class="flex gap-3">
+            <button class="rounded-xl border px-4 py-2">昇順</button>
+            <button class="rounded-xl border px-4 py-2">降順</button>
+          </div>
+          <button class="w-full rounded-xl bg-amber-700 text-white py-2">並び替え</button>
+          <button data-modal-close="official-dm-sort" class="w-full rounded-xl border py-2">閉じる</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const screens = Array.from(document.querySelectorAll(".screen"));
+    const modals = Array.from(document.querySelectorAll(".modal"));
+    const header = document.getElementById("global-header");
+    const footer = document.getElementById("global-footer");
+    let role = "member";
+
+    const showScreen = (id) => {
+      screens.forEach((screen) => screen.classList.remove("active"));
+      const target = document.getElementById(`screen-${id}`);
+      if (target) {
+        target.classList.add("active");
+        const headerMode = target.dataset.header;
+        const footerMode = target.dataset.footer;
+        header.classList.toggle("hidden", headerMode === "none");
+        footer.classList.toggle("hidden", footerMode !== "member");
+        if (headerMode === "admin" || (headerMode === "shared" && role === "admin")) {
+          header.querySelector("button[data-modal-open]").setAttribute("data-modal-open", "admin-menu");
+        } else {
+          header.querySelector("button[data-modal-open]").setAttribute("data-modal-open", "member-menu");
+        }
+      }
+    };
+
+    const openModal = (id) => {
+      const target = document.getElementById(`modal-${id}`);
+      if (target) target.classList.add("active");
+    };
+
+    const closeModal = (id) => {
+      const target = document.getElementById(`modal-${id}`);
+      if (target) target.classList.remove("active");
+    };
+
+    document.querySelectorAll("[data-nav-to]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const target = button.dataset.navTo;
+        if (target === "admin-home") role = "admin";
+        if (target === "member-home") role = "member";
+        showScreen(target);
+        modals.forEach((modal) => modal.classList.remove("active"));
+      });
+    });
+
+    document.querySelectorAll("[data-modal-open]").forEach((button) => {
+      button.addEventListener("click", () => openModal(button.dataset.modalOpen));
+    });
+
+    document.querySelectorAll("[data-modal-close]").forEach((button) => {
+      button.addEventListener("click", () => closeModal(button.dataset.modalClose));
+    });
+
+    document.querySelectorAll("[data-toggle]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const target = document.getElementById(button.dataset.toggle);
+        if (target) target.classList.toggle("hidden");
+      });
+    });
+
+    const tabGroups = {};
+    document.querySelectorAll("[data-tab]").forEach((button) => {
+      const group = button.dataset.tab;
+      if (!tabGroups[group]) tabGroups[group] = [];
+      tabGroups[group].push(button);
+      button.addEventListener("click", () => {
+        const target = button.dataset.tabTarget;
+        document.querySelectorAll(`[id^="tab-"]`).forEach((panel) => {
+          if (panel.id === `tab-${target}`) {
+            panel.classList.remove("hidden");
+          } else if (panel.id.startsWith("tab-")) {
+            panel.classList.add("hidden");
+          }
+        });
+      });
+    });
+
+    const loginTabs = {
+      existing: document.getElementById("login-existing"),
+      new: document.getElementById("login-new"),
+      tabExisting: document.getElementById("tab-login-existing"),
+      tabNew: document.getElementById("tab-login-new"),
+    };
+    loginTabs.tabExisting.addEventListener("click", () => {
+      loginTabs.existing.classList.remove("hidden");
+      loginTabs.new.classList.add("hidden");
+    });
+    loginTabs.tabNew.addEventListener("click", () => {
+      loginTabs.new.classList.remove("hidden");
+      loginTabs.existing.classList.add("hidden");
+    });
+
+    const tutorialSteps = [
+      "Give縁へようこそ。つながりを深める準備をしましょう。",
+      "信頼度バッジを確認して安心のマッチング。",
+      "お気に入りや1on1で関係を深めましょう。",
+      "DMで直接コミュニケーションが可能です。",
+      "支払い設定後にすべての機能が利用できます。",
+    ];
+    const indicatorContainer = document.getElementById("tutorial-indicators");
+    const tutorialText = document.getElementById("tutorial-text");
+    const tutorialNext = document.getElementById("tutorial-next");
+    const tutorialFinish = document.getElementById("tutorial-finish");
+    let tutorialIndex = 0;
+
+    const renderTutorial = () => {
+      indicatorContainer.innerHTML = "";
+      tutorialSteps.forEach((_, index) => {
+        const dot = document.createElement("div");
+        dot.className = `h-2 w-2 rounded-full ${index === tutorialIndex ? "bg-amber-700" : "bg-amber-200"}`;
+        indicatorContainer.appendChild(dot);
+      });
+      tutorialText.textContent = tutorialSteps[tutorialIndex];
+      tutorialNext.classList.toggle("hidden", tutorialIndex === tutorialSteps.length - 1);
+      tutorialFinish.classList.toggle("hidden", tutorialIndex !== tutorialSteps.length - 1);
+    };
+    tutorialNext.addEventListener("click", () => {
+      tutorialIndex = Math.min(tutorialIndex + 1, tutorialSteps.length - 1);
+      renderTutorial();
+    });
+    renderTutorial();
+
+    const listTemplates = {
+      notifications: (i) => `<div class="rounded-xl border p-3 flex items-center justify-between"><div><span class="text-xs bg-amber-100 text-amber-900 px-2 py-1 rounded-full">DM</span><p class="font-semibold">新着通知 ${i + 1}</p></div><button class="text-sm text-amber-700" data-nav-to="dm">確認</button></div>`,
+      "banner-ads": (i) => `<img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=400&q=80" class="h-24 w-64 rounded-xl" alt="banner" />`,
+      "recent-members": (i) => `<div class="border rounded-xl p-3 flex items-center gap-3"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80" class="h-10 w-10 rounded-full" alt="member" /><div><p class="font-semibold">会員名 ${i + 1}</p><p class="text-xs text-slate-500">最終ログイン: 1日前</p></div></div>`,
+      "quick-access-member": (i) => `<button class="w-full rounded-xl border px-4 py-2 text-left">クイックアクセス ${i + 1}</button>`,
+      "profile-text-fields": (i) => `<input type="text" class="w-full border rounded-xl px-4 py-3" placeholder="追加項目 ${i + 1}" />`,
+      "member-list": (i) => `<div class="py-3 flex flex-wrap items-center justify-between gap-3"><div><p class="font-semibold">会員名 ${i + 1}</p><p class="text-xs text-slate-500">会社名 ${i + 1}</p></div><div class="text-amber-500">★★★☆☆</div><div class="text-xs text-slate-500">最終ログイン: ${i + 1}日前</div><div class="flex gap-2"><button data-modal-open="favorite-remove" class="rounded-xl border px-3 py-1">解除</button><button data-modal-open="profile-detail" class="rounded-xl border px-3 py-1">詳細</button></div></div>`,
+      "payment-history": (i) => `<div class="py-3 flex flex-wrap items-center justify-between gap-3"><div><p class="font-semibold">支払日 ${i + 1}</p><p class="text-xs text-slate-500">支払種別: 更新費</p></div><p class="font-semibold">¥400</p><button class="rounded-xl border px-3 py-1" data-modal-open="receipt">領収書</button></div>`,
+      "invite-list": (i) => `<div class="py-3 flex flex-wrap items-center justify-between gap-3"><div><p class="font-semibold">コード番号 GE-${i + 1}</p><p class="text-xs text-slate-500">使用状況: 未使用</p></div><p class="text-xs text-slate-500">有効期限: 7日</p><button class="rounded-xl border px-3 py-1" data-modal-open="invite-delete">削除</button></div>`,
+      "member-search-results": (i) => `<div class="py-3 flex flex-wrap items-center justify-between gap-3"><div><p class="font-semibold">会員名 ${i + 1}</p><p class="text-xs text-slate-500">会社名 ${i + 1}</p></div><div class="text-amber-500">★★★★☆</div><div class="text-xs text-slate-500">最終ログイン: ${i + 1}日前</div></div>`,
+      "recommended-cards": (i) => `<div class="border rounded-2xl p-4 flex items-center gap-3"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80" class="h-12 w-12 rounded-full" alt="member" /><div><p class="font-semibold">おすすめ会員 ${i + 1}</p><div class="text-amber-500">★★★★★</div></div></div>`,
+      "new-members": (i) => `<div class="border rounded-2xl p-4 flex items-center gap-3"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=100&q=80" class="h-12 w-12 rounded-full" alt="member" /><div><p class="font-semibold">新規会員 ${i + 1}</p><div class="text-amber-500">★★★☆☆</div></div></div>`,
+      "recommended-list": (i) => `<div class="border rounded-2xl p-4 flex items-center gap-3"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80" class="h-12 w-12 rounded-full" alt="member" /><div><p class="font-semibold">おすすめ会員 ${i + 1}</p><div class="text-amber-500">★★★★☆</div></div></div>`,
+      "dm-list": (i) => `<div class="py-3 flex items-center justify-between gap-3"><div class="flex items-center gap-3"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80" class="h-10 w-10 rounded-full" alt="member" /><div><p class="font-semibold">相手会員 ${i + 1}</p><p class="text-xs text-slate-500">最新メッセージ</p></div></div><div class="flex gap-2 items-center"><button data-nav-to="dm-detail" class="rounded-xl border px-3 py-1">詳細</button><button data-modal-open="dm-actions" class="p-2 rounded-lg border"><i data-lucide="settings" class="w-4 h-4"></i></button></div></div>`,
+      "dm-blocked-list": (i) => `<div class="py-3 flex items-center justify-between gap-3"><div class="flex items-center gap-3"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=100&q=80" class="h-10 w-10 rounded-full" alt="member" /><div><p class="font-semibold">ブロック会員 ${i + 1}</p></div></div><div class="flex gap-2"><button class="rounded-xl border px-3 py-1">解除</button><button class="rounded-xl border px-3 py-1">通報</button></div></div>`,
+      "dm-memo-list": (i) => `<button class="rounded-xl border px-3 py-2 text-left">メモ ${i + 1}</button>`,
+      "memo-list": (i) => `<div class="py-3 flex items-center justify-between gap-3"><div><p class="font-semibold">メモ ${i + 1}</p><p class="text-xs text-slate-500">会員名 ${i + 1}</p></div><div class="flex gap-2"><button data-nav-to="memo-detail" class="rounded-xl border px-3 py-1">開く</button><button data-modal-open="memo-delete" class="rounded-xl border px-3 py-1">削除</button></div></div>`,
+      "memo-dialog-list": (i) => `<button class="w-full rounded-xl border px-4 py-2 text-left" data-modal-close="memo-list" data-modal-open="memo-detail">メモ ${i + 1}</button>`,
+      "timeline-list": (i) => `<div class="border rounded-xl p-3">タイムライン投稿 ${i + 1}</div>`,
+      "notice-list": (i) => `<div class="border rounded-xl p-3">公式お知らせ ${i + 1}</div>`,
+      "promotion-history": (i) => `<div class="py-3 flex items-center justify-between"><div><p class="font-semibold">申請 ${i + 1}</p><p class="text-xs text-slate-500">ステータス: 承認待ち</p></div></div>`,
+      "ads-history": (i) => `<div class="py-3 flex items-center justify-between"><div><p class="font-semibold">広告申請 ${i + 1}</p><p class="text-xs text-slate-500">ステータス: 承認待ち</p></div></div>`,
+      "admin-tasks": (i) => `<div class="py-3 flex items-center justify-between"><p class="font-semibold">タスク ${i + 1}</p><p class="text-xs text-slate-500">種別: 承認</p></div>`,
+      "quick-access-admin": (i) => `<button class="w-full rounded-xl border px-4 py-2 text-left">管理クイック ${i + 1}</button>`,
+      "admin-member-list": (i) => `<div class="py-3 flex flex-wrap items-center justify-between gap-3"><div><p class="font-semibold">会員 ${i + 1}</p><p class="text-xs text-slate-500">会社名 ${i + 1}</p></div><div class="text-amber-500">★★★★☆</div><p class="text-xs">ステータス: 有効</p><div class="flex gap-2"><button data-nav-to="admin-member-edit" class="rounded-xl border px-3 py-1">編集</button><button data-modal-open="admin-stop" class="rounded-xl border px-3 py-1">停止</button><button data-nav-to="admin-history" class="rounded-xl border px-3 py-1">利用履歴</button></div></div>`,
+      "admin-history": (i) => `<div class="py-3 flex items-center justify-between"><p class="font-semibold">日時 ${i + 1}</p><p class="text-xs text-slate-500">操作内容 ${i + 1}</p></div>`,
+      "official-dm-list": (i) => `<div class="py-3 flex items-center justify-between"><div><p class="font-semibold">会員 ${i + 1}</p><p class="text-xs text-slate-500">最新メッセージ抜粋</p></div><button data-nav-to="official-dm-detail" class="rounded-xl border px-3 py-1">詳細</button></div>`,
+      "approval-signup": (i) => `<div class="py-3 flex items-center justify-between"><div><p class="font-semibold">申請日 ${i + 1}</p><p class="text-xs text-slate-500">会員名 ${i + 1}</p></div><p class="text-xs">ステータス: 申請中</p></div>`,
+      "approval-event": (i) => `<div class="py-3 flex items-center justify-between"><div><p class="font-semibold">申請日 ${i + 1}</p><p class="text-xs text-slate-500">タイトル ${i + 1}</p></div><p class="text-xs">ステータス: 申請中</p></div>`,
+      "approval-ad": (i) => `<div class="py-3 flex items-center justify-between"><div><p class="font-semibold">申請日 ${i + 1}</p><p class="text-xs text-slate-500">広告種別: バナー</p></div><p class="text-xs">ステータス: 申請中</p></div>`,
+      "approval-identity": (i) => `<div class="py-3 flex items-center justify-between"><div><p class="font-semibold">申請日 ${i + 1}</p><p class="text-xs text-slate-500">書類種別: 免許証</p></div><p class="text-xs">ステータス: 申請中</p></div>`,
+      "profile-fields": (i) => `<div class="py-3 flex items-center justify-between"><p class="font-semibold">項目名 ${i + 1}</p><p class="text-xs text-slate-500">入力形式: input</p></div>`,
+      "notice-manage": (i) => `<div class="py-3 flex items-center justify-between"><div><p class="font-semibold">お知らせ ${i + 1}</p><p class="text-xs text-slate-500">投稿日 ${i + 1}</p></div><p class="text-xs">ステータス: 公開</p></div>`,
+      "report-list": (i) => `<div class="py-3 flex items-center justify-between"><div><p class="font-semibold">通報日 ${i + 1}</p><p class="text-xs text-slate-500">通報理由</p></div><p class="text-xs">対応状況: 未対応</p></div>`,
+      "invite-history": (i) => `<div class="py-3 flex items-center justify-between"><div><p class="font-semibold">コード ${i + 1}</p><p class="text-xs text-slate-500">作成者 ${i + 1}</p></div><p class="text-xs">使用状況: 未使用</p></div>`,
+      "admin-usage": (i) => `<div class="py-3 flex items-center justify-between"><div><p class="font-semibold">日時 ${i + 1}</p><p class="text-xs text-slate-500">管理者名 ${i + 1}</p></div><p class="text-xs">操作内容 ${i + 1}</p></div>`,
+      "all-payments": (i) => `<div class="py-3 flex items-center justify-between"><div><p class="font-semibold">支払日 ${i + 1}</p><p class="text-xs text-slate-500">会員名 ${i + 1}</p></div><p class="text-xs">決済方法: クレカ</p></div>`,
+      "profile-fields-display": (i) => `<div class="flex justify-between text-sm"><span>プロフィール項目 ${i + 1}</span><span>内容</span></div>`
+    };
+
+    document.querySelectorAll("[data-list]").forEach((list) => {
+      const type = list.dataset.list;
+      const template = listTemplates[type];
+      if (!template) return;
+      const items = Array.from({ length: 50 }, (_, i) => template(i)).join("");
+      list.innerHTML = items;
+    });
+
+    lucide.createIcons();
+  </script>
+</body>
+</html>
