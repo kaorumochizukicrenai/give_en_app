@@ -6,12 +6,12 @@ const adminMenu = document.getElementById('admin-menu');
 const modals = Array.from(document.querySelectorAll('.modal'));
 
 const listConfigs = {
-  footer-ads: { type: 'footerAd', total: 12 },
-  member-notifications: { type: 'notification', total: 5 },
-  banner-ads: { type: 'banner', total: 5 },
-  recent-members: { type: 'memberTile', total: 8 },
-  recommended-members: { type: 'memberTile', total: 8 },
-  profile-favorites: { type: 'memberTile', total: 50 },
+  'footer-ads': { type: 'footerAd', total: 12 },
+  'member-notifications': { type: 'notification', total: 5 },
+  'banner-ads': { type: 'banner', total: 5 },
+  'recent-members': { type: 'memberTile', total: 8 },
+  'recommended-members': { type: 'memberTile', total: 8 },
+  'profile-favorites': { type: 'memberTile', total: 50 },
   'profile-1on1': { type: 'memberTile', total: 50 },
   'profile-follow': { type: 'memberTile', total: 50 },
   'profile-followers': { type: 'memberTile', total: 50 },
