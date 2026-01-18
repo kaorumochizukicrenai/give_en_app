@@ -1,0 +1,2234 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Give縁 UI Mock</title>
+  <link rel="icon" href="logotest.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-slate-950 text-slate-100">
+  <div class="animated-bg" aria-hidden="true"></div>
+
+  <div id="app" class="min-h-screen relative">
+    <div id="global-header" class="fixed top-0 left-0 right-0 z-40 hidden">
+      <div class="bg-slate-900/80 backdrop-blur border-b border-slate-800">
+        <div class="max-w-6xl mx-auto flex items-center justify-between px-4 py-3">
+          <button class="flex items-center gap-2" data-action="go-home">
+            <img src="logotest.png" alt="Give縁" class="h-8" />
+          </button>
+          <button class="icon-btn" data-action="open-menu">
+            <i data-lucide="menu"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="global-footer" class="fixed bottom-0 left-0 right-0 z-30 hidden">
+      <div class="bg-slate-900/90 backdrop-blur border-t border-slate-800">
+        <div class="max-w-6xl mx-auto px-4 py-3">
+          <div class="text-xs text-slate-400 mb-2">承認済み広告</div>
+          <div class="flex gap-3 overflow-x-auto" MA-database data-list-type="footer-ads" data-max="5"></div>
+        </div>
+      </div>
+    </div>
+
+    <main class="pt-16 pb-24">
+      <!-- Login & pre-login screens -->
+      <section id="screen-link-expired" class="screen" data-auth="guest">
+        <div class="screen-shell">
+          <div class="card">
+            <p class="text-lg">リンクの有効期限が切れています。このまま画面を閉じてください。</p>
+            <div class="mt-6 flex justify-end">
+              <button class="btn" data-action="go-login">閉じる</button>
+            </div>
+          </div>
+        </div>
+        <div class="dev-tools" MA-dev>
+          <button data-action="go-login">開発確認: ログイン</button>
+        </div>
+      </section>
+
+      <section id="screen-new-password" class="screen" data-auth="guest">
+        <div class="screen-shell">
+          <div class="card max-w-xl w-full">
+            <h1 class="screen-title">新パスワード登録</h1>
+            <div class="form-grid">
+              <label class="field">
+                <span>新パスワード</span>
+                <input type="password" placeholder="••••••••" />
+              </label>
+              <label class="field">
+                <span>パスワード確認</span>
+                <input type="password" placeholder="••••••••" />
+              </label>
+              <div class="alert hidden" data-error="new-password">入力内容に誤りがあります。</div>
+            </div>
+            <div class="mt-6 flex flex-wrap gap-3 justify-end">
+              <button class="btn" data-action="submit-new-password">新パスワードを登録する</button>
+              <button class="btn-ghost" data-action="go-login">閉じる</button>
+            </div>
+          </div>
+        </div>
+        <div class="dev-tools" MA-dev>
+          <button data-toggle-error="new-password">開発確認: エラー表示切替</button>
+        </div>
+      </section>
+
+      <section id="screen-detail-register" class="screen" data-auth="guest">
+        <div class="screen-shell">
+          <div class="card max-w-xl w-full">
+            <h1 class="screen-title">詳細登録</h1>
+            <div class="form-grid">
+              <label class="field">
+                <span>電話番号</span>
+                <input type="tel" placeholder="090-1234-5678" />
+              </label>
+              <label class="field">
+                <span>お名前</span>
+                <input type="text" placeholder="山田 太郎" />
+              </label>
+              <label class="field">
+                <span>会社名</span>
+                <input type="text" placeholder="株式会社サンプル" />
+              </label>
+              <label class="field">
+                <span>招待コード（任意）</span>
+                <input type="text" placeholder="INV-XXXX" />
+              </label>
+              <div class="alert hidden" data-error="detail-register">入力内容に誤りがあります。</div>
+            </div>
+            <div class="mt-6 flex justify-end gap-3">
+              <button class="btn" data-action="submit-detail-register">詳細情報を送信する</button>
+            </div>
+          </div>
+        </div>
+        <div class="dev-tools" MA-dev>
+          <button data-toggle-error="detail-register">開発確認: エラー表示切替</button>
+        </div>
+      </section>
+
+      <section id="screen-detail-complete" class="screen" data-auth="guest">
+        <div class="screen-shell">
+          <div class="card max-w-xl w-full">
+            <p class="text-lg">後日パスワードが送付されたメールが届きますので、そちらでログインください。このままブラウザを閉じてください。</p>
+            <div class="mt-6 flex justify-end">
+              <button class="btn" data-action="go-login">閉じる</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-auto-login" class="screen" data-auth="guest">
+        <div class="screen-shell">
+          <div class="card flex flex-col items-center gap-4">
+            <div class="loader"></div>
+            <p>ログイン情報を確認しています...</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-login" class="screen" data-auth="guest">
+        <div class="screen-shell">
+          <div class="card max-w-3xl w-full">
+            <div class="flex justify-center mb-6">
+              <img src="logotest.png" alt="Give縁" class="h-12" />
+            </div>
+            <div class="tab-bar" data-tab-group="login">
+              <button class="tab active" data-tab="login-existing">アカウント作成済みの方</button>
+              <button class="tab" data-tab="login-new">アカウント未作成の方</button>
+            </div>
+
+            <div class="tab-panel" data-tab-content="login-existing">
+              <div class="form-grid">
+                <label class="field">
+                  <span>メールアドレス</span>
+                  <input type="email" placeholder="example@give-en.jp" />
+                </label>
+                <label class="field">
+                  <span>パスワード</span>
+                  <input type="password" placeholder="••••••••" />
+                </label>
+                <div class="alert hidden" data-error="login">ログイン情報が間違っています。</div>
+              </div>
+              <div class="mt-6 flex flex-wrap gap-3">
+                <button class="btn" data-action="login">ログイン</button>
+                <button class="btn-ghost" data-action="go-reset">パスワードリセット</button>
+              </div>
+            </div>
+
+            <div class="tab-panel hidden" data-tab-content="login-new">
+              <div class="form-grid">
+                <label class="field">
+                  <span>メールアドレス</span>
+                  <input type="email" placeholder="example@give-en.jp" />
+                </label>
+                <p class="text-sm text-slate-300">認証用のメールを送付するので、受け取れるメールアドレスをご入力ください。</p>
+                <div class="alert hidden" data-error="register-request">入力内容に誤りがあります。</div>
+              </div>
+              <div class="mt-6 flex gap-3">
+                <button class="btn" data-action="submit-register-request">新規アカウント登録申請</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="dev-tools" MA-dev>
+          <button data-toggle-error="login">開発確認: ログインエラー</button>
+          <button data-toggle-error="register-request">開発確認: 登録エラー</button>
+          <button data-action="go-link-expired">開発確認: リンク期限切れ</button>
+          <button data-action="go-new-password">開発確認: 新パスワード登録</button>
+          <button data-action="go-detail-register">開発確認: 詳細登録</button>
+          <button data-action="go-admin-login">開発確認: 管理者ログイン</button>
+        </div>
+      </section>
+
+      <section id="screen-register-request-complete" class="screen" data-auth="guest">
+        <div class="screen-shell">
+          <div class="card max-w-xl w-full">
+            <p class="text-lg">認証用メールを送付しました。メール内リンクから詳細登録を進めてください。</p>
+            <div class="mt-6 flex justify-end">
+              <button class="btn" data-action="go-login">ログイン画面に戻る</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-password-reset" class="screen" data-auth="guest">
+        <div class="screen-shell">
+          <div class="card max-w-xl w-full">
+            <h1 class="screen-title">パスワードリセット</h1>
+            <div class="form-grid">
+              <label class="field">
+                <span>メールアドレス</span>
+                <input type="email" placeholder="example@give-en.jp" />
+              </label>
+              <label class="field">
+                <span>電話番号</span>
+                <input type="tel" placeholder="090-1234-5678" />
+              </label>
+              <p class="text-sm text-slate-300">認証用のメールを送付するので、登録されているメールアドレスと電話番号をご入力ください。</p>
+              <div class="alert hidden" data-error="reset">入力内容に誤りがあります。</div>
+            </div>
+            <div class="mt-6 flex flex-wrap gap-3 justify-end">
+              <button class="btn" data-action="submit-reset">パスワードリセット申請</button>
+              <button class="btn-ghost" data-action="go-login">戻る</button>
+            </div>
+          </div>
+        </div>
+        <div class="dev-tools" MA-dev>
+          <button data-toggle-error="reset">開発確認: エラー表示切替</button>
+        </div>
+      </section>
+
+      <section id="screen-reset-complete" class="screen" data-auth="guest">
+        <div class="screen-shell">
+          <div class="card max-w-xl w-full">
+            <p class="text-lg">パスワードリセット用メールを送付しました。</p>
+            <div class="mt-6 flex justify-end">
+              <button class="btn" data-action="go-login">ログイン画面に戻る</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-new-password-complete" class="screen" data-auth="guest">
+        <div class="screen-shell">
+          <div class="card max-w-xl w-full">
+            <p class="text-lg">パスワードをリセットしました。このままブラウザを閉じていただき、もう一度ログインしてください。</p>
+            <div class="mt-6 flex justify-end">
+              <button class="btn" data-action="go-login">閉じる</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Member tutorial & payment setup -->
+      <section id="screen-tutorial" class="screen" data-auth="member">
+        <div class="screen-shell">
+          <div class="card max-w-4xl w-full">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-sm text-slate-300">チュートリアル 1/5</span>
+              <span class="badge">スキップ不可</span>
+            </div>
+            <div class="grid md:grid-cols-[1fr,1.2fr] gap-6 items-center">
+              <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=900&q=80" alt="チュートリアル" class="rounded-xl w-full h-56 object-cover" />
+              <div>
+                <h2 class="text-2xl font-semibold mb-2">Give縁へようこそ</h2>
+                <p class="text-slate-300">会員同士の信頼ある出会いを支援します。プロフィールやDMの使い方を順番に確認しましょう。</p>
+              </div>
+            </div>
+            <div class="mt-6 flex items-center justify-between">
+              <div class="flex gap-2">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+              </div>
+              <button class="btn" data-action="tutorial-next">次へ</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-tutorial-last" class="screen" data-auth="member">
+        <div class="screen-shell">
+          <div class="card max-w-4xl w-full">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-sm text-slate-300">チュートリアル 5/5</span>
+              <span class="badge">最後のページ</span>
+            </div>
+            <div class="grid md:grid-cols-[1fr,1.2fr] gap-6 items-center">
+              <img src="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=900&q=80" alt="チュートリアル" class="rounded-xl w-full h-56 object-cover" />
+              <div>
+                <h2 class="text-2xl font-semibold mb-2">つながりを深めましょう</h2>
+                <p class="text-slate-300">お気に入りや1on1機能で信頼度を高め、より良いビジネス機会を作りましょう。</p>
+              </div>
+            </div>
+            <div class="mt-6 flex items-center justify-between">
+              <div class="flex gap-2">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot active"></span>
+              </div>
+              <button class="btn" data-action="tutorial-complete">完了</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-payment-setup" class="screen" data-auth="member">
+        <div class="screen-shell">
+          <div class="card max-w-xl w-full">
+            <h1 class="screen-title">支払い方法設定</h1>
+            <p class="text-slate-300">更新費用の支払いに必要なクレジットカードを登録してください。</p>
+            <div class="mt-6">
+              <button class="btn w-full" data-action="setup-payment">支払い方法を設定する</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-stripe-loading" class="screen" data-auth="member">
+        <div class="screen-shell">
+          <div class="card flex flex-col items-center gap-4">
+            <div class="loader"></div>
+            <p>Stripe画面に移動しています...</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Member home -->
+      <section id="screen-member-home" class="screen" data-auth="member">
+        <div class="screen-shell">
+          <div class="grid lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 space-y-6">
+              <div class="card">
+                <h2 class="section-title">新着通知</h2>
+                <div class="space-y-3" MA-database data-list-type="notifications" data-max="5"></div>
+              </div>
+              <div class="card">
+                <h2 class="section-title">バナー広告</h2>
+                <div class="carousel" MA-database data-list-type="banner-ads" data-max="5"></div>
+              </div>
+              <div class="card">
+                <h2 class="section-title">直近にログインした会員</h2>
+                <div class="grid sm:grid-cols-2 gap-3" MA-database data-list-type="recent-members"></div>
+              </div>
+            </div>
+            <div class="space-y-6">
+              <div class="card">
+                <h2 class="section-title">おすすめ会員</h2>
+                <p class="text-sm text-slate-300 mb-4">相性の良い会員を優先して表示しています。</p>
+                <button class="btn w-full" data-action="go-recommended">おすすめ会員を見る</button>
+              </div>
+              <div class="card">
+                <h2 class="section-title">クイックアクセス</h2>
+                <div class="space-y-2" MA-database data-list-type="member-quick-access"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="lock-overlay hidden" data-lock="member-home">
+          <div class="lock-card">
+            <i data-lucide="lock"></i>
+            <p>更新費用が未払いのため、支払情報とログイン情報変更以外の操作が制限されています。</p>
+          </div>
+        </div>
+        <div class="dev-tools" MA-dev>
+          <button data-toggle-lock="member-home">開発確認: ロック状態切替</button>
+        </div>
+      </section>
+
+      <!-- Member menu screens -->
+      <section id="screen-profile" class="screen" data-auth="member">
+        <div class="screen-shell">
+          <div class="card max-w-2xl w-full">
+            <h1 class="screen-title">プロフィール</h1>
+            <div class="grid sm:grid-cols-2 gap-3">
+              <button class="btn" data-action="open-profile-preview">プロフィールプレビュー</button>
+              <button class="btn" data-action="go-profile-edit">プロフィール編集</button>
+              <button class="btn" data-action="go-identity">本人確認書類提出</button>
+              <button class="btn" data-action="go-favorites">お気に入り一覧</button>
+              <button class="btn" data-action="go-1on1">1on1一覧</button>
+              <button class="btn" data-action="go-following">フォローした一覧</button>
+              <button class="btn" data-action="go-followers">フォローされた一覧</button>
+            </div>
+            <div class="mt-6 flex justify-end">
+              <button class="btn-ghost" data-action="go-member-home">戻る</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-profile-edit" class="screen" data-auth="member">
+        <div class="screen-shell">
+          <div class="card max-w-3xl w-full">
+            <h1 class="screen-title">プロフィール編集</h1>
+            <div class="form-grid">
+              <label class="field">
+                <span>名前</span>
+                <input type="text" placeholder="山田 太郎" />
+              </label>
+              <label class="field">
+                <span>生年月日</span>
+                <input type="date" />
+              </label>
+              <label class="field">
+                <span>プロフィール画像</span>
+                <input type="file" />
+              </label>
+              <label class="field">
+                <span>肩書き</span>
+                <input type="text" placeholder="代表取締役" />
+              </label>
+              <label class="field">
+                <span>事業内容</span>
+                <textarea rows="3" placeholder="事業概要を入力"></textarea>
+              </label>
+              <div class="alert hidden" data-error="profile-edit">入力内容に誤りがあります。</div>
+              <div class="notice hidden" data-success="profile-edit">保存しました。</div>
+            </div>
+            <div class="mt-6 flex flex-wrap gap-3 justify-end">
+              <button class="btn" data-action="save-profile">保存</button>
+              <button class="btn-ghost" data-action="go-profile">戻る</button>
+            </div>
+          </div>
+        </div>
+        <div class="dev-tools" MA-dev>
+          <button data-toggle-error="profile-edit">開発確認: エラー表示切替</button>
+          <button data-toggle-success="profile-edit">開発確認: 保存完了表示切替</button>
+        </div>
+      </section>
+
+      <section id="screen-identity" class="screen" data-auth="member">
+        <div class="screen-shell">
+          <div class="card max-w-3xl w-full">
+            <h1 class="screen-title">本人確認書類提出</h1>
+            <div class="form-grid">
+              <label class="field">
+                <span>書類画像アップロード</span>
+                <input type="file" />
+              </label>
+              <label class="field">
+                <span>書類種別</span>
+                <select>
+                  <option>運転免許証</option>
+                  <option>マイナンバーカード</option>
+                  <option>パスポート</option>
+                </select>
+              </label>
+              <div class="alert hidden" data-error="identity">入力内容に誤りがあります。</div>
+              <div class="notice hidden" data-success="identity">送信完了しました。</div>
+            </div>
+            <div class="mt-6 flex gap-3 justify-end">
+              <button class="btn" data-action="submit-identity">送信</button>
+              <button class="btn-ghost" data-action="go-profile">戻る</button>
+            </div>
+          </div>
+        </div>
+        <div class="dev-tools" MA-dev>
+          <button data-toggle-error="identity">開発確認: エラー表示切替</button>
+          <button data-toggle-success="identity">開発確認: 送信完了表示切替</button>
+        </div>
+      </section>
+
+      <section id="screen-favorites" class="screen" data-auth="member">
+        <div class="screen-shell">
+          <div class="card">
+            <div class="screen-header">
+              <h1 class="screen-title">お気に入り一覧</h1>
+              <div class="flex gap-2">
+                <button class="btn-ghost" data-action="open-member-search">検索条件</button>
+                <button class="btn-ghost" data-action="open-member-sort">並び替え</button>
+              </div>
+            </div>
+            <div class="list" MA-database data-list-type="member-list" data-max="30"></div>
+            <div class="mt-4 flex justify-between items-center">
+              <button class="btn-ghost" data-action="go-profile">戻る</button>
+              <button class="btn" data-action="load-more">次の30件を表示</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-1on1" class="screen" data-auth="member">
+        <div class="screen-shell">
+          <div class="card">
+            <div class="screen-header">
+              <h1 class="screen-title">1on1一覧</h1>
+              <div class="flex gap-2">
+                <button class="btn-ghost" data-action="open-member-search">検索条件</button>
+                <button class="btn-ghost" data-action="open-member-sort">並び替え</button>
+              </div>
+            </div>
+            <div class="list" MA-database data-list-type="member-list" data-max="30"></div>
+            <div class="mt-4 flex justify-between items-center">
+              <button class="btn-ghost" data-action="go-profile">戻る</button>
+              <button class="btn" data-action="load-more">次の30件を表示</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-following" class="screen" data-auth="member">
+        <div class="screen-shell">
+          <div class="card">
+            <div class="screen-header">
+              <h1 class="screen-title">フォローした一覧</h1>
+              <div class="flex gap-2">
+                <button class="btn-ghost" data-action="open-member-search">検索条件</button>
+                <button class="btn-ghost" data-action="open-member-sort">並び替え</button>
+              </div>
+            </div>
+            <div class="list" MA-database data-list-type="member-list" data-max="30"></div>
+            <div class="mt-4 flex justify-between items-center">
+              <button class="btn-ghost" data-action="go-profile">戻る</button>
+              <button class="btn" data-action="load-more">次の30件を表示</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-followers" class="screen" data-auth="member">
+        <div class="screen-shell">
+          <div class="card">
+            <div class="screen-header">
+              <h1 class="screen-title">フォローされた一覧</h1>
+              <div class="flex gap-2">
+                <button class="btn-ghost" data-action="open-member-search">検索条件</button>
+                <button class="btn-ghost" data-action="open-member-sort">並び替え</button>
+              </div>
+            </div>
+            <div class="list" MA-database data-list-type="member-list" data-max="30"></div>
+            <div class="mt-4 flex justify-between items-center">
+              <button class="btn-ghost" data-action="go-profile">戻る</button>
+              <button class="btn" data-action="load-more">次の30件を表示</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-payment" class="screen" data-auth="member">
+        <div class="screen-shell">
+          <div class="card max-w-3xl w-full">
+            <h1 class="screen-title">支払情報</h1>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div class="card-inner">
+                <p class="text-sm text-slate-400">現在ポイント</p>
+                <p class="text-2xl font-semibold">12,500 pt</p>
+              </div>
+              <div class="card-inner">
+                <p class="text-sm text-slate-400">従量課金</p>
+                <div class="flex flex-wrap gap-2 mt-2">
+                  <button class="chip">1000円分</button>
+                  <button class="chip">2000円分</button>
+                  <button class="chip">3000円分</button>
+                  <button class="chip">5000円分</button>
+                </div>
+              </div>
+            </div>
+            <div class="mt-6 flex flex-wrap gap-3">
+              <button class="btn" data-action="go-payment-setup">支払い方法設定</button>
+              <button class="btn" data-action="go-charge">チャージする</button>
+              <button class="btn" data-action="go-payment-history">支払履歴一覧</button>
+              <button class="btn-ghost" data-action="go-member-home">戻る</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-charge" class="screen" data-auth="member">
+        <div class="screen-shell">
+          <div class="card max-w-3xl w-full">
+            <h1 class="screen-title">従量課金チャージ</h1>
+            <div class="card-inner mb-4">
+              <p class="text-sm text-slate-400">現在ポイント</p>
+              <p class="text-2xl font-semibold">12,500 pt</p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <button class="chip">1000円分</button>
+              <button class="chip">2000円分</button>
+              <button class="chip">3000円分</button>
+              <button class="chip">5000円分</button>
+            </div>
+            <div class="mt-6 flex flex-wrap gap-3">
+              <button class="btn" data-action="go-stripe">Stripe支払い画面へ</button>
+              <button class="btn-ghost" data-action="go-payment">戻る</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-payment-history" class="screen" data-auth="member">
+        <div class="screen-shell">
+          <div class="card">
+            <div class="screen-header">
+              <h1 class="screen-title">支払履歴一覧</h1>
+              <div class="flex gap-2">
+                <button class="btn-ghost" data-action="open-payment-search">検索条件</button>
+                <button class="btn-ghost" data-action="open-payment-sort">並び替え</button>
+              </div>
+            </div>
+            <div class="list" MA-database data-list-type="payment-history" data-max="30"></div>
+            <div class="mt-4 flex justify-between">
+              <button class="btn-ghost" data-action="go-payment">戻る</button>
+              <button class="btn" data-action="load-more">次の30件を表示</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-invite" class="screen" data-auth="member">
+        <div class="screen-shell">
+          <div class="card">
+            <div class="screen-header">
+              <h1 class="screen-title">招待コード</h1>
+              <div class="flex gap-2">
+                <button class="btn" data-action="open-invite-create">招待コード新規作成</button>
+                <button class="btn-ghost" data-action="open-invite-search">検索条件</button>
+                <button class="btn-ghost" data-action="open-invite-sort">並び替え</button>
+              </div>
+            </div>
+            <div class="list" MA-database data-list-type="invite-codes" data-max="30"></div>
+            <div class="mt-4 flex justify-between">
+              <button class="btn-ghost" data-action="go-member-home">戻る</button>
+              <button class="btn" data-action="load-more">次の30件を表示</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-search-members" class="screen" data-auth="member">
+        <div class="screen-shell">
+          <div class="card">
+            <div class="tab-bar" data-tab-group="member-search">
+              <button class="tab active" data-tab="search-tab">会員検索</button>
+              <button class="tab" data-tab="recommend-tab">おすすめ会員</button>
+              <button class="tab" data-tab="newcomer-tab">新規入会した会員</button>
+            </div>
+            <div class="tab-panel" data-tab-content="search-tab">
+              <div class="screen-header">
+                <h1 class="screen-title">会員検索</h1>
+                <div class="flex gap-2">
+                  <button class="btn-ghost" data-action="open-member-search">検索条件</button>
+                  <button class="btn-ghost" data-action="open-member-sort">並び替え</button>
+                </div>
+              </div>
+              <div class="list" MA-database data-list-type="member-search" data-max="30"></div>
+              <div class="mt-4 flex justify-end">
+                <button class="btn" data-action="load-more">次の30件を表示</button>
+              </div>
+            </div>
+            <div class="tab-panel hidden" data-tab-content="recommend-tab">
+              <div class="screen-header">
+                <h1 class="screen-title">おすすめ会員</h1>
+                <div>
+                  <button class="btn-ghost" data-action="open-recommend-sort">並び替え</button>
+                </div>
+              </div>
+              <div class="grid sm:grid-cols-2 gap-3" MA-database data-list-type="recommended-members"></div>
+              <div class="mt-4 flex justify-end">
+                <button class="btn" data-action="load-more">次の30件を表示</button>
+              </div>
+            </div>
+            <div class="tab-panel hidden" data-tab-content="newcomer-tab">
+              <div class="screen-header">
+                <h1 class="screen-title">新規入会した会員</h1>
+                <div>
+                  <button class="btn-ghost" data-action="open-newcomer-sort">並び替え</button>
+                </div>
+              </div>
+              <div class="grid sm:grid-cols-2 gap-3" MA-database data-list-type="new-members"></div>
+              <div class="mt-4 flex justify-end">
+                <button class="btn" data-action="load-more">次の30件を表示</button>
+              </div>
+            </div>
+            <div class="mt-6 flex justify-end">
+              <button class="btn-ghost" data-action="go-member-home">戻る</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-recommended" class="screen" data-auth="member">
+        <div class="screen-shell">
+          <div class="card">
+            <h1 class="screen-title">おすすめ会員一覧</h1>
+            <div class="grid sm:grid-cols-2 gap-3" MA-database data-list-type="recommended-members"></div>
+            <div class="mt-4 flex justify-end">
+              <button class="btn-ghost" data-action="go-member-home">戻る</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-dm" class="screen" data-auth="member">
+        <div class="screen-shell">
+          <div class="card">
+            <div class="tab-bar" data-tab-group="dm">
+              <button class="tab active" data-tab="dm-list">DM一覧</button>
+              <button class="tab" data-tab="dm-blocked">ブロック済み一覧</button>
+            </div>
+            <div class="tab-panel" data-tab-content="dm-list">
+              <div class="screen-header">
+                <h1 class="screen-title">DM一覧</h1>
+                <div class="flex gap-2">
+                  <button class="btn-ghost" data-action="open-dm-search">検索条件</button>
+                  <button class="btn-ghost" data-action="open-dm-sort">並び替え</button>
+                </div>
+              </div>
+              <div class="list" MA-database data-list-type="dm-list" data-max="50"></div>
+            </div>
+            <div class="tab-panel hidden" data-tab-content="dm-blocked">
+              <div class="screen-header">
+                <h1 class="screen-title">ブロック済み一覧</h1>
+                <div class="flex gap-2">
+                  <button class="btn-ghost" data-action="open-block-search">検索条件</button>
+                  <button class="btn-ghost" data-action="open-block-sort">並び替え</button>
+                </div>
+              </div>
+              <div class="list" MA-database data-list-type="blocked-list" data-max="50"></div>
+            </div>
+            <div class="mt-6 flex justify-end">
+              <button class="btn-ghost" data-action="go-member-home">戻る</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-dm-detail" class="screen" data-auth="member">
+        <div class="screen-shell">
+          <div class="card dm-detail">
+            <div class="dm-header">
+              <button class="icon-btn" data-action="go-dm"><i data-lucide="chevron-left"></i></button>
+              <div class="warning">まだフォローしてません</div>
+              <button class="icon-btn" data-action="open-profile-preview">
+                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=80&q=80" alt="プロフィール" class="h-8 w-8 rounded-full object-cover" />
+              </button>
+              <button class="icon-btn" data-action="open-dm-settings"><i data-lucide="settings"></i></button>
+            </div>
+            <div class="dm-body" MA-database data-list-type="dm-messages"></div>
+            <div class="dm-footer" data-dm-input>
+              <button class="icon-btn" data-action="open-dm-memo"><i data-lucide="sticky-note"></i></button>
+              <textarea rows="1" placeholder="メッセージを入力"></textarea>
+              <button class="icon-btn"><i data-lucide="send"></i></button>
+            </div>
+            <div class="dm-footer hidden" data-dm-memo>
+              <button class="icon-btn" data-action="close-dm-memo"><i data-lucide="chevron-down"></i></button>
+              <div class="memo-list" MA-database data-list-type="dm-memos" data-max="30"></div>
+              <button class="icon-btn" data-action="open-dm-memo-detail"><i data-lucide="plus"></i></button>
+            </div>
+            <div class="dm-footer hidden" data-dm-memo-detail>
+              <button class="btn-ghost" data-action="close-dm-memo-detail">戻る</button>
+              <input type="text" placeholder="メモタイトル" />
+              <textarea rows="2" placeholder="メモ内容"></textarea>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-memo" class="screen" data-auth="member">
+        <div class="screen-shell">
+          <div class="card">
+            <div class="screen-header">
+              <h1 class="screen-title">会員メモ</h1>
+              <div class="flex gap-2">
+                <button class="btn-ghost" data-action="open-memo-search">検索条件</button>
+                <button class="btn-ghost" data-action="open-memo-sort">並び替え</button>
+              </div>
+            </div>
+            <div class="list" MA-database data-list-type="memo-list" data-max="50"></div>
+            <div class="mt-6 flex justify-end">
+              <button class="btn-ghost" data-action="go-member-home">戻る</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-memo-detail" class="screen" data-auth="member">
+        <div class="screen-shell">
+          <div class="card max-w-4xl w-full">
+            <div class="flex justify-between items-center">
+              <button class="btn-ghost" data-action="go-memo">戻る</button>
+              <div class="flex gap-3">
+                <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=120&q=80" alt="プロフィール" class="h-10 w-10 rounded-full object-cover" />
+                <img src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=120&q=80" alt="プロフィール" class="h-10 w-10 rounded-full object-cover" />
+              </div>
+            </div>
+            <div class="form-grid mt-4">
+              <label class="field">
+                <span>タイトル</span>
+                <input type="text" placeholder="メモタイトル" />
+              </label>
+              <label class="field">
+                <span>メモ内容</span>
+                <textarea rows="6" placeholder="内容を入力"></textarea>
+              </label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-announcement" class="screen" data-auth="member">
+        <div class="screen-shell">
+          <div class="card">
+            <div class="tab-bar" data-tab-group="announcement">
+              <button class="tab active" data-tab="timeline">タイムライン</button>
+              <button class="tab" data-tab="notice">お知らせ</button>
+              <button class="tab" data-tab="promotion">宣伝</button>
+              <button class="tab" data-tab="advertise">広告</button>
+            </div>
+            <div class="tab-panel" data-tab-content="timeline">
+              <div class="screen-header">
+                <h1 class="screen-title">タイムライン</h1>
+                <div class="flex gap-2">
+                  <button class="btn-ghost" data-action="open-timeline-search">検索条件</button>
+                </div>
+              </div>
+              <div class="list" MA-database data-list-type="timeline" data-max="50"></div>
+            </div>
+            <div class="tab-panel hidden" data-tab-content="notice">
+              <h1 class="screen-title">公式お知らせ</h1>
+              <div class="list" MA-database data-list-type="notices" data-max="50"></div>
+            </div>
+            <div class="tab-panel hidden" data-tab-content="promotion">
+              <div class="screen-header">
+                <h1 class="screen-title">宣伝申請</h1>
+                <button class="btn" data-action="go-promotion-create">新規投稿</button>
+              </div>
+              <div class="list" MA-database data-list-type="promotion-history" data-max="50"></div>
+            </div>
+            <div class="tab-panel hidden" data-tab-content="advertise">
+              <div class="screen-header">
+                <h1 class="screen-title">広告申請</h1>
+                <button class="btn" data-action="go-ad-create">新規申請</button>
+              </div>
+              <div class="list" MA-database data-list-type="ad-history" data-max="50"></div>
+            </div>
+            <div class="mt-6 flex justify-end">
+              <button class="btn-ghost" data-action="go-member-home">戻る</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-promotion-create" class="screen" data-auth="member">
+        <div class="screen-shell">
+          <div class="card max-w-3xl w-full">
+            <h1 class="screen-title">宣伝 新規投稿</h1>
+            <div class="form-grid">
+              <label class="field">
+                <span>画像</span>
+                <input type="file" />
+              </label>
+              <label class="field">
+                <span>本文</span>
+                <textarea rows="5" placeholder="本文を入力"></textarea>
+              </label>
+              <label class="field">
+                <span>申込URL</span>
+                <input type="url" placeholder="https://" />
+              </label>
+            </div>
+            <div class="mt-6 flex justify-end">
+              <button class="btn" data-action="submit-promotion">申請する</button>
+              <button class="btn-ghost" data-action="go-announcement">戻る</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-ad-create" class="screen" data-auth="member">
+        <div class="screen-shell">
+          <div class="card max-w-3xl w-full">
+            <h1 class="screen-title">広告 新規申請</h1>
+            <div class="form-grid">
+              <label class="field">
+                <span>画像</span>
+                <input type="file" />
+              </label>
+              <label class="field">
+                <span>本文</span>
+                <textarea rows="5" placeholder="本文を入力"></textarea>
+              </label>
+              <label class="field">
+                <span>リンクURL</span>
+                <input type="url" placeholder="https://" />
+              </label>
+              <label class="field">
+                <span>広告種別</span>
+                <select>
+                  <option>バナー広告</option>
+                  <option>フッター広告</option>
+                </select>
+              </label>
+            </div>
+            <div class="mt-6 flex justify-end">
+              <button class="btn" data-action="submit-ad">申請する</button>
+              <button class="btn-ghost" data-action="go-announcement">戻る</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-account" class="screen" data-auth="member">
+        <div class="screen-shell">
+          <div class="card max-w-3xl w-full">
+            <h1 class="screen-title">ログイン情報変更</h1>
+            <div class="form-grid">
+              <label class="field">
+                <span>メールアドレス</span>
+                <input type="email" placeholder="example@give-en.jp" />
+              </label>
+              <label class="field">
+                <span>電話番号</span>
+                <input type="tel" placeholder="090-1234-5678" />
+              </label>
+              <label class="field">
+                <span>パスワード</span>
+                <input type="password" placeholder="••••••••" />
+              </label>
+              <label class="field">
+                <span>パスワード確認</span>
+                <input type="password" placeholder="••••••••" />
+              </label>
+              <div class="alert hidden" data-error="account">入力内容に誤りがあります。</div>
+              <div class="notice hidden" data-success="account">保存しました。</div>
+            </div>
+            <div class="mt-6 flex flex-wrap gap-3 justify-end">
+              <button class="btn" data-action="save-account">保存</button>
+              <button class="btn-ghost" data-action="open-withdraw">会員退会</button>
+              <button class="btn-ghost" data-action="go-member-home">戻る</button>
+            </div>
+          </div>
+        </div>
+        <div class="dev-tools" MA-dev>
+          <button data-toggle-error="account">開発確認: エラー表示切替</button>
+          <button data-toggle-success="account">開発確認: 保存完了表示切替</button>
+        </div>
+      </section>
+
+      <section id="screen-terms" class="screen" data-auth="member">
+        <div class="screen-shell">
+          <div class="card max-w-4xl w-full">
+            <h1 class="screen-title">利用規約</h1>
+            <div class="terms-box">
+              <p>本規約はGive縁の利用条件を定めるものです。利用者は本規約に同意のうえサービスをご利用ください。</p>
+              <p>1. 会員は最新情報を正確に登録し、他会員の信頼を損なう行為を行わないものとします。</p>
+              <p>2. 不正行為や迷惑行為が確認された場合、管理者は利用停止措置を行う場合があります。</p>
+              <p>3. 支払いに関する取り決めは別途定める料金規定に従います。</p>
+              <p>4. 本サービスに掲載されるコンテンツの著作権は各投稿者または当社に帰属します。</p>
+              <p>5. 詳細な規定は随時更新され、最新の内容が適用されます。</p>
+            </div>
+            <div class="mt-6 flex justify-end">
+              <button class="btn-ghost" data-action="go-member-home">戻る</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Admin screens -->
+      <section id="screen-admin-home" class="screen" data-auth="admin">
+        <div class="screen-shell">
+          <div class="card">
+            <h1 class="screen-title">管理者ホーム</h1>
+            <div class="list" MA-database data-list-type="admin-tasks" data-max="10"></div>
+            <div class="mt-6">
+              <h2 class="section-title">クイックアクセス</h2>
+              <div class="space-y-2" MA-database data-list-type="admin-quick-access"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-admin-members" class="screen" data-auth="admin">
+        <div class="screen-shell">
+          <div class="card">
+            <div class="screen-header">
+              <h1 class="screen-title">会員管理</h1>
+              <div class="flex gap-2">
+                <button class="btn-ghost" data-action="open-admin-member-search">検索条件</button>
+                <button class="btn-ghost" data-action="open-admin-member-sort">並び替え</button>
+              </div>
+            </div>
+            <div class="list" MA-database data-list-type="admin-member-list" data-max="30"></div>
+            <div class="mt-4 flex justify-between">
+              <button class="btn-ghost" data-action="go-admin-home">戻る</button>
+              <button class="btn" data-action="load-more">次の30件を表示</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-admin-member-edit" class="screen" data-auth="admin">
+        <div class="screen-shell">
+          <div class="card max-w-4xl w-full">
+            <h1 class="screen-title">会員編集</h1>
+            <div class="form-grid">
+              <label class="field">
+                <span>会員名</span>
+                <input type="text" placeholder="会員名" />
+              </label>
+              <label class="field">
+                <span>会社名</span>
+                <input type="text" placeholder="会社名" />
+              </label>
+              <div class="field">
+                <span>プロフィール画像</span>
+                <img src="https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=200&q=80" alt="プロフィール" class="h-20 w-20 rounded-full" />
+              </div>
+              <label class="field">
+                <span>信頼度バッジ</span>
+                <select>
+                  <option>★</option>
+                  <option>★★</option>
+                  <option>★★★</option>
+                  <option>★★★★</option>
+                  <option>★★★★★</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>停止状態</span>
+                <select>
+                  <option>有効</option>
+                  <option>停止中</option>
+                </select>
+              </label>
+              <div class="alert hidden" data-error="admin-member-edit">入力内容に誤りがあります。</div>
+              <div class="notice hidden" data-success="admin-member-edit">保存しました。</div>
+            </div>
+            <div class="mt-6 flex justify-end gap-3">
+              <button class="btn" data-action="save-admin-member">保存</button>
+              <button class="btn-ghost" data-action="go-admin-members">戻る</button>
+            </div>
+          </div>
+        </div>
+        <div class="dev-tools" MA-dev>
+          <button data-toggle-error="admin-member-edit">開発確認: エラー表示切替</button>
+          <button data-toggle-success="admin-member-edit">開発確認: 保存完了表示切替</button>
+        </div>
+      </section>
+
+      <section id="screen-admin-member-history" class="screen" data-auth="admin">
+        <div class="screen-shell">
+          <div class="card">
+            <div class="screen-header">
+              <h1 class="screen-title">会員利用履歴</h1>
+              <div class="flex gap-2">
+                <button class="btn-ghost" data-action="open-admin-history-search">検索条件</button>
+                <button class="btn-ghost" data-action="open-admin-history-sort">並び替え</button>
+              </div>
+            </div>
+            <div class="list" MA-database data-list-type="admin-usage-history" data-max="30"></div>
+            <div class="mt-4 flex justify-between">
+              <button class="btn-ghost" data-action="go-admin-members">戻る</button>
+              <button class="btn" data-action="load-more">次の30件を表示</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-admin-dm" class="screen" data-auth="admin">
+        <div class="screen-shell">
+          <div class="card">
+            <div class="screen-header">
+              <h1 class="screen-title">公式DM</h1>
+              <div class="flex gap-2">
+                <button class="btn-ghost" data-action="open-admin-dm-search">検索条件</button>
+                <button class="btn-ghost" data-action="open-admin-dm-sort">並び替え</button>
+              </div>
+            </div>
+            <div class="list" MA-database data-list-type="admin-dm-list" data-max="30"></div>
+            <div class="mt-4 flex justify-between">
+              <button class="btn-ghost" data-action="go-admin-home">戻る</button>
+              <button class="btn" data-action="load-more">次の30件を表示</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-admin-dm-detail" class="screen" data-auth="admin">
+        <div class="screen-shell">
+          <div class="card dm-detail">
+            <div class="dm-header">
+              <button class="icon-btn" data-action="go-admin-dm"><i data-lucide="chevron-left"></i></button>
+              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80" alt="相手" class="h-10 w-10 rounded-full object-cover" />
+              <span class="text-sm text-slate-300">公式DMスレッド</span>
+            </div>
+            <div class="dm-body" MA-database data-list-type="admin-dm-messages"></div>
+            <div class="dm-footer">
+              <textarea rows="1" placeholder="メッセージを入力"></textarea>
+              <button class="icon-btn"><i data-lucide="send"></i></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-admin-approval" class="screen" data-auth="admin">
+        <div class="screen-shell">
+          <div class="card">
+            <div class="screen-header">
+              <h1 class="screen-title">新規入会申込承認</h1>
+              <div class="flex gap-2">
+                <button class="btn-ghost" data-action="open-join-search">検索条件</button>
+                <button class="btn-ghost" data-action="open-join-sort">並び替え</button>
+              </div>
+            </div>
+            <div class="list" MA-database data-list-type="join-requests" data-max="30"></div>
+            <div class="mt-4 flex justify-between">
+              <button class="btn-ghost" data-action="go-admin-home">戻る</button>
+              <button class="btn" data-action="load-more">次の30件を表示</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-admin-event-approval" class="screen" data-auth="admin">
+        <div class="screen-shell">
+          <div class="card">
+            <div class="screen-header">
+              <h1 class="screen-title">イベント掲載申込承認</h1>
+              <div class="flex gap-2">
+                <button class="btn-ghost" data-action="open-event-search">検索条件</button>
+                <button class="btn-ghost" data-action="open-event-sort">並び替え</button>
+              </div>
+            </div>
+            <div class="list" MA-database data-list-type="event-requests" data-max="30"></div>
+            <div class="mt-4 flex justify-between">
+              <button class="btn-ghost" data-action="go-admin-home">戻る</button>
+              <button class="btn" data-action="load-more">次の30件を表示</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-admin-ad-approval" class="screen" data-auth="admin">
+        <div class="screen-shell">
+          <div class="card">
+            <div class="screen-header">
+              <h1 class="screen-title">広告掲載申込承認</h1>
+              <div class="flex gap-2">
+                <button class="btn-ghost" data-action="open-ad-search">検索条件</button>
+                <button class="btn-ghost" data-action="open-ad-sort">並び替え</button>
+              </div>
+            </div>
+            <div class="list" MA-database data-list-type="ad-requests" data-max="30"></div>
+            <div class="mt-4 flex justify-between">
+              <button class="btn-ghost" data-action="go-admin-home">戻る</button>
+              <button class="btn" data-action="load-more">次の30件を表示</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-admin-identity-approval" class="screen" data-auth="admin">
+        <div class="screen-shell">
+          <div class="card">
+            <div class="screen-header">
+              <h1 class="screen-title">本人確認書類承認</h1>
+              <div class="flex gap-2">
+                <button class="btn-ghost" data-action="open-identity-search">検索条件</button>
+                <button class="btn-ghost" data-action="open-identity-sort">並び替え</button>
+              </div>
+            </div>
+            <div class="list" MA-database data-list-type="identity-requests" data-max="30"></div>
+            <div class="mt-4 flex justify-between">
+              <button class="btn-ghost" data-action="go-admin-home">戻る</button>
+              <button class="btn" data-action="load-more">次の30件を表示</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-admin-profile-fields" class="screen" data-auth="admin">
+        <div class="screen-shell">
+          <div class="card">
+            <div class="screen-header">
+              <h1 class="screen-title">プロフィール項目管理</h1>
+              <button class="btn" data-action="go-profile-field-create">新規追加</button>
+            </div>
+            <div class="list" MA-database data-list-type="profile-fields" data-max="50"></div>
+            <div class="mt-4 flex justify-end">
+              <button class="btn-ghost" data-action="go-admin-home">戻る</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-admin-profile-field-create" class="screen" data-auth="admin">
+        <div class="screen-shell">
+          <div class="card max-w-2xl w-full">
+            <h1 class="screen-title">プロフィール項目 新規追加</h1>
+            <div class="form-grid">
+              <label class="field">
+                <span>項目名</span>
+                <input type="text" placeholder="項目名" />
+              </label>
+              <label class="field">
+                <span>入力形式</span>
+                <select>
+                  <option>input</option>
+                  <option>textarea</option>
+                </select>
+              </label>
+              <div class="alert hidden" data-error="profile-field">入力内容に誤りがあります。</div>
+              <div class="notice hidden" data-success="profile-field">保存しました。</div>
+            </div>
+            <div class="mt-6 flex justify-end gap-3">
+              <button class="btn" data-action="save-profile-field">保存</button>
+              <button class="btn-ghost" data-action="go-admin-profile-fields">戻る</button>
+            </div>
+          </div>
+        </div>
+        <div class="dev-tools" MA-dev>
+          <button data-toggle-error="profile-field">開発確認: エラー表示切替</button>
+          <button data-toggle-success="profile-field">開発確認: 保存完了表示切替</button>
+        </div>
+      </section>
+
+      <section id="screen-admin-profile-field-edit" class="screen" data-auth="admin">
+        <div class="screen-shell">
+          <div class="card max-w-2xl w-full">
+            <h1 class="screen-title">プロフィール項目 編集</h1>
+            <div class="form-grid">
+              <label class="field">
+                <span>項目名</span>
+                <input type="text" placeholder="項目名" />
+              </label>
+              <label class="field">
+                <span>入力形式</span>
+                <select>
+                  <option>input</option>
+                  <option>textarea</option>
+                </select>
+              </label>
+              <div class="alert hidden" data-error="profile-field-edit">入力内容に誤りがあります。</div>
+              <div class="notice hidden" data-success="profile-field-edit">保存しました。</div>
+            </div>
+            <div class="mt-6 flex justify-end gap-3">
+              <button class="btn" data-action="save-profile-field">保存</button>
+              <button class="btn-ghost" data-action="go-admin-profile-fields">戻る</button>
+            </div>
+          </div>
+        </div>
+        <div class="dev-tools" MA-dev>
+          <button data-toggle-error="profile-field-edit">開発確認: エラー表示切替</button>
+          <button data-toggle-success="profile-field-edit">開発確認: 保存完了表示切替</button>
+        </div>
+      </section>
+
+      <section id="screen-admin-notice" class="screen" data-auth="admin">
+        <div class="screen-shell">
+          <div class="card">
+            <div class="screen-header">
+              <h1 class="screen-title">公式お知らせ管理</h1>
+              <div class="flex gap-2">
+                <button class="btn-ghost" data-action="open-notice-search">検索条件</button>
+                <button class="btn-ghost" data-action="open-notice-sort">並び替え</button>
+                <button class="btn" data-action="go-notice-create">新規作成</button>
+              </div>
+            </div>
+            <div class="list" MA-database data-list-type="admin-notice" data-max="30"></div>
+            <div class="mt-4 flex justify-between">
+              <button class="btn-ghost" data-action="go-admin-home">戻る</button>
+              <button class="btn" data-action="load-more">次の30件を表示</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-admin-notice-create" class="screen" data-auth="admin">
+        <div class="screen-shell">
+          <div class="card max-w-3xl w-full">
+            <h1 class="screen-title">公式お知らせ 新規作成</h1>
+            <div class="form-grid">
+              <label class="field">
+                <span>タイトル</span>
+                <input type="text" placeholder="タイトル" />
+              </label>
+              <label class="field">
+                <span>本文</span>
+                <textarea rows="5" placeholder="本文を入力"></textarea>
+              </label>
+              <label class="field">
+                <span>公開ステータス</span>
+                <select>
+                  <option>下書き</option>
+                  <option>公開</option>
+                </select>
+              </label>
+              <div class="alert hidden" data-error="notice-create">入力内容に誤りがあります。</div>
+              <div class="notice hidden" data-success="notice-create">保存しました。</div>
+            </div>
+            <div class="mt-6 flex justify-end gap-3">
+              <button class="btn" data-action="save-notice">保存</button>
+              <button class="btn-ghost" data-action="go-admin-notice">戻る</button>
+            </div>
+          </div>
+        </div>
+        <div class="dev-tools" MA-dev>
+          <button data-toggle-error="notice-create">開発確認: エラー表示切替</button>
+          <button data-toggle-success="notice-create">開発確認: 保存完了表示切替</button>
+        </div>
+      </section>
+
+      <section id="screen-admin-notice-edit" class="screen" data-auth="admin">
+        <div class="screen-shell">
+          <div class="card max-w-3xl w-full">
+            <h1 class="screen-title">公式お知らせ 編集</h1>
+            <div class="form-grid">
+              <label class="field">
+                <span>タイトル</span>
+                <input type="text" placeholder="タイトル" />
+              </label>
+              <label class="field">
+                <span>本文</span>
+                <textarea rows="5" placeholder="本文を入力"></textarea>
+              </label>
+              <label class="field">
+                <span>公開ステータス</span>
+                <select>
+                  <option>下書き</option>
+                  <option>公開</option>
+                </select>
+              </label>
+              <div class="alert hidden" data-error="notice-edit">入力内容に誤りがあります。</div>
+              <div class="notice hidden" data-success="notice-edit">保存しました。</div>
+            </div>
+            <div class="mt-6 flex justify-end gap-3">
+              <button class="btn" data-action="save-notice">保存</button>
+              <button class="btn-ghost" data-action="go-admin-notice">戻る</button>
+            </div>
+          </div>
+        </div>
+        <div class="dev-tools" MA-dev>
+          <button data-toggle-error="notice-edit">開発確認: エラー表示切替</button>
+          <button data-toggle-success="notice-edit">開発確認: 保存完了表示切替</button>
+        </div>
+      </section>
+
+      <section id="screen-admin-report" class="screen" data-auth="admin">
+        <div class="screen-shell">
+          <div class="card">
+            <div class="screen-header">
+              <h1 class="screen-title">通報管理</h1>
+              <div class="flex gap-2">
+                <button class="btn-ghost" data-action="open-report-search">検索条件</button>
+                <button class="btn-ghost" data-action="open-report-sort">並び替え</button>
+              </div>
+            </div>
+            <div class="list" MA-database data-list-type="reports" data-max="30"></div>
+            <div class="mt-4 flex justify-between">
+              <button class="btn-ghost" data-action="go-admin-home">戻る</button>
+              <button class="btn" data-action="load-more">次の30件を表示</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-admin-invite-history" class="screen" data-auth="admin">
+        <div class="screen-shell">
+          <div class="card">
+            <div class="screen-header">
+              <h1 class="screen-title">招待コード履歴</h1>
+              <div class="flex gap-2">
+                <button class="btn-ghost" data-action="open-invite-history-search">検索条件</button>
+                <button class="btn-ghost" data-action="open-invite-history-sort">並び替え</button>
+              </div>
+            </div>
+            <div class="list" MA-database data-list-type="invite-history" data-max="30"></div>
+            <div class="mt-4 flex justify-between">
+              <button class="btn-ghost" data-action="go-admin-home">戻る</button>
+              <button class="btn" data-action="load-more">次の30件を表示</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-admin-usage" class="screen" data-auth="admin">
+        <div class="screen-shell">
+          <div class="card">
+            <div class="screen-header">
+              <h1 class="screen-title">全管理者利用履歴</h1>
+              <div class="flex gap-2">
+                <button class="btn-ghost" data-action="open-admin-usage-search">検索条件</button>
+                <button class="btn-ghost" data-action="open-admin-usage-sort">並び替え</button>
+              </div>
+            </div>
+            <div class="list" MA-database data-list-type="admin-usage" data-max="30"></div>
+            <div class="mt-4 flex justify-between">
+              <button class="btn-ghost" data-action="go-admin-home">戻る</button>
+              <button class="btn" data-action="load-more">次の30件を表示</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-admin-payments" class="screen" data-auth="admin">
+        <div class="screen-shell">
+          <div class="card">
+            <div class="screen-header">
+              <h1 class="screen-title">全会員支払履歴</h1>
+              <div class="flex gap-2">
+                <button class="btn-ghost" data-action="open-admin-payment-search">検索条件</button>
+                <button class="btn-ghost" data-action="open-admin-payment-sort">並び替え</button>
+              </div>
+            </div>
+            <div class="list" MA-database data-list-type="admin-payments" data-max="30"></div>
+            <div class="mt-4 flex justify-between">
+              <button class="btn-ghost" data-action="go-admin-home">戻る</button>
+              <button class="btn" data-action="load-more">次の30件を表示</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-admin-ad-points" class="screen" data-auth="admin">
+        <div class="screen-shell">
+          <div class="card max-w-2xl w-full">
+            <h1 class="screen-title">広告ポイント配分設定</h1>
+            <div class="form-grid">
+              <label class="field">
+                <span>バナー広告ポイント消費</span>
+                <input type="number" placeholder="10" />
+              </label>
+              <label class="field">
+                <span>フッター広告ポイント消費</span>
+                <input type="number" placeholder="5" />
+              </label>
+              <div class="alert hidden" data-error="ad-points">入力内容に誤りがあります。</div>
+              <div class="notice hidden" data-success="ad-points">保存しました。</div>
+            </div>
+            <div class="mt-6 flex justify-end gap-3">
+              <button class="btn" data-action="save-ad-points">保存</button>
+              <button class="btn-ghost" data-action="go-admin-home">戻る</button>
+            </div>
+          </div>
+        </div>
+        <div class="dev-tools" MA-dev>
+          <button data-toggle-error="ad-points">開発確認: エラー表示切替</button>
+          <button data-toggle-success="ad-points">開発確認: 保存完了表示切替</button>
+        </div>
+      </section>
+
+      <section id="screen-admin-terms" class="screen" data-auth="admin">
+        <div class="screen-shell">
+          <div class="card max-w-4xl w-full">
+            <h1 class="screen-title">利用規約</h1>
+            <div class="terms-box">
+              <p>管理者向けに本規約を確認できます。最新の規定に従って運用してください。</p>
+              <p>運営上の注意事項や最新のポリシーを記載します。</p>
+            </div>
+            <div class="mt-6 flex justify-end">
+              <button class="btn-ghost" data-action="go-admin-home">戻る</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Overlays & dialogs -->
+    <div id="member-menu" class="overlay hidden">
+      <div class="overlay-panel">
+        <button class="btn-ghost w-full" data-action="close-menu">ハンバーガーメニューを閉じる</button>
+        <button class="menu-item" data-action="go-profile">プロフィール</button>
+        <button class="menu-item" data-action="go-payment">支払情報</button>
+        <button class="menu-item" data-action="go-invite">招待コード</button>
+        <button class="menu-item" data-action="go-search-members">仲間を調べる</button>
+        <button class="menu-item" data-action="go-dm">DM</button>
+        <button class="menu-item" data-action="go-memo">会員メモ</button>
+        <button class="menu-item" data-action="go-announcement">宣伝・イベント・お知らせ</button>
+        <button class="menu-item" data-action="go-terms">利用規約を読む</button>
+        <button class="menu-item" data-action="go-account">ログイン情報変更</button>
+        <button class="menu-item" data-action="open-logout">ログアウト</button>
+      </div>
+    </div>
+
+    <div id="admin-menu" class="overlay hidden">
+      <div class="overlay-panel">
+        <button class="btn-ghost w-full" data-action="close-menu">ハンバーガーメニューを閉じる</button>
+        <button class="menu-item" data-action="go-admin-members">会員管理</button>
+        <button class="menu-item" data-action="go-admin-dm">公式DM</button>
+        <button class="menu-item" data-action="go-admin-approval">新規入会申込承認</button>
+        <button class="menu-item" data-action="go-admin-event-approval">イベント掲載申込承認</button>
+        <button class="menu-item" data-action="go-admin-ad-approval">広告掲載申込承認</button>
+        <button class="menu-item" data-action="go-admin-identity-approval">本人確認書類承認</button>
+        <button class="menu-item" data-action="go-admin-profile-fields">プロフィール項目管理</button>
+        <button class="menu-item" data-action="go-admin-notice">公式お知らせ管理</button>
+        <button class="menu-item" data-action="go-admin-report">通報管理</button>
+        <button class="menu-item" data-action="go-admin-invite-history">招待コード履歴</button>
+        <button class="menu-item" data-action="go-admin-usage">全管理者利用履歴</button>
+        <button class="menu-item" data-action="go-admin-payments">全会員支払履歴</button>
+        <button class="menu-item" data-action="go-admin-ad-points">広告ポイント配分設定</button>
+        <button class="menu-item" data-action="go-admin-terms">利用規約を読む</button>
+        <button class="menu-item" data-action="open-logout">ログアウト</button>
+      </div>
+    </div>
+
+    <div id="dialog-search-member" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">会員検索条件</h3>
+        <div class="form-grid">
+          <label class="field"><span>会員名</span><input type="text" /></label>
+          <label class="field"><span>会社名</span><input type="text" /></label>
+          <label class="field"><span>業種</span><input type="text" /></label>
+          <label class="field"><span>役職</span><input type="text" /></label>
+          <label class="field"><span>所在地（都道府県/市区町村）</span><input type="text" /></label>
+          <label class="field"><span>活動エリア</span><input type="text" /></label>
+          <label class="field"><span>得意分野</span><input type="text" /></label>
+          <label class="field"><span>キーワード</span><input type="text" /></label>
+          <label class="field"><span>信頼度バッジ</span><select><option>★〜★★★★★</option></select></label>
+          <label class="field"><span>最終ログイン日時範囲</span><input type="text" placeholder="2024/01/01 - 2024/12/31" /></label>
+          <label class="field"><span>自由入力項目</span><input type="text" /></label>
+        </div>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">検索</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-sort-member" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">会員並び替え</h3>
+        <label class="field"><span>並び替え項目</span><select><option>会員名</option><option>会社名</option><option>信頼度バッジ</option><option>最終ログイン日時</option></select></label>
+        <div class="flex gap-2 mt-3">
+          <button class="chip">昇順</button>
+          <button class="chip">降順</button>
+        </div>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">並び替え</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-favorite" class="dialog hidden">
+      <div class="dialog-card">
+        <p>お気に入りを解除しますか？</p>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">解除する</button>
+          <button class="btn-ghost" data-action="close-dialog">キャンセル</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-profile" class="dialog hidden">
+      <div class="dialog-card">
+        <div class="flex items-center gap-3">
+          <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80" alt="プロフィール" class="h-16 w-16 rounded-full object-cover" />
+          <div>
+            <div class="text-lg font-semibold">山田 太郎</div>
+            <div class="rating">★★★★★</div>
+          </div>
+        </div>
+        <div class="mt-4 space-y-2" MA-database data-list-type="profile-summary" data-max="5"></div>
+        <div class="mt-4 flex gap-2">
+          <button class="icon-btn"><i data-lucide="heart"></i></button>
+          <button class="icon-btn"><i data-lucide="user-check"></i></button>
+          <button class="icon-btn"><i data-lucide="user-plus"></i></button>
+          <button class="icon-btn" data-action="go-dm-detail"><i data-lucide="message-circle"></i></button>
+          <button class="icon-btn" data-action="open-memo-dialog"><i data-lucide="sticky-note"></i></button>
+        </div>
+        <div class="dialog-actions">
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-payment-search" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">支払履歴検索</h3>
+        <div class="form-grid">
+          <label class="field"><span>支払日範囲</span><input type="text" /></label>
+          <label class="field"><span>支払種別</span><select><option>更新費用</option><option>従量課金</option></select></label>
+          <label class="field"><span>金額範囲</span><input type="text" /></label>
+        </div>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">検索</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-payment-sort" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">支払履歴並び替え</h3>
+        <label class="field"><span>並び替え項目</span><select><option>支払日</option><option>支払種別</option><option>金額</option></select></label>
+        <div class="flex gap-2 mt-3">
+          <button class="chip">昇順</button>
+          <button class="chip">降順</button>
+        </div>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">並び替え</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-receipt" class="dialog hidden">
+      <div class="dialog-card">
+        <p>領収書をダウンロードします。</p>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">ダウンロード</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-invite-create" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">招待コード生成</h3>
+        <div class="code-box">INV-9X3K-7T2Q</div>
+        <p class="text-sm text-slate-300">作成完了しました。</p>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-invite-search" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">招待コード検索</h3>
+        <div class="form-grid">
+          <label class="field"><span>作成日範囲</span><input type="text" /></label>
+          <label class="field"><span>使用状況</span><select><option>未使用</option><option>使用済み</option></select></label>
+        </div>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">検索</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-invite-sort" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">招待コード並び替え</h3>
+        <label class="field"><span>並び替え項目</span><select><option>作成日</option><option>使用状況</option><option>有効期限</option></select></label>
+        <div class="flex gap-2 mt-3">
+          <button class="chip">昇順</button>
+          <button class="chip">降順</button>
+        </div>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">並び替え</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-invite-delete" class="dialog hidden">
+      <div class="dialog-card">
+        <p>招待コードを削除しますか？</p>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">削除する</button>
+          <button class="btn-ghost" data-action="close-dialog">キャンセル</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-recommend-sort" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">おすすめ会員並び替え</h3>
+        <label class="field"><span>並び替え項目</span><select><option>最終ログイン日時</option><option>信頼度バッジ</option></select></label>
+        <div class="flex gap-2 mt-3">
+          <button class="chip">昇順</button>
+          <button class="chip">降順</button>
+        </div>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">並び替え</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-newcomer-sort" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">新規入会会員並び替え</h3>
+        <label class="field"><span>並び替え項目</span><select><option>入会日</option><option>信頼度バッジ</option></select></label>
+        <div class="flex gap-2 mt-3">
+          <button class="chip">昇順</button>
+          <button class="chip">降順</button>
+        </div>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">並び替え</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-dm-search" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">DM検索条件</h3>
+        <div class="form-grid">
+          <label class="field"><span>会員名</span><input type="text" /></label>
+          <label class="field"><span>キーワード</span><input type="text" /></label>
+        </div>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">検索</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-dm-sort" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">DM並び替え</h3>
+        <label class="field"><span>並び替え項目</span><select><option>最終更新日時</option><option>会員名</option></select></label>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">並び替え</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-block-search" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">ブロック済み検索</h3>
+        <div class="form-grid">
+          <label class="field"><span>会員名</span><input type="text" /></label>
+          <label class="field"><span>キーワード</span><input type="text" /></label>
+        </div>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">検索</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-block-sort" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">ブロック済み並び替え</h3>
+        <label class="field"><span>並び替え項目</span><select><option>最終更新日時</option><option>会員名</option></select></label>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">並び替え</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-dm-settings" class="dialog hidden">
+      <div class="dialog-card">
+        <p>このユーザーをブロックまたは通報しますか？</p>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">ブロック</button>
+          <button class="btn" data-action="close-dialog">通報</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-memo-search" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">会員メモ検索</h3>
+        <div class="form-grid">
+          <label class="field"><span>会員名</span><input type="text" /></label>
+          <label class="field"><span>キーワード</span><input type="text" /></label>
+        </div>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">検索</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-memo-sort" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">会員メモ並び替え</h3>
+        <label class="field"><span>並び替え項目</span><select><option>更新日時</option><option>会員名</option></select></label>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">並び替え</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-memo-delete" class="dialog hidden">
+      <div class="dialog-card">
+        <p>メモを削除しますか？</p>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">削除する</button>
+          <button class="btn-ghost" data-action="close-dialog">キャンセル</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-memo-list" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">会員メモ一覧</h3>
+        <div class="flex gap-2 mb-4">
+          <img src="https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=80&q=80" alt="プロフィール" class="h-10 w-10 rounded-full" />
+          <img src="https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=80&q=80" alt="プロフィール" class="h-10 w-10 rounded-full" />
+        </div>
+        <div class="list" MA-database data-list-type="memo-dialog"></div>
+        <div class="dialog-actions">
+          <button class="icon-btn" data-action="open-memo-detail-dialog"><i data-lucide="plus"></i></button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-memo-detail" class="dialog hidden">
+      <div class="dialog-card">
+        <button class="btn-ghost" data-action="open-memo-dialog">戻る</button>
+        <label class="field mt-3"><span>タイトル</span><input type="text" /></label>
+        <label class="field"><span>メモ内容</span><textarea rows="4"></textarea></label>
+        <div class="flex gap-2 mt-3">
+          <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=80&q=80" alt="プロフィール" class="h-10 w-10 rounded-full" />
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=80&q=80" alt="プロフィール" class="h-10 w-10 rounded-full" />
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-timeline-search" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">タイムライン検索</h3>
+        <label class="field"><span>キーワード</span><input type="text" /></label>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">検索</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-logout" class="dialog hidden">
+      <div class="dialog-card">
+        <p>ログアウトしますか？</p>
+        <div class="dialog-actions">
+          <button class="btn" data-action="confirm-logout">ログアウトする</button>
+          <button class="btn-ghost" data-action="close-dialog">キャンセル</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-withdraw" class="dialog hidden">
+      <div class="dialog-card">
+        <p>退会するとアカウントが削除されます。</p>
+        <div class="dialog-actions">
+          <button class="btn" data-action="confirm-withdraw">退会する</button>
+          <button class="btn-ghost" data-action="close-dialog">キャンセル</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-admin-member-search" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">会員検索条件</h3>
+        <div class="form-grid">
+          <label class="field"><span>会員名</span><input type="text" /></label>
+          <label class="field"><span>会社名</span><input type="text" /></label>
+          <label class="field"><span>業種</span><input type="text" /></label>
+          <label class="field"><span>役職</span><input type="text" /></label>
+          <label class="field"><span>所在地</span><input type="text" /></label>
+          <label class="field"><span>信頼度バッジ</span><select><option>★〜★★★★★</option></select></label>
+          <label class="field"><span>ステータス</span><select><option>有効</option><option>停止</option></select></label>
+        </div>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">検索</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-admin-member-sort" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">会員並び替え</h3>
+        <label class="field"><span>並び替え項目</span><select><option>会員名</option><option>最終ログイン日時</option><option>信頼度バッジ</option><option>ステータス</option></select></label>
+        <div class="flex gap-2 mt-3">
+          <button class="chip">昇順</button>
+          <button class="chip">降順</button>
+        </div>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">並び替え</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-admin-stop" class="dialog hidden">
+      <div class="dialog-card">
+        <p>会員を停止しますか？</p>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">停止する</button>
+          <button class="btn-ghost" data-action="close-dialog">キャンセル</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-admin-history-search" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">利用履歴検索</h3>
+        <label class="field"><span>日時範囲</span><input type="text" /></label>
+        <label class="field"><span>操作内容キーワード</span><input type="text" /></label>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">検索</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-admin-history-sort" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">利用履歴並び替え</h3>
+        <label class="field"><span>並び替え項目</span><select><option>日時</option><option>操作内容</option></select></label>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">並び替え</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-admin-dm-search" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">公式DM検索</h3>
+        <label class="field"><span>会員名</span><input type="text" /></label>
+        <label class="field"><span>キーワード</span><input type="text" /></label>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">検索</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-admin-dm-sort" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">公式DM並び替え</h3>
+        <label class="field"><span>並び替え項目</span><select><option>最終更新日時</option><option>会員名</option></select></label>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">並び替え</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-join-search" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">入会申込検索</h3>
+        <div class="form-grid">
+          <label class="field"><span>申請日範囲</span><input type="text" /></label>
+          <label class="field"><span>会員名</span><input type="text" /></label>
+          <label class="field"><span>メールアドレス</span><input type="text" /></label>
+          <label class="field"><span>ステータス</span><select><option>申請中</option><option>承認</option><option>却下</option></select></label>
+        </div>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">検索</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-join-sort" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">入会申込並び替え</h3>
+        <label class="field"><span>並び替え項目</span><select><option>申請日</option><option>会員名</option><option>ステータス</option></select></label>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">並び替え</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-join-approve" class="dialog hidden">
+      <div class="dialog-card">
+        <p>入会申込を承認または却下します。</p>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">承認する</button>
+          <button class="btn" data-action="close-dialog">却下する</button>
+          <button class="btn-ghost" data-action="close-dialog">キャンセル</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-event-search" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">イベント申込検索</h3>
+        <div class="form-grid">
+          <label class="field"><span>申請日範囲</span><input type="text" /></label>
+          <label class="field"><span>会員名</span><input type="text" /></label>
+          <label class="field"><span>タイトル</span><input type="text" /></label>
+          <label class="field"><span>ステータス</span><select><option>申請中</option><option>承認</option><option>却下</option></select></label>
+        </div>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">検索</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-event-sort" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">イベント申込並び替え</h3>
+        <label class="field"><span>並び替え項目</span><select><option>申請日</option><option>会員名</option><option>ステータス</option></select></label>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">並び替え</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-event-approve" class="dialog hidden">
+      <div class="dialog-card">
+        <p>イベント掲載を承認または却下します。</p>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">承認する</button>
+          <button class="btn" data-action="close-dialog">却下する</button>
+          <button class="btn-ghost" data-action="close-dialog">キャンセル</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-ad-search" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">広告申込検索</h3>
+        <div class="form-grid">
+          <label class="field"><span>申請日範囲</span><input type="text" /></label>
+          <label class="field"><span>会員名</span><input type="text" /></label>
+          <label class="field"><span>広告種別</span><input type="text" /></label>
+          <label class="field"><span>ステータス</span><select><option>申請中</option><option>承認</option><option>却下</option></select></label>
+        </div>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">検索</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-ad-sort" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">広告申込並び替え</h3>
+        <label class="field"><span>並び替え項目</span><select><option>申請日</option><option>会員名</option><option>ステータス</option></select></label>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">並び替え</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-ad-approve" class="dialog hidden">
+      <div class="dialog-card">
+        <p>広告掲載を承認または却下します。</p>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">承認する</button>
+          <button class="btn" data-action="close-dialog">却下する</button>
+          <button class="btn-ghost" data-action="close-dialog">キャンセル</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-identity-search" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">本人確認検索</h3>
+        <div class="form-grid">
+          <label class="field"><span>申請日範囲</span><input type="text" /></label>
+          <label class="field"><span>会員名</span><input type="text" /></label>
+          <label class="field"><span>書類種別</span><input type="text" /></label>
+          <label class="field"><span>ステータス</span><select><option>申請中</option><option>承認</option><option>却下</option></select></label>
+        </div>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">検索</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-identity-sort" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">本人確認並び替え</h3>
+        <label class="field"><span>並び替え項目</span><select><option>申請日</option><option>会員名</option><option>ステータス</option></select></label>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">並び替え</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-identity-approve" class="dialog hidden">
+      <div class="dialog-card">
+        <p>本人確認を承認または却下します。</p>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">承認する</button>
+          <button class="btn" data-action="close-dialog">却下する</button>
+          <button class="btn-ghost" data-action="close-dialog">キャンセル</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-profile-field-delete" class="dialog hidden">
+      <div class="dialog-card">
+        <p>項目を削除しますか？</p>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">削除する</button>
+          <button class="btn-ghost" data-action="close-dialog">キャンセル</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-notice-search" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">公式お知らせ検索</h3>
+        <label class="field"><span>投稿日範囲</span><input type="text" /></label>
+        <label class="field"><span>タイトル</span><input type="text" /></label>
+        <label class="field"><span>ステータス</span><select><option>下書き</option><option>公開</option></select></label>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">検索</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-notice-sort" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">公式お知らせ並び替え</h3>
+        <label class="field"><span>並び替え項目</span><select><option>投稿日</option><option>タイトル</option><option>ステータス</option></select></label>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">並び替え</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-report-search" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">通報検索</h3>
+        <div class="form-grid">
+          <label class="field"><span>通報日範囲</span><input type="text" /></label>
+          <label class="field"><span>通報者</span><input type="text" /></label>
+          <label class="field"><span>通報対象</span><input type="text" /></label>
+          <label class="field"><span>対応状況</span><select><option>未対応</option><option>対応済み</option></select></label>
+          <label class="field"><span>キーワード</span><input type="text" /></label>
+        </div>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">検索</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-report-sort" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">通報並び替え</h3>
+        <label class="field"><span>並び替え項目</span><select><option>通報日</option><option>通報者</option><option>通報対象</option><option>対応状況</option></select></label>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">並び替え</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-report-stop" class="dialog hidden">
+      <div class="dialog-card">
+        <p>対象会員を停止しますか？</p>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">停止する</button>
+          <button class="btn-ghost" data-action="close-dialog">キャンセル</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-invite-history-search" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">招待コード履歴検索</h3>
+        <div class="form-grid">
+          <label class="field"><span>作成日範囲</span><input type="text" /></label>
+          <label class="field"><span>使用状況</span><select><option>未使用</option><option>使用済み</option></select></label>
+          <label class="field"><span>作成者</span><input type="text" /></label>
+          <label class="field"><span>登録会員</span><input type="text" /></label>
+        </div>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">検索</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-invite-history-sort" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">招待コード履歴並び替え</h3>
+        <label class="field"><span>並び替え項目</span><select><option>作成日</option><option>使用状況</option><option>作成者</option><option>登録会員</option></select></label>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">並び替え</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-admin-usage-search" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">全管理者利用履歴検索</h3>
+        <label class="field"><span>日時範囲</span><input type="text" /></label>
+        <label class="field"><span>管理者名</span><input type="text" /></label>
+        <label class="field"><span>操作内容キーワード</span><input type="text" /></label>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">検索</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-admin-usage-sort" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">全管理者利用履歴並び替え</h3>
+        <label class="field"><span>並び替え項目</span><select><option>日時</option><option>管理者名</option><option>操作内容</option></select></label>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">並び替え</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-admin-payment-search" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">全会員支払履歴検索</h3>
+        <div class="form-grid">
+          <label class="field"><span>支払日範囲</span><input type="text" /></label>
+          <label class="field"><span>会員名</span><input type="text" /></label>
+          <label class="field"><span>支払種別</span><input type="text" /></label>
+          <label class="field"><span>金額範囲</span><input type="text" /></label>
+          <label class="field"><span>決済方法</span><input type="text" /></label>
+        </div>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">検索</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-admin-payment-sort" class="dialog hidden">
+      <div class="dialog-card">
+        <h3 class="dialog-title">全会員支払履歴並び替え</h3>
+        <label class="field"><span>並び替え項目</span><select><option>支払日</option><option>会員名</option><option>支払種別</option><option>金額</option></select></label>
+        <div class="dialog-actions">
+          <button class="btn" data-action="close-dialog">並び替え</button>
+          <button class="btn-ghost" data-action="close-dialog">閉じる</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
