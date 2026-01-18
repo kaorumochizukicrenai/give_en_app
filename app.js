@@ -55,7 +55,7 @@ const createRow = {
     <div class="card" data-action="open-modal" data-modal="profile-detail">
       <div class="avatar small">
         <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=200&q=80" alt="member" />
-        <span class="badge">★</span>
+        <span class="badge" aria-hidden="true"></span>
       </div>
       <p class="mt-2 font-semibold">会員 ${i + 1}</p>
       <p class="text-sm">30代 / 東京都 / IT</p>
@@ -73,13 +73,23 @@ const createRow = {
       <p class="font-semibold">メモタイトル ${i + 1}</p>
       <div class="avatar small mt-3">
         <img src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?auto=format&fit=crop&w=200&q=80" alt="member" />
-        <span class="badge">★</span>
+        <span class="badge" aria-hidden="true"></span>
       </div>
       <button class="icon-button mt-3" data-action="open-modal" data-modal="memo-delete"><i data-lucide="trash"></i></button>
     </div>
   `,
-  timelineRow: (i) => `<div class="table-row" data-action="open-modal" data-modal="post-detail">投稿者 ${i + 1} | サムネ 1:1 | 投稿タイトル | 投稿日 2024/07/${(i % 28) + 1}</div>`,
-  newsRow: (i) => `<div class="table-row" data-action="open-modal" data-modal="notice-detail">お知らせ ${i + 1} | 投稿日 2024/07/${(i % 28) + 1} | 種別</div>`,
+  timelineRow: (i) => `
+    <div class="table-row" data-action="open-modal" data-modal="post-detail">
+      <img class="thumb-1x1" src="https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=120&q=80" alt="サムネイル" />
+      <span>投稿者 ${i + 1} | 投稿タイトル | 投稿日 2024/07/${(i % 28) + 1}</span>
+    </div>
+  `,
+  newsRow: (i) => `
+    <div class="table-row" data-action="open-modal" data-modal="notice-detail">
+      <img class="thumb-1x1" src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=120&q=80" alt="サムネイル" />
+      <span>お知らせ ${i + 1} | 投稿日 2024/07/${(i % 28) + 1} | 種別</span>
+    </div>
+  `,
   promoRow: (i) => `<div class="table-row">申請 ${i + 1} | 申請日 2024/07/${(i % 28) + 1} | 承認待ち</div>`,
   bannerHistoryRow: (i) => `<div class="table-row">広告 ${i + 1} | 種別 バナー | 申請日 2024/07/${(i % 28) + 1} | 承認待ち</div>`,
   adminTask: (i) => `<div class="table-row">タスク ${i + 1} | 種別</div>`,
@@ -121,13 +131,37 @@ const resetAllLists = () => {
 };
 
 const showScreen = (id) => {
+  const nextScreen = screens.find((screen) => screen.dataset.screen === id);
+  const currentScreen = screens.find((screen) => !screen.classList.contains('hidden'));
+  if (currentScreen && currentScreen !== nextScreen) {
+    currentScreen.classList.remove('is-active');
+    currentScreen.classList.add('is-leaving');
+    const onTransitionEnd = (event) => {
+      if (event.propertyName !== 'opacity') return;
+      currentScreen.classList.add('hidden');
+      currentScreen.classList.remove('is-leaving');
+      currentScreen.removeEventListener('transitionend', onTransitionEnd);
+    };
+    currentScreen.addEventListener('transitionend', onTransitionEnd);
+  }
   screens.forEach((screen) => {
-    screen.classList.toggle('hidden', screen.dataset.screen !== id);
+    if (screen !== nextScreen && screen !== currentScreen) {
+      screen.classList.add('hidden');
+      screen.classList.remove('is-active', 'is-leaving');
+    }
   });
-  const activeScreen = screens.find((screen) => screen.dataset.screen === id);
+  if (nextScreen) {
+    nextScreen.classList.remove('hidden', 'is-leaving');
+    requestAnimationFrame(() => {
+      nextScreen.classList.add('is-active');
+    });
+  }
+  const activeScreen = nextScreen;
   const role = activeScreen?.dataset.role;
   header.classList.toggle('hidden', role === 'public');
   footer.classList.toggle('hidden', role !== 'member');
+  memberMenu.classList.remove('is-active');
+  adminMenu.classList.remove('is-active');
   memberMenu.classList.add('hidden');
   adminMenu.classList.add('hidden');
   closeModals();
@@ -202,13 +236,29 @@ const handleActions = (event) => {
     const activeScreen = screens.find((screen) => !screen.classList.contains('hidden'));
     if (activeScreen?.dataset.role === 'admin') {
       adminMenu.classList.remove('hidden');
+      requestAnimationFrame(() => {
+        adminMenu.classList.add('is-active');
+      });
     } else {
       memberMenu.classList.remove('hidden');
+      requestAnimationFrame(() => {
+        memberMenu.classList.add('is-active');
+      });
     }
   }
   if (action === 'close-menu') {
-    memberMenu.classList.add('hidden');
-    adminMenu.classList.add('hidden');
+    const closeMenu = (menu) => {
+      if (menu.classList.contains('hidden')) return;
+      menu.classList.remove('is-active');
+      const onTransitionEnd = (event) => {
+        if (event.propertyName !== 'opacity') return;
+        menu.classList.add('hidden');
+        menu.removeEventListener('transitionend', onTransitionEnd);
+      };
+      menu.addEventListener('transitionend', onTransitionEnd);
+    };
+    closeMenu(memberMenu);
+    closeMenu(adminMenu);
   }
   if (action === 'toggle-dm-memo') {
     document.getElementById('dm-memo-list').classList.toggle('hidden');
