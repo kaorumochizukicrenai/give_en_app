@@ -1,0 +1,1763 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Give縁 UI Mock</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 text-slate-900">
+  <div class="bg-anim">
+    <div class="bg-blob blob-a"></div>
+    <div class="bg-blob blob-b"></div>
+    <div class="bg-blob blob-c"></div>
+  </div>
+
+  <header id="global-header" class="global-header hidden">
+    <div class="flex items-center gap-3">
+      <button class="logo-button" data-nav="home">
+        <img src="logotest.png" alt="Give縁" class="h-10" />
+      </button>
+    </div>
+    <button class="icon-button" data-action="open-menu">
+      <i data-lucide="menu" class="w-5 h-5"></i>
+    </button>
+  </header>
+
+  <footer id="global-footer" class="global-footer hidden">
+    <div class="footer-carousel">
+      <div class="footer-carousel-track" id="footer-ads" MA-database="footer-ads"></div>
+    </div>
+  </footer>
+
+  <main id="app" class="app-container">
+    <section class="screen" data-screen="loading" data-role="public">
+      <div class="center-card">
+        <div class="spinner"></div>
+        <p class="mt-4 text-lg">読み込み中</p>
+      </div>
+      <div class="dev-panel" MA-dev>
+        <button class="dev-button" data-nav="login">ログイン画面へ</button>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="new-password" data-role="public">
+      <div class="auth-card">
+        <h1 class="screen-title">新パスワード入力</h1>
+        <div class="form-grid">
+          <label>
+            新パスワード
+            <input type="password" class="input" />
+          </label>
+          <label>
+            新パスワード確認
+            <input type="password" class="input" />
+          </label>
+        </div>
+        <div class="error-message hidden" id="error-new-password">入力内容に誤りがあります。</div>
+        <div class="button-row">
+          <button class="primary" data-nav="password-reset-complete">パスワードを更新する</button>
+          <button class="secondary" data-nav="login">戻る</button>
+        </div>
+      </div>
+      <div class="dev-panel" MA-dev>
+        <button class="dev-button" data-toggle="error-new-password">エラー表示切替</button>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="link-expired" data-role="public">
+      <div class="center-card">
+        <p class="text-lg">リンクの有効期限が切れています。このまま画面を閉じてください。</p>
+      </div>
+      <div class="dev-panel" MA-dev>
+        <button class="dev-button" data-nav="login">ログイン画面へ</button>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="login" data-role="public">
+      <div class="auth-card">
+        <img src="logotest.png" alt="Give縁" class="h-16 mx-auto" />
+        <div class="tab-group" data-tab-group="login">
+          <button class="tab active" data-tab="login-existing">アカウント作成済みの方</button>
+          <button class="tab" data-tab="login-new">アカウント未作成の方</button>
+        </div>
+        <div class="tab-panel" data-tab-panel="login-existing">
+          <label>
+            メールアドレス
+            <input type="email" class="input" />
+          </label>
+          <label>
+            パスワード
+            <input type="password" class="input" />
+          </label>
+          <div class="error-message hidden" id="error-login">ログイン情報が間違っています。</div>
+          <button class="primary w-full" data-nav="member-home">ログイン</button>
+          <button class="link-button" data-nav="password-reset">パスワードを忘れた方はこちら</button>
+        </div>
+        <div class="tab-panel hidden" data-tab-panel="login-new">
+          <label>
+            メールアドレス
+            <input type="email" class="input" />
+          </label>
+          <p class="helper-text">認証用のメールを送付するので、受け取れるメールアドレスをご入力ください。</p>
+          <div class="error-message hidden" id="error-register">メールアドレスを確認してください。</div>
+          <button class="primary w-full" data-action="open-modal" data-modal="register-complete">登録申請</button>
+        </div>
+      </div>
+      <div class="dev-panel" MA-dev>
+        <button class="dev-button" data-toggle="error-login">ログインエラー切替</button>
+        <button class="dev-button" data-toggle="error-register">登録申請エラー切替</button>
+        <button class="dev-button" data-nav="detail-info">詳細情報入力へ</button>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="detail-info" data-role="public">
+      <div class="auth-card">
+        <h1 class="screen-title">詳細情報入力</h1>
+        <div class="form-grid">
+          <label>
+            電話番号
+            <input type="tel" class="input" />
+          </label>
+          <label>
+            お名前
+            <input type="text" class="input" />
+          </label>
+          <label>
+            会社名
+            <input type="text" class="input" />
+          </label>
+          <label>
+            招待コード（任意）
+            <input type="text" class="input" />
+          </label>
+        </div>
+        <div class="error-message hidden" id="error-detail-info">入力内容に誤りがあります。</div>
+        <div class="button-row">
+          <button class="primary" data-nav="register-complete">登録情報を送信する</button>
+          <button class="secondary" data-nav="login">戻る</button>
+        </div>
+      </div>
+      <div class="dev-panel" MA-dev>
+        <button class="dev-button" data-toggle="error-detail-info">エラー表示切替</button>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="register-complete" data-role="public">
+      <div class="center-card">
+        <p class="text-lg">後日パスワードが送付されたメールが届きますので、そちらでログインください。このままブラウザを閉じてください。</p>
+      </div>
+      <div class="dev-panel" MA-dev>
+        <button class="dev-button" data-nav="login">ログイン画面へ</button>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="password-reset" data-role="public">
+      <div class="auth-card">
+        <h1 class="screen-title">パスワードリセット</h1>
+        <label>
+          メールアドレス
+          <input type="email" class="input" />
+        </label>
+        <label>
+          電話番号
+          <input type="tel" class="input" />
+        </label>
+        <p class="helper-text">認証用のメールを送付するので、登録されているメールアドレスと電話番号をご入力ください。</p>
+        <div class="error-message hidden" id="error-reset">入力内容に誤りがあります。</div>
+        <div class="button-row">
+          <button class="primary" data-action="open-modal" data-modal="reset-email">パスワードリセットメールを送付する</button>
+          <button class="secondary" data-nav="login">戻る</button>
+        </div>
+      </div>
+      <div class="dev-panel" MA-dev>
+        <button class="dev-button" data-toggle="error-reset">エラー表示切替</button>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="password-reset-complete" data-role="public">
+      <div class="center-card">
+        <p class="text-lg">パスワードをリセットしました。このままブラウザを閉じていただき、もう一度ログインしてください。</p>
+      </div>
+      <div class="dev-panel" MA-dev>
+        <button class="dev-button" data-nav="login">ログイン画面へ</button>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="tutorial-1" data-role="public">
+      <div class="center-card">
+        <p class="text-lg">チュートリアル説明テキスト（ページ1）</p>
+        <p class="text-sm">1/5</p>
+        <button class="primary" data-nav="tutorial-2">次へ</button>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="tutorial-2" data-role="public">
+      <div class="center-card">
+        <p class="text-lg">チュートリアル説明テキスト（ページ2）</p>
+        <p class="text-sm">2/5</p>
+        <button class="primary" data-nav="tutorial-3">次へ</button>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="tutorial-3" data-role="public">
+      <div class="center-card">
+        <p class="text-lg">チュートリアル説明テキスト（ページ3）</p>
+        <p class="text-sm">3/5</p>
+        <button class="primary" data-nav="tutorial-4">次へ</button>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="tutorial-4" data-role="public">
+      <div class="center-card">
+        <p class="text-lg">チュートリアル説明テキスト（ページ4）</p>
+        <p class="text-sm">4/5</p>
+        <button class="primary" data-nav="tutorial-5">次へ</button>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="tutorial-5" data-role="public">
+      <div class="center-card">
+        <p class="text-lg">チュートリアル説明テキスト（ページ5）</p>
+        <p class="text-sm">5/5</p>
+        <button class="primary" data-nav="payment-setup">次へ</button>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="payment-setup" data-role="member">
+      <div class="screen-header">
+        <h1 class="screen-title">支払方法設定</h1>
+        <p class="helper-text">月額更新費400円の支払いに必要なクレジットカードを登録します。</p>
+      </div>
+      <div class="card">
+        <button class="primary" data-nav="stripe-setup">支払方法を設定する</button>
+        <button class="secondary" data-nav="member-home">戻る</button>
+      </div>
+      <div class="footer-placeholder"></div>
+    </section>
+
+    <section class="screen hidden" data-screen="stripe-setup" data-role="public">
+      <div class="auth-card">
+        <h1 class="screen-title">Stripe支払方法設定</h1>
+        <div class="stripe-logo">Stripe</div>
+        <div class="form-grid">
+          <label>カード番号<input type="text" class="input" /></label>
+          <label>有効期限<input type="text" class="input" /></label>
+          <label>CVC<input type="text" class="input" /></label>
+          <label>請求先情報<input type="text" class="input" /></label>
+        </div>
+        <div class="button-row">
+          <button class="primary" data-nav="payment-setup">保存</button>
+          <button class="secondary" data-nav="payment-setup">キャンセル</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="member-home" data-role="member">
+      <div class="screen-header">
+        <h1 class="screen-title">ホーム</h1>
+      </div>
+      <div class="grid gap-6">
+        <div class="card">
+          <h2 class="section-title">新着通知</h2>
+          <div class="scroll-box" id="member-notifications" MA-database="member-notifications"></div>
+        </div>
+        <div class="card">
+          <h2 class="section-title">バナー広告</h2>
+          <div class="h-scroll" id="banner-ads" MA-database="banner-ads"></div>
+        </div>
+        <div class="card">
+          <h2 class="section-title">直近にログインした会員</h2>
+          <div class="h-scroll" id="recent-members" MA-database="recent-members"></div>
+        </div>
+        <div class="card">
+          <h2 class="section-title">おすすめ会員</h2>
+          <div class="h-scroll" id="recommended-members" MA-database="recommended-members"></div>
+        </div>
+        <div class="card">
+          <h2 class="section-title">クイックアクセス</h2>
+          <div class="quick-grid">
+            <button class="quick-card" data-nav="profile">プロフィール</button>
+            <button class="quick-card" data-nav="payment-info">支払情報</button>
+            <button class="quick-card" data-nav="invite-code">招待コード</button>
+            <button class="quick-card" data-nav="member-search">仲間を調べる</button>
+            <button class="quick-card" data-nav="dm">DM</button>
+            <button class="quick-card" data-nav="memo">会員メモ</button>
+            <button class="quick-card" data-nav="promotions">宣伝・イベント・お知らせ</button>
+            <button class="quick-card" data-nav="login-info">ログイン情報変更</button>
+          </div>
+        </div>
+      </div>
+      <div class="footer-placeholder"></div>
+    </section>
+
+    <section class="screen hidden" data-screen="terms-member" data-role="member">
+      <div class="screen-header">
+        <h1 class="screen-title">利用規約</h1>
+        <button class="secondary" data-nav="member-home">戻る</button>
+      </div>
+      <div class="card">
+        <p class="leading-relaxed">利用規約本文テキストが入ります。条文の見出しや箇条書きが続きます。</p>
+      </div>
+      <div class="footer-placeholder"></div>
+    </section>
+
+    <section class="screen hidden" data-screen="profile" data-role="member">
+      <div class="screen-header sticky-header">
+        <div class="flex items-center justify-between">
+          <h1 class="screen-title">プロフィール</h1>
+          <button class="secondary" data-nav="member-home">戻る</button>
+        </div>
+        <div class="tab-group" data-tab-group="profile">
+          <button class="tab active" data-tab="profile-favorites">お気に入り</button>
+          <button class="tab" data-tab="profile-1on1">1on1</button>
+          <button class="tab" data-tab="profile-follow">フォロー</button>
+          <button class="tab" data-tab="profile-followers">フォロワー</button>
+        </div>
+        <div class="button-row">
+          <button class="ghost" data-action="open-modal" data-modal="member-search">検索</button>
+          <button class="ghost" data-action="open-modal" data-modal="member-sort">並び替え</button>
+        </div>
+      </div>
+      <div class="card profile-card">
+        <div class="avatar">
+          <img src="https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=200&q=80" alt="profile" />
+          <span class="badge" aria-hidden="true"></span>
+        </div>
+        <div>
+          <p class="font-semibold">山田 花子</p>
+          <p class="text-sm">30代 / 東京都 / IT・通信</p>
+          <p class="text-sm">本人確認書類：提出済み</p>
+          <p class="text-sm">保有ポイント：3,200pt</p>
+        </div>
+        <div class="profile-actions">
+          <button class="primary" data-action="open-modal" data-modal="profile-detail">プロフィールプレビュー</button>
+          <button class="secondary" data-nav="profile-edit">プロフィール編集</button>
+          <button class="secondary" data-nav="id-verify">本人確認書類を提出</button>
+        </div>
+      </div>
+      <div class="tab-panel" data-tab-panel="profile-favorites">
+        <div class="list-grid" id="profile-favorites" MA-database="profile-favorites"></div>
+        <button class="load-more" data-action="load-more" data-target="profile-favorites">次の30件を表示</button>
+      </div>
+      <div class="tab-panel hidden" data-tab-panel="profile-1on1">
+        <div class="list-grid" id="profile-1on1" MA-database="profile-1on1"></div>
+        <button class="load-more" data-action="load-more" data-target="profile-1on1">次の30件を表示</button>
+      </div>
+      <div class="tab-panel hidden" data-tab-panel="profile-follow">
+        <div class="list-grid" id="profile-follow" MA-database="profile-follow"></div>
+        <button class="load-more" data-action="load-more" data-target="profile-follow">次の30件を表示</button>
+      </div>
+      <div class="tab-panel hidden" data-tab-panel="profile-followers">
+        <div class="list-grid" id="profile-followers" MA-database="profile-followers"></div>
+        <button class="load-more" data-action="load-more" data-target="profile-followers">次の30件を表示</button>
+      </div>
+      <div class="footer-placeholder"></div>
+    </section>
+
+    <section class="screen hidden" data-screen="profile-edit" data-role="member">
+      <div class="screen-header">
+        <h1 class="screen-title">プロフィール編集</h1>
+        <button class="secondary" data-nav="profile">戻る</button>
+      </div>
+      <div class="card">
+        <div class="form-grid">
+          <label>名前<input type="text" class="input" /></label>
+          <label>生年月日<input type="date" class="input" /></label>
+          <label>プロフィール画像<input type="file" class="input" /></label>
+          <label>活動地域<select class="input"><option>東京都</option></select></label>
+          <label>業種<select class="input"><option>IT・通信</option></select></label>
+          <label>追加プロフィール項目<input type="text" class="input" /></label>
+        </div>
+        <div class="error-message hidden" id="error-profile-edit">入力内容に誤りがあります。</div>
+        <div class="button-row">
+          <button class="primary">保存</button>
+        </div>
+      </div>
+      <div class="dev-panel" MA-dev>
+        <button class="dev-button" data-toggle="error-profile-edit">エラー表示切替</button>
+      </div>
+      <div class="footer-placeholder"></div>
+    </section>
+
+    <section class="screen hidden" data-screen="id-verify" data-role="member">
+      <div class="screen-header">
+        <h1 class="screen-title">本人確認書類提出</h1>
+        <button class="secondary" data-nav="profile">戻る</button>
+      </div>
+      <div class="card">
+        <label>本人確認書類画像<input type="file" class="input" /></label>
+        <label>本人確認書類種別<select class="input"><option>運転免許証</option></select></label>
+        <p class="helper-text">書類の四隅が見えるように撮影した画像をアップロードしてください。</p>
+        <div class="error-message hidden" id="error-id-verify">入力内容に誤りがあります。</div>
+        <button class="primary" data-action="open-modal" data-modal="id-verify-complete">送信</button>
+      </div>
+      <div class="dev-panel" MA-dev>
+        <button class="dev-button" data-toggle="error-id-verify">エラー表示切替</button>
+      </div>
+      <div class="footer-placeholder"></div>
+    </section>
+
+    <section class="screen hidden" data-screen="payment-info" data-role="member">
+      <div class="screen-header">
+        <h1 class="screen-title">支払情報</h1>
+        <button class="secondary" data-nav="member-home">戻る</button>
+      </div>
+      <div class="card">
+        <p class="text-lg">保有ポイント：3,200pt</p>
+        <div class="alert">月額更新費が未払いです。</div>
+        <div class="button-row">
+          <button class="primary" data-nav="stripe-setup">支払方法設定</button>
+          <button class="secondary" data-nav="stripe-charge">従量課金チャージ</button>
+          <button class="secondary" data-nav="stripe-history">支払履歴一覧</button>
+        </div>
+      </div>
+      <div class="footer-placeholder"></div>
+    </section>
+
+    <section class="screen hidden" data-screen="stripe-charge" data-role="public">
+      <div class="auth-card">
+        <h1 class="screen-title">Stripe従量課金チャージ</h1>
+        <div class="stripe-logo">Stripe</div>
+        <label>チャージ金額<input type="text" class="input" /></label>
+        <div class="form-grid">
+          <label>カード番号<input type="text" class="input" /></label>
+          <label>有効期限<input type="text" class="input" /></label>
+          <label>CVC<input type="text" class="input" /></label>
+        </div>
+        <div class="button-row">
+          <button class="primary" data-nav="payment-info">支払う</button>
+          <button class="secondary" data-nav="payment-info">キャンセル</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="stripe-history" data-role="public">
+      <div class="auth-card">
+        <h1 class="screen-title">Stripe支払履歴</h1>
+        <div class="stripe-logo">Stripe</div>
+        <label>検索<input type="text" class="input" /></label>
+        <label>並び替え<select class="input"><option>支払日</option></select></label>
+        <div class="list-grid" id="stripe-history" MA-database="stripe-history"></div>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="invite-code" data-role="member">
+      <div class="screen-header sticky-header">
+        <div class="flex items-center justify-between">
+          <h1 class="screen-title">招待コード</h1>
+          <button class="secondary" data-nav="member-home">戻る</button>
+        </div>
+        <div class="button-row">
+          <button class="primary" data-action="open-modal" data-modal="invite-create">招待コード新規作成</button>
+          <button class="ghost" data-action="open-modal" data-modal="invite-search">検索</button>
+          <button class="ghost" data-action="open-modal" data-modal="invite-sort">並び替え</button>
+        </div>
+      </div>
+      <div class="list-table" id="invite-list" MA-database="invite-list"></div>
+      <button class="load-more" data-action="load-more" data-target="invite-list">次の30件を表示</button>
+      <div class="footer-placeholder"></div>
+    </section>
+
+    <section class="screen hidden" data-screen="member-search" data-role="member">
+      <div class="screen-header sticky-header">
+        <div class="flex items-center justify-between">
+          <h1 class="screen-title">仲間を調べる</h1>
+          <button class="secondary" data-nav="member-home">戻る</button>
+        </div>
+        <div class="tab-group" data-tab-group="member-search">
+          <button class="tab active" data-tab="member-search-all">会員検索</button>
+          <button class="tab" data-tab="member-search-recommend">おすすめ会員</button>
+          <button class="tab" data-tab="member-search-new">新しい仲間</button>
+        </div>
+        <div class="button-row">
+          <button class="ghost" data-action="open-modal" data-modal="member-search">検索</button>
+          <button class="ghost" data-action="open-modal" data-modal="member-sort">並び替え</button>
+        </div>
+      </div>
+      <div class="tab-panel" data-tab-panel="member-search-all">
+        <div class="list-grid" id="member-search-all" MA-database="member-search-all"></div>
+        <button class="load-more" data-action="load-more" data-target="member-search-all">次の30件を表示</button>
+      </div>
+      <div class="tab-panel hidden" data-tab-panel="member-search-recommend">
+        <div class="list-grid" id="member-search-recommend" MA-database="member-search-recommend"></div>
+        <button class="load-more" data-action="load-more" data-target="member-search-recommend">次の30件を表示</button>
+      </div>
+      <div class="tab-panel hidden" data-tab-panel="member-search-new">
+        <div class="list-grid" id="member-search-new" MA-database="member-search-new"></div>
+        <button class="load-more" data-action="load-more" data-target="member-search-new">次の30件を表示</button>
+      </div>
+      <div class="footer-placeholder"></div>
+    </section>
+
+    <section class="screen hidden" data-screen="dm" data-role="member">
+      <div class="screen-header sticky-header">
+        <div class="flex items-center justify-between">
+          <h1 class="screen-title">DM</h1>
+          <button class="secondary" data-nav="member-home">戻る</button>
+        </div>
+        <div class="tab-group" data-tab-group="dm">
+          <button class="tab active" data-tab="dm-list">DM</button>
+          <button class="tab" data-tab="dm-settings">設定</button>
+        </div>
+        <div class="button-row">
+          <button class="ghost" data-action="open-modal" data-modal="dm-search">検索</button>
+          <button class="ghost" data-action="open-modal" data-modal="dm-sort">並び替え</button>
+        </div>
+      </div>
+      <div class="tab-panel" data-tab-panel="dm-list">
+        <div class="list-table" id="dm-list" MA-database="dm-list"></div>
+        <button class="load-more" data-action="load-more" data-target="dm-list">次の30件を表示</button>
+      </div>
+      <div class="tab-panel hidden" data-tab-panel="dm-settings">
+        <div class="list-table" id="dm-blocked" MA-database="dm-blocked"></div>
+        <button class="load-more" data-action="load-more" data-target="dm-blocked">次の30件を表示</button>
+      </div>
+      <div class="footer-placeholder"></div>
+    </section>
+
+    <section class="screen hidden" data-screen="dm-detail" data-role="member">
+      <div class="dm-header">
+        <button class="icon-button" data-nav="dm"><i data-lucide="arrow-left"></i></button>
+        <span class="warning-text">マダーフォローしてません</span>
+        <button class="icon-button" data-action="open-modal" data-modal="dm-settings-dialog"><i data-lucide="settings"></i></button>
+      </div>
+      <div class="card flex items-center gap-4">
+        <div class="avatar small">
+          <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=200&q=80" alt="member" />
+          <span class="badge" aria-hidden="true"></span>
+        </div>
+        <div>
+          <p class="font-semibold">会員A</p>
+          <p class="text-sm">東京都 / IT・通信</p>
+        </div>
+      </div>
+      <div class="dm-body" id="dm-messages" MA-database="dm-messages"></div>
+      <div class="dm-input" id="dm-input-bar">
+        <button class="icon-button" data-action="toggle-dm-memo"><i data-lucide="sticky-note"></i></button>
+        <textarea class="input flex-1" rows="1" placeholder="メッセージを入力"></textarea>
+        <button class="icon-button"><i data-lucide="send"></i></button>
+      </div>
+      <div class="dm-memo-bar hidden" id="dm-memo-list">
+        <div class="memo-list" id="dm-memo-items" MA-database="dm-memo-items"></div>
+        <button class="icon-button" data-action="toggle-dm-memo"><i data-lucide="x"></i></button>
+        <button class="icon-button" data-action="open-dm-memo-edit"><i data-lucide="plus"></i></button>
+      </div>
+      <div class="dm-memo-edit hidden" id="dm-memo-edit">
+        <button class="secondary" data-action="close-dm-memo-edit">戻る</button>
+        <input type="text" class="input" placeholder="メモタイトル" />
+        <textarea class="input" rows="2" placeholder="メモ内容"></textarea>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="memo" data-role="member">
+      <div class="screen-header sticky-header">
+        <div class="flex items-center justify-between">
+          <h1 class="screen-title">会員メモ</h1>
+          <button class="secondary" data-nav="member-home">戻る</button>
+        </div>
+        <div class="button-row">
+          <button class="ghost" data-action="open-modal" data-modal="memo-search">検索</button>
+          <button class="ghost" data-action="open-modal" data-modal="memo-sort">並び替え</button>
+        </div>
+      </div>
+      <div class="list-grid" id="memo-list" MA-database="memo-list"></div>
+      <button class="load-more" data-action="load-more" data-target="memo-list">次の30件を表示</button>
+      <div class="footer-placeholder"></div>
+    </section>
+
+    <section class="screen hidden" data-screen="memo-detail" data-role="member">
+      <div class="screen-header">
+        <h1 class="screen-title">会員メモ詳細</h1>
+        <button class="secondary" data-nav="memo">戻る</button>
+      </div>
+      <div class="card">
+        <input type="text" class="input" placeholder="メモタイトル" />
+        <textarea class="input" rows="5" placeholder="メモ内容"></textarea>
+        <div class="avatar small">
+          <img src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?auto=format&fit=crop&w=200&q=80" alt="member" />
+          <span class="badge" aria-hidden="true"></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="promotions" data-role="member">
+      <div class="screen-header sticky-header">
+        <div class="flex items-center justify-between">
+          <h1 class="screen-title">宣伝・イベント・お知らせ</h1>
+          <button class="secondary" data-nav="member-home">戻る</button>
+        </div>
+        <div class="tab-group" data-tab-group="promotions">
+          <button class="tab active" data-tab="promo-timeline">タイムライン</button>
+          <button class="tab" data-tab="promo-news">お知らせ</button>
+          <button class="tab" data-tab="promo-ads">宣伝</button>
+          <button class="tab" data-tab="promo-banner">広告</button>
+        </div>
+        <div class="button-row">
+          <button class="ghost" data-action="open-modal" data-modal="promo-search">検索</button>
+          <button class="ghost" data-action="open-modal" data-modal="promo-sort">並び替え</button>
+        </div>
+      </div>
+      <div class="tab-panel" data-tab-panel="promo-timeline">
+        <div class="list-table" id="timeline-list" MA-database="timeline-list"></div>
+        <button class="load-more" data-action="load-more" data-target="timeline-list">次の30件を表示</button>
+      </div>
+      <div class="tab-panel hidden" data-tab-panel="promo-news">
+        <div class="list-table" id="news-list" MA-database="news-list"></div>
+        <button class="load-more" data-action="load-more" data-target="news-list">次の30件を表示</button>
+      </div>
+      <div class="tab-panel hidden" data-tab-panel="promo-ads">
+        <div class="button-row">
+          <button class="primary" data-nav="new-post">新規投稿</button>
+        </div>
+        <div class="list-table" id="promo-history" MA-database="promo-history"></div>
+        <button class="load-more" data-action="load-more" data-target="promo-history">次の30件を表示</button>
+      </div>
+      <div class="tab-panel hidden" data-tab-panel="promo-banner">
+        <div class="button-row">
+          <button class="primary" data-nav="new-banner">新規申請</button>
+        </div>
+        <p class="text-sm">保有ポイント：3,200pt</p>
+        <div class="list-table" id="banner-history" MA-database="banner-history"></div>
+        <button class="load-more" data-action="load-more" data-target="banner-history">次の30件を表示</button>
+      </div>
+      <div class="dev-panel" MA-dev>
+        <button class="dev-button" data-action="open-modal" data-modal="notice-search">お知らせ検索</button>
+        <button class="dev-button" data-action="open-modal" data-modal="notice-sort">お知らせ並び替え</button>
+        <button class="dev-button" data-action="open-modal" data-modal="promo-apply-search">宣伝申請検索</button>
+        <button class="dev-button" data-action="open-modal" data-modal="promo-apply-sort">宣伝申請並び替え</button>
+        <button class="dev-button" data-action="open-modal" data-modal="ad-apply-search">広告申請検索</button>
+        <button class="dev-button" data-action="open-modal" data-modal="ad-apply-sort">広告申請並び替え</button>
+        <button class="dev-button" data-action="open-modal" data-modal="post-detail">投稿詳細</button>
+        <button class="dev-button" data-action="open-modal" data-modal="notice-detail">お知らせ詳細</button>
+      </div>
+      <div class="footer-placeholder"></div>
+    </section>
+
+    <section class="screen hidden" data-screen="new-post" data-role="member">
+      <div class="screen-header">
+        <h1 class="screen-title">新規投稿</h1>
+        <button class="secondary" data-nav="promotions">戻る</button>
+      </div>
+      <div class="card">
+        <label>サムネ画像<input type="file" class="input" /></label>
+        <label>投稿タイトル<input type="text" class="input" /></label>
+        <label>本文<textarea class="input" rows="4"></textarea></label>
+        <label>申し込み用URL<input type="url" class="input" /></label>
+        <div class="error-message hidden" id="error-new-post">入力内容に誤りがあります。</div>
+        <button class="primary">申請する</button>
+      </div>
+      <div class="dev-panel" MA-dev>
+        <button class="dev-button" data-toggle="error-new-post">エラー表示切替</button>
+      </div>
+      <div class="footer-placeholder"></div>
+    </section>
+
+    <section class="screen hidden" data-screen="new-banner" data-role="member">
+      <div class="screen-header">
+        <h1 class="screen-title">広告新規申請</h1>
+        <button class="secondary" data-nav="promotions">戻る</button>
+      </div>
+      <div class="card">
+        <label>広告用画像<input type="file" class="input" /></label>
+        <label>URL<input type="url" class="input" /></label>
+        <label>広告種別<select class="input"><option>バナー広告</option><option>フッター広告</option></select></label>
+        <div class="error-message hidden" id="error-new-banner">入力内容に誤りがあります。</div>
+        <button class="primary">申請する</button>
+      </div>
+      <div class="dev-panel" MA-dev>
+        <button class="dev-button" data-toggle="error-new-banner">エラー表示切替</button>
+      </div>
+      <div class="footer-placeholder"></div>
+    </section>
+
+    <section class="screen hidden" data-screen="login-info" data-role="member">
+      <div class="screen-header">
+        <h1 class="screen-title">ログイン情報変更</h1>
+        <button class="secondary" data-nav="member-home">戻る</button>
+      </div>
+      <div class="card">
+        <label>メールアドレス<input type="email" class="input" /></label>
+        <label>電話番号<input type="tel" class="input" /></label>
+        <label>パスワード<input type="password" class="input" /></label>
+        <label>パスワード確認<input type="password" class="input" /></label>
+        <div class="error-message hidden" id="error-login-info">入力内容に誤りがあります。</div>
+        <div class="button-row">
+          <button class="primary">保存</button>
+          <button class="danger" data-action="open-modal" data-modal="withdraw">退会</button>
+        </div>
+      </div>
+      <div class="dev-panel" MA-dev>
+        <button class="dev-button" data-toggle="error-login-info">エラー表示切替</button>
+      </div>
+      <div class="footer-placeholder"></div>
+    </section>
+
+    <section class="screen hidden" data-screen="admin-home" data-role="admin">
+      <div class="screen-header">
+        <h1 class="screen-title">管理者ホーム</h1>
+      </div>
+      <div class="card">
+        <h2 class="section-title">やるべきタスク</h2>
+        <div class="list-table" id="admin-tasks" MA-database="admin-tasks"></div>
+      </div>
+      <div class="card">
+        <h2 class="section-title">クイックアクセス</h2>
+        <div class="quick-grid">
+          <button class="quick-card" data-nav="admin-members">会員一覧</button>
+          <button class="quick-card" data-nav="admin-dm">公式DM</button>
+          <button class="quick-card" data-nav="admin-join">新規入会申し込み</button>
+          <button class="quick-card" data-nav="admin-events">イベント掲載申込</button>
+          <button class="quick-card" data-nav="admin-ads">広告掲載申込</button>
+          <button class="quick-card" data-nav="admin-verify">本人確認書類</button>
+          <button class="quick-card" data-nav="admin-profile-fields">プロフィール項目編集</button>
+          <button class="quick-card" data-nav="admin-announcements">公式お知らせ管理</button>
+          <button class="quick-card" data-nav="admin-reports">通報管理</button>
+          <button class="quick-card" data-nav="admin-invites">招待コード履歴</button>
+          <button class="quick-card" data-nav="admin-logs">全管理者利用履歴</button>
+          <button class="quick-card" data-nav="admin-payments">全会員支払履歴</button>
+          <button class="quick-card" data-nav="admin-points">広告ポイント配分設定</button>
+        </div>
+      </div>
+      <div class="dev-panel" MA-dev>
+        <button class="dev-button" data-nav="admin-member-detail">会員詳細</button>
+        <button class="dev-button" data-nav="admin-join-detail">入会申請詳細</button>
+        <button class="dev-button" data-nav="admin-event-detail">イベント申請詳細</button>
+        <button class="dev-button" data-nav="admin-ad-detail">広告申請詳細</button>
+        <button class="dev-button" data-nav="admin-verify-detail">本人確認詳細</button>
+        <button class="dev-button" data-nav="admin-news-detail">お知らせ詳細</button>
+        <button class="dev-button" data-nav="admin-report-detail">通報詳細</button>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="admin-terms" data-role="admin">
+      <div class="screen-header">
+        <h1 class="screen-title">利用規約</h1>
+        <button class="secondary" data-nav="admin-home">戻る</button>
+      </div>
+      <div class="card">
+        <p class="leading-relaxed">管理者向け利用規約本文テキスト。</p>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="admin-members" data-role="admin">
+      <div class="screen-header sticky-header">
+        <div class="flex items-center justify-between">
+          <h1 class="screen-title">会員一覧</h1>
+          <button class="secondary" data-nav="admin-home">戻る</button>
+        </div>
+        <div class="button-row">
+          <button class="ghost" data-action="open-modal" data-modal="admin-member-search">検索</button>
+          <button class="ghost" data-action="open-modal" data-modal="admin-member-sort">並び替え</button>
+        </div>
+      </div>
+      <div class="list-table" id="admin-members" MA-database="admin-members"></div>
+      <button class="load-more" data-action="load-more" data-target="admin-members">次の30件を表示</button>
+    </section>
+
+    <section class="screen hidden" data-screen="admin-member-detail" data-role="admin">
+      <div class="screen-header">
+        <h1 class="screen-title">会員詳細</h1>
+        <button class="secondary" data-nav="admin-members">戻る</button>
+      </div>
+      <div class="card">
+        <div class="avatar">
+          <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=200&q=80" alt="member" />
+          <span class="badge" aria-hidden="true"></span>
+        </div>
+        <p>会員名：田中 太郎</p>
+        <p>年代：40代</p>
+        <p>活動地域：大阪府</p>
+        <p>業種：建設</p>
+        <p>本人確認書類：提出済み</p>
+        <p>会員停止ステータス：有効</p>
+        <div class="button-row">
+          <button class="secondary" data-nav="admin-logs">利用履歴一覧</button>
+          <button class="primary" data-nav="admin-member-edit">編集</button>
+          <button class="danger" data-action="open-modal" data-modal="admin-stop">停止</button>
+          <button class="secondary" data-action="open-modal" data-modal="admin-unstop">停止解除</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="admin-member-edit" data-role="admin">
+      <div class="screen-header">
+        <h1 class="screen-title">会員編集</h1>
+        <button class="secondary" data-nav="admin-member-detail">戻る</button>
+      </div>
+      <div class="card">
+        <div class="form-grid">
+          <label>会員名<input type="text" class="input" /></label>
+          <label>生年月日<input type="date" class="input" /></label>
+          <label>プロフィール画像<input type="file" class="input" /></label>
+          <label>活動地域<select class="input"><option>大阪府</option></select></label>
+          <label>業種<select class="input"><option>建設</option></select></label>
+          <label>信頼度バッジ<select class="input"><option>★</option></select></label>
+          <label>追加プロフィール項目<input type="text" class="input" /></label>
+        </div>
+        <div class="error-message hidden" id="error-admin-member">入力内容に誤りがあります。</div>
+        <button class="primary">保存</button>
+      </div>
+      <div class="dev-panel" MA-dev>
+        <button class="dev-button" data-toggle="error-admin-member">エラー表示切替</button>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="admin-dm" data-role="admin">
+      <div class="screen-header sticky-header">
+        <div class="flex items-center justify-between">
+          <h1 class="screen-title">公式DM</h1>
+          <button class="secondary" data-nav="admin-home">戻る</button>
+        </div>
+        <div class="button-row">
+          <button class="ghost" data-action="open-modal" data-modal="admin-dm-search">検索</button>
+          <button class="ghost" data-action="open-modal" data-modal="admin-dm-sort">並び替え</button>
+        </div>
+      </div>
+      <div class="list-table" id="admin-dm-list" MA-database="admin-dm-list"></div>
+      <button class="load-more" data-action="load-more" data-target="admin-dm-list">次の30件を表示</button>
+    </section>
+
+    <section class="screen hidden" data-screen="admin-dm-detail" data-role="admin">
+      <div class="dm-header">
+        <button class="icon-button" data-nav="admin-dm"><i data-lucide="arrow-left"></i></button>
+        <span class="font-semibold">公式DM</span>
+        <button class="icon-button"><i data-lucide="settings"></i></button>
+      </div>
+      <div class="dm-body" id="admin-dm-messages" MA-database="admin-dm-messages"></div>
+      <div class="dm-input">
+        <textarea class="input flex-1" rows="1" placeholder="メッセージを入力"></textarea>
+        <button class="icon-button"><i data-lucide="send"></i></button>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="admin-join" data-role="admin">
+      <div class="screen-header sticky-header">
+        <div class="flex items-center justify-between">
+          <h1 class="screen-title">新規入会申し込み</h1>
+          <button class="secondary" data-nav="admin-home">戻る</button>
+        </div>
+        <div class="button-row">
+          <button class="ghost" data-action="open-modal" data-modal="admin-join-search">検索</button>
+          <button class="ghost" data-action="open-modal" data-modal="admin-join-sort">並び替え</button>
+        </div>
+      </div>
+      <div class="list-table" id="admin-join-list" MA-database="admin-join-list"></div>
+      <button class="load-more" data-action="load-more" data-target="admin-join-list">次の30件を表示</button>
+    </section>
+
+    <section class="screen hidden" data-screen="admin-join-detail" data-role="admin">
+      <div class="screen-header">
+        <h1 class="screen-title">入会申請詳細</h1>
+        <button class="secondary" data-nav="admin-join">戻る</button>
+      </div>
+      <div class="card">
+        <p>申請者名：佐藤 一郎</p>
+        <p>電話番号：090-1234-5678</p>
+        <p>会社名：ギブ縁商事</p>
+        <p>招待コード：GE-2394</p>
+        <p>承認ステータス：未承認</p>
+        <div class="button-row">
+          <button class="primary" data-action="open-modal" data-modal="admin-approve">承認</button>
+          <button class="danger" data-action="open-modal" data-modal="admin-reject">却下</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="admin-events" data-role="admin">
+      <div class="screen-header sticky-header">
+        <div class="flex items-center justify-between">
+          <h1 class="screen-title">イベント掲載申込</h1>
+          <button class="secondary" data-nav="admin-home">戻る</button>
+        </div>
+        <div class="button-row">
+          <button class="ghost" data-action="open-modal" data-modal="admin-event-search">検索</button>
+          <button class="ghost" data-action="open-modal" data-modal="admin-event-sort">並び替え</button>
+        </div>
+      </div>
+      <div class="list-table" id="admin-event-list" MA-database="admin-event-list"></div>
+      <button class="load-more" data-action="load-more" data-target="admin-event-list">次の30件を表示</button>
+    </section>
+
+    <section class="screen hidden" data-screen="admin-event-detail" data-role="admin">
+      <div class="screen-header">
+        <h1 class="screen-title">イベント申請詳細</h1>
+        <button class="secondary" data-nav="admin-events">戻る</button>
+      </div>
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=400&q=80" alt="event" class="rounded-lg" />
+        <p>イベントタイトル：交流会2024</p>
+        <p>イベント本文：交流会の詳細説明。</p>
+        <p>申請者名：高橋 真理</p>
+        <p>申し込みURL：https://example.com</p>
+        <p>承認ステータス：審査中</p>
+        <div class="button-row">
+          <button class="primary" data-action="open-modal" data-modal="admin-approve">承認</button>
+          <button class="danger" data-action="open-modal" data-modal="admin-reject">却下</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="admin-ads" data-role="admin">
+      <div class="screen-header sticky-header">
+        <div class="flex items-center justify-between">
+          <h1 class="screen-title">広告掲載申込</h1>
+          <button class="secondary" data-nav="admin-home">戻る</button>
+        </div>
+        <div class="button-row">
+          <button class="ghost" data-action="open-modal" data-modal="admin-ad-search">検索</button>
+          <button class="ghost" data-action="open-modal" data-modal="admin-ad-sort">並び替え</button>
+        </div>
+      </div>
+      <div class="list-table" id="admin-ad-list" MA-database="admin-ad-list"></div>
+      <button class="load-more" data-action="load-more" data-target="admin-ad-list">次の30件を表示</button>
+    </section>
+
+    <section class="screen hidden" data-screen="admin-ad-detail" data-role="admin">
+      <div class="screen-header">
+        <h1 class="screen-title">広告申請詳細</h1>
+        <button class="secondary" data-nav="admin-ads">戻る</button>
+      </div>
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1487014679447-9f8336841d58?auto=format&fit=crop&w=400&q=80" alt="ad" class="rounded-lg" />
+        <p>広告種別：バナー広告</p>
+        <p>申請者名：鈴木 剛</p>
+        <p>リンクURL：https://example.com</p>
+        <p>承認ステータス：審査中</p>
+        <div class="button-row">
+          <button class="primary" data-action="open-modal" data-modal="admin-approve">承認</button>
+          <button class="danger" data-action="open-modal" data-modal="admin-reject">却下</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="admin-verify" data-role="admin">
+      <div class="screen-header sticky-header">
+        <div class="flex items-center justify-between">
+          <h1 class="screen-title">本人確認書類</h1>
+          <button class="secondary" data-nav="admin-home">戻る</button>
+        </div>
+      </div>
+      <div class="list-table" id="admin-verify-list" MA-database="admin-verify-list"></div>
+      <button class="load-more" data-action="load-more" data-target="admin-verify-list">次の30件を表示</button>
+    </section>
+
+    <section class="screen hidden" data-screen="admin-verify-detail" data-role="admin">
+      <div class="screen-header">
+        <h1 class="screen-title">本人確認書類詳細</h1>
+        <button class="secondary" data-nav="admin-verify">戻る</button>
+      </div>
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1506784365847-bbad939e9335?auto=format&fit=crop&w=400&q=80" alt="doc" class="rounded-lg" />
+        <p>提出書類種別：運転免許証</p>
+        <p>申請者名：小林 愛</p>
+        <p>承認ステータス：審査中</p>
+        <div class="button-row">
+          <button class="primary" data-action="open-modal" data-modal="admin-approve">承認</button>
+          <button class="danger" data-action="open-modal" data-modal="admin-reject">却下</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="admin-profile-fields" data-role="admin">
+      <div class="screen-header">
+        <h1 class="screen-title">プロフィール項目編集</h1>
+        <button class="secondary" data-nav="admin-home">戻る</button>
+      </div>
+      <div class="card">
+        <div class="list-table">
+          <div class="table-row">名前</div>
+          <div class="table-row">生年月日</div>
+          <div class="table-row">活動地域</div>
+          <div class="table-row">業種</div>
+        </div>
+        <div class="form-grid">
+          <label>追加項目名<input type="text" class="input" /></label>
+          <label>入力形式<select class="input"><option>Input</option><option>Textarea</option></select></label>
+          <button class="secondary">削除</button>
+        </div>
+        <div class="error-message hidden" id="error-profile-fields">入力内容に誤りがあります。</div>
+        <div class="button-row">
+          <button class="secondary">追加</button>
+          <button class="primary">保存</button>
+        </div>
+      </div>
+      <div class="dev-panel" MA-dev>
+        <button class="dev-button" data-toggle="error-profile-fields">エラー表示切替</button>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="admin-announcements" data-role="admin">
+      <div class="screen-header sticky-header">
+        <div class="flex items-center justify-between">
+          <h1 class="screen-title">公式お知らせ管理</h1>
+          <button class="secondary" data-nav="admin-home">戻る</button>
+        </div>
+        <div class="button-row">
+          <button class="ghost" data-action="open-modal" data-modal="admin-news-search">検索</button>
+          <button class="ghost" data-action="open-modal" data-modal="admin-news-sort">並び替え</button>
+          <button class="primary" data-nav="admin-news-new">新規作成</button>
+        </div>
+      </div>
+      <div class="list-table" id="admin-news-list" MA-database="admin-news-list"></div>
+      <button class="load-more" data-action="load-more" data-target="admin-news-list">次の30件を表示</button>
+    </section>
+
+    <section class="screen hidden" data-screen="admin-news-new" data-role="admin">
+      <div class="screen-header">
+        <h1 class="screen-title">お知らせ新規作成</h1>
+        <button class="secondary" data-nav="admin-announcements">戻る</button>
+      </div>
+      <div class="card">
+        <label>サムネ画像<input type="file" class="input" /></label>
+        <label>タイトル<input type="text" class="input" /></label>
+        <label>本文<textarea class="input" rows="4"></textarea></label>
+        <label>種別<select class="input"><option>公式</option></select></label>
+        <label>申し込み用URL<input type="url" class="input" /></label>
+        <div class="error-message hidden" id="error-admin-news-new">入力内容に誤りがあります。</div>
+        <button class="primary">投稿する</button>
+      </div>
+      <div class="dev-panel" MA-dev>
+        <button class="dev-button" data-toggle="error-admin-news-new">エラー表示切替</button>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="admin-news-detail" data-role="admin">
+      <div class="screen-header">
+        <h1 class="screen-title">お知らせ詳細</h1>
+        <button class="secondary" data-nav="admin-announcements">戻る</button>
+      </div>
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=400&q=80" alt="news" class="rounded-lg" />
+        <p>タイトル：公式お知らせ</p>
+        <p>本文：告知内容が入ります。</p>
+        <p>種別：公式</p>
+        <p>URL：https://example.com</p>
+        <button class="primary" data-nav="admin-news-edit">編集</button>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="admin-news-edit" data-role="admin">
+      <div class="screen-header">
+        <h1 class="screen-title">お知らせ編集</h1>
+        <button class="secondary" data-nav="admin-news-detail">戻る</button>
+      </div>
+      <div class="card">
+        <label>サムネ画像<input type="file" class="input" /></label>
+        <label>タイトル<input type="text" class="input" /></label>
+        <label>本文<textarea class="input" rows="4"></textarea></label>
+        <label>種別<select class="input"><option>公式</option></select></label>
+        <label>申し込み用URL<input type="url" class="input" /></label>
+        <div class="error-message hidden" id="error-admin-news-edit">入力内容に誤りがあります。</div>
+        <button class="primary">保存</button>
+      </div>
+      <div class="dev-panel" MA-dev>
+        <button class="dev-button" data-toggle="error-admin-news-edit">エラー表示切替</button>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="admin-reports" data-role="admin">
+      <div class="screen-header sticky-header">
+        <div class="flex items-center justify-between">
+          <h1 class="screen-title">通報管理</h1>
+          <button class="secondary" data-nav="admin-home">戻る</button>
+        </div>
+      </div>
+      <div class="list-table" id="admin-report-list" MA-database="admin-report-list"></div>
+      <button class="load-more" data-action="load-more" data-target="admin-report-list">次の30件を表示</button>
+    </section>
+
+    <section class="screen hidden" data-screen="admin-report-detail" data-role="admin">
+      <div class="screen-header">
+        <h1 class="screen-title">通報詳細</h1>
+        <button class="secondary" data-nav="admin-reports">戻る</button>
+      </div>
+      <div class="card">
+        <p>通報内容：不適切な投稿</p>
+        <p>通報者：会員A</p>
+        <p>通報対象会員：会員B</p>
+        <p>通報理由：迷惑行為</p>
+        <p>対応状態：未対応</p>
+        <button class="danger">対象会員を停止</button>
+      </div>
+    </section>
+
+    <section class="screen hidden" data-screen="admin-invites" data-role="admin">
+      <div class="screen-header sticky-header">
+        <div class="flex items-center justify-between">
+          <h1 class="screen-title">招待コード履歴</h1>
+          <button class="secondary" data-nav="admin-home">戻る</button>
+        </div>
+        <div class="button-row">
+          <button class="ghost" data-action="open-modal" data-modal="admin-invite-search">検索</button>
+          <button class="ghost" data-action="open-modal" data-modal="admin-invite-sort">並び替え</button>
+        </div>
+      </div>
+      <div class="list-table" id="admin-invite-list" MA-database="admin-invite-list"></div>
+      <button class="load-more" data-action="load-more" data-target="admin-invite-list">次の30件を表示</button>
+    </section>
+
+    <section class="screen hidden" data-screen="admin-logs" data-role="admin">
+      <div class="screen-header sticky-header">
+        <div class="flex items-center justify-between">
+          <h1 class="screen-title">全管理者利用履歴</h1>
+          <button class="secondary" data-nav="admin-home">戻る</button>
+        </div>
+        <div class="button-row">
+          <button class="ghost" data-action="open-modal" data-modal="admin-log-search">検索</button>
+          <button class="ghost" data-action="open-modal" data-modal="admin-log-sort">並び替え</button>
+        </div>
+      </div>
+      <div class="list-table" id="admin-log-list" MA-database="admin-log-list"></div>
+      <button class="load-more" data-action="load-more" data-target="admin-log-list">次の30件を表示</button>
+    </section>
+
+    <section class="screen hidden" data-screen="admin-payments" data-role="admin">
+      <div class="screen-header sticky-header">
+        <div class="flex items-center justify-between">
+          <h1 class="screen-title">全会員支払履歴</h1>
+          <button class="secondary" data-nav="admin-home">戻る</button>
+        </div>
+        <div class="button-row">
+          <button class="ghost" data-action="open-modal" data-modal="admin-payment-search">検索</button>
+          <button class="ghost" data-action="open-modal" data-modal="admin-payment-sort">並び替え</button>
+        </div>
+      </div>
+      <div class="list-table" id="admin-payment-list" MA-database="admin-payment-list"></div>
+      <button class="load-more" data-action="load-more" data-target="admin-payment-list">次の30件を表示</button>
+    </section>
+
+    <section class="screen hidden" data-screen="admin-points" data-role="admin">
+      <div class="screen-header">
+        <h1 class="screen-title">広告ポイント配分設定</h1>
+        <button class="secondary" data-nav="admin-home">戻る</button>
+      </div>
+      <div class="card">
+        <label>バナー広告ポイント<input type="number" class="input" /></label>
+        <label>フッター広告ポイント<input type="number" class="input" /></label>
+        <div class="error-message hidden" id="error-admin-points">入力内容に誤りがあります。</div>
+        <button class="primary">保存</button>
+      </div>
+      <div class="dev-panel" MA-dev>
+        <button class="dev-button" data-toggle="error-admin-points">エラー表示切替</button>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal hidden" data-modal="register-complete">
+    <div class="modal-card">
+      <h2 class="modal-title">登録申請完了</h2>
+      <p>認証用のメールを送付しました</p>
+      <button class="primary" data-action="close-modal">OK</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="reset-email">
+    <div class="modal-card">
+      <h2 class="modal-title">パスワードリセット</h2>
+      <p>認証用のメールを送付しました</p>
+      <button class="primary" data-action="close-modal">OK</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="id-verify-complete">
+    <div class="modal-card">
+      <h2 class="modal-title">本人確認書類</h2>
+      <p>送信しました</p>
+      <button class="primary" data-action="close-modal">OK</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="profile-detail">
+    <div class="modal-card">
+      <button class="modal-close" data-action="close-modal"><i data-lucide="x"></i></button>
+      <div class="avatar">
+        <img src="https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=200&q=80" alt="profile" />
+        <span class="badge" aria-hidden="true"></span>
+      </div>
+      <p>山田 花子 / 30代 / 東京都 / IT・通信</p>
+      <p>追加プロフィール項目：ビジネス経験 10年</p>
+      <p>本人確認書類：提出済み</p>
+      <div class="icon-row">
+        <button class="icon-button muted"><i data-lucide="heart"></i></button>
+        <button class="icon-button muted"><i data-lucide="handshake"></i></button>
+        <button class="icon-button muted"><i data-lucide="users"></i></button>
+        <button class="icon-button" data-nav="dm-detail"><i data-lucide="message-circle"></i></button>
+        <button class="icon-button" data-action="open-modal" data-modal="memo-dialog"><i data-lucide="sticky-note"></i></button>
+      </div>
+      <p class="text-xs">自分自身表示時はアイコンが無効になります。</p>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="member-search">
+    <div class="modal-card">
+      <h2 class="modal-title">検索</h2>
+      <div class="form-grid">
+        <label>名前<input type="text" class="input" /></label>
+        <label>年代<select class="input"><option>30代</option></select></label>
+        <label>活動地域<select class="input"><option>東京都</option></select></label>
+        <label>業種<select class="input"><option>IT・通信</option></select></label>
+        <label>信頼度バッジ<select class="input"><option>★</option></select></label>
+        <label>本人確認書類<select class="input"><option>提出済み</option></select></label>
+        <label>登録日<input type="date" class="input" /></label>
+        <label>最終ログイン日<input type="date" class="input" /></label>
+        <label>保有ポイント範囲<input type="text" class="input" /></label>
+        <label>追加項目<input type="text" class="input" /></label>
+      </div>
+      <button class="primary">検索する</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="member-sort">
+    <div class="modal-card">
+      <h2 class="modal-title">並び替え</h2>
+      <label>並び替え項目<select class="input"><option>登録日</option></select></label>
+      <button class="primary">並び替える</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="invite-create">
+    <div class="modal-card">
+      <h2 class="modal-title">招待コード作成</h2>
+      <p>新規で招待コードを作成しますか？</p>
+      <button class="primary">作成する</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="invite-delete">
+    <div class="modal-card">
+      <h2 class="modal-title">招待コード削除</h2>
+      <p>この招待コードを無効にしますか？</p>
+      <button class="danger">削除する</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="invite-search">
+    <div class="modal-card">
+      <h2 class="modal-title">招待コード検索</h2>
+      <label>作成日<input type="date" class="input" /></label>
+      <label>有効期限<input type="date" class="input" /></label>
+      <label>使用済み<select class="input"><option>未使用</option></select></label>
+      <button class="primary">検索する</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="invite-sort">
+    <div class="modal-card">
+      <h2 class="modal-title">招待コード並び替え</h2>
+      <label>並び替え項目<select class="input"><option>作成日</option></select></label>
+      <button class="primary">並び替える</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="dm-settings-dialog">
+    <div class="modal-card">
+      <h2 class="modal-title">DM設定</h2>
+      <button class="secondary" data-action="open-modal" data-modal="block-dialog">ブロック</button>
+      <button class="secondary" data-action="open-modal" data-modal="report-dialog">通報</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="dm-search">
+    <div class="modal-card">
+      <h2 class="modal-title">DM検索</h2>
+      <label>検索キーワード<input type="text" class="input" /></label>
+      <button class="primary">検索する</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="dm-sort">
+    <div class="modal-card">
+      <h2 class="modal-title">DM並び替え</h2>
+      <label>並び替え<select class="input"><option>最新順</option></select></label>
+      <button class="primary">並び替える</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="report-dialog">
+    <div class="modal-card">
+      <h2 class="modal-title">通報</h2>
+      <label>通報理由<select class="input"><option>迷惑行為</option></select></label>
+      <label>通報内容<textarea class="input" rows="3"></textarea></label>
+      <button class="primary">通報する</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="block-dialog">
+    <div class="modal-card">
+      <h2 class="modal-title">ブロック確認</h2>
+      <p>この会員をブロックしますか？</p>
+      <button class="primary">ブロックする</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="unblock-dialog">
+    <div class="modal-card">
+      <h2 class="modal-title">ブロック解除</h2>
+      <p>ブロックを解除しますか？</p>
+      <button class="primary">解除する</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="memo-search">
+    <div class="modal-card">
+      <h2 class="modal-title">会員メモ検索</h2>
+      <label>キーワード<input type="text" class="input" /></label>
+      <button class="primary">検索する</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="memo-sort">
+    <div class="modal-card">
+      <h2 class="modal-title">会員メモ並び替え</h2>
+      <label>並び替え<select class="input"><option>更新日</option></select></label>
+      <button class="primary">並び替える</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="memo-delete">
+    <div class="modal-card">
+      <h2 class="modal-title">メモ削除</h2>
+      <p>メモを削除しますか？</p>
+      <button class="danger">削除する</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="memo-dialog">
+    <div class="modal-card">
+      <button class="modal-close" data-action="close-modal"><i data-lucide="x"></i></button>
+      <div class="avatar small">
+        <img src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?auto=format&fit=crop&w=200&q=80" alt="member" />
+        <span class="badge" aria-hidden="true"></span>
+      </div>
+      <div class="memo-dialog-grid" id="memo-dialog-list" MA-database="memo-dialog-list"></div>
+      <button class="icon-button" data-action="open-modal" data-modal="memo-detail-dialog"><i data-lucide="plus"></i></button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="memo-detail-dialog">
+    <div class="modal-card">
+      <button class="modal-close" data-action="close-modal"><i data-lucide="x"></i></button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+      <input type="text" class="input" placeholder="メモタイトル" />
+      <textarea class="input" rows="3" placeholder="メモ内容"></textarea>
+      <div class="avatar small">
+        <img src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?auto=format&fit=crop&w=200&q=80" alt="member" />
+        <span class="badge" aria-hidden="true"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="promo-search">
+    <div class="modal-card">
+      <h2 class="modal-title">宣伝検索</h2>
+      <label>投稿タイトル<input type="text" class="input" /></label>
+      <label>申請日<input type="date" class="input" /></label>
+      <label>承認状態<select class="input"><option>承認待ち</option></select></label>
+      <button class="primary">検索する</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="promo-sort">
+    <div class="modal-card">
+      <h2 class="modal-title">宣伝並び替え</h2>
+      <label>並び替え<select class="input"><option>申請日</option></select></label>
+      <button class="primary">並び替える</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="notice-search">
+    <div class="modal-card">
+      <h2 class="modal-title">お知らせ検索</h2>
+      <label>投稿日付<input type="date" class="input" /></label>
+      <label>種別<select class="input"><option>公式</option></select></label>
+      <label>タイトル<input type="text" class="input" /></label>
+      <button class="primary">検索する</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="notice-sort">
+    <div class="modal-card">
+      <h2 class="modal-title">お知らせ並び替え</h2>
+      <label>並び替え<select class="input"><option>投稿日付</option></select></label>
+      <button class="primary">並び替える</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="promo-apply-search">
+    <div class="modal-card">
+      <h2 class="modal-title">宣伝申請検索</h2>
+      <label>投稿タイトル<input type="text" class="input" /></label>
+      <label>申請日<input type="date" class="input" /></label>
+      <label>承認状態<select class="input"><option>承認待ち</option></select></label>
+      <button class="primary">検索する</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="promo-apply-sort">
+    <div class="modal-card">
+      <h2 class="modal-title">宣伝申請並び替え</h2>
+      <label>並び替え<select class="input"><option>申請日</option></select></label>
+      <button class="primary">並び替える</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="ad-apply-search">
+    <div class="modal-card">
+      <h2 class="modal-title">広告申請検索</h2>
+      <label>広告種別<select class="input"><option>バナー</option></select></label>
+      <label>申請日<input type="date" class="input" /></label>
+      <label>承認状態<select class="input"><option>承認待ち</option></select></label>
+      <button class="primary">検索する</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="ad-apply-sort">
+    <div class="modal-card">
+      <h2 class="modal-title">広告申請並び替え</h2>
+      <label>並び替え<select class="input"><option>申請日</option></select></label>
+      <button class="primary">並び替える</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="post-detail">
+    <div class="modal-card">
+      <button class="modal-close" data-action="close-modal"><i data-lucide="x"></i></button>
+      <div class="avatar small">
+        <img src="https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=200&q=80" alt="poster" />
+        <span class="badge" aria-hidden="true"></span>
+      </div>
+      <p>投稿者名：会員A</p>
+      <img src="https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=400&q=80" alt="thumb" class="rounded-lg" />
+      <p>投稿タイトル：イベント参加募集</p>
+      <p>投稿日付：2024/07/12</p>
+      <p>投稿本文：本文テキストが入ります。</p>
+      <a href="https://example.com" target="_blank" rel="noreferrer" class="link-button">申し込み用URL</a>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="notice-detail">
+    <div class="modal-card">
+      <button class="modal-close" data-action="close-modal"><i data-lucide="x"></i></button>
+      <img src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=400&q=80" alt="notice" class="rounded-lg" />
+      <p>お知らせタイトル：公式お知らせ</p>
+      <p>投稿日付：2024/07/09</p>
+      <p>本文：お知らせ本文が入ります。</p>
+      <p>種別：公式</p>
+      <a href="https://example.com" target="_blank" rel="noreferrer" class="link-button">申し込み用URL</a>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="withdraw">
+    <div class="modal-card">
+      <h2 class="modal-title">退会確認</h2>
+      <p>退会しますか？</p>
+      <button class="danger">退会する</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="unpaid">
+    <div class="modal-card">
+      <h2 class="modal-title">月額更新費未払い</h2>
+      <p>月額更新費が支払われていません。支払方法の設定をご確認ください。</p>
+      <button class="primary" data-action="close-modal">OK</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="admin-member-search">
+    <div class="modal-card">
+      <h2 class="modal-title">会員検索</h2>
+      <label>会員名<input type="text" class="input" /></label>
+      <label>地域<input type="text" class="input" /></label>
+      <label>業種<input type="text" class="input" /></label>
+      <label>ステータス<select class="input"><option>有効</option></select></label>
+      <button class="primary">検索する</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="admin-member-sort">
+    <div class="modal-card">
+      <h2 class="modal-title">会員並び替え</h2>
+      <label>並び替え<select class="input"><option>登録日</option></select></label>
+      <button class="primary">並び替える</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="admin-stop">
+    <div class="modal-card">
+      <h2 class="modal-title">停止確認</h2>
+      <p>この会員を停止しますか？</p>
+      <button class="danger">停止する</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="admin-unstop">
+    <div class="modal-card">
+      <h2 class="modal-title">停止解除確認</h2>
+      <p>停止を解除しますか？</p>
+      <button class="primary">解除する</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="admin-dm-search">
+    <div class="modal-card">
+      <h2 class="modal-title">公式DM検索</h2>
+      <label>キーワード<input type="text" class="input" /></label>
+      <button class="primary">検索する</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="admin-dm-sort">
+    <div class="modal-card">
+      <h2 class="modal-title">公式DM並び替え</h2>
+      <label>並び替え<select class="input"><option>最新順</option></select></label>
+      <button class="primary">並び替える</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="admin-join-search">
+    <div class="modal-card">
+      <h2 class="modal-title">入会申請検索</h2>
+      <label>申請日<input type="date" class="input" /></label>
+      <label>申請者名<input type="text" class="input" /></label>
+      <label>ステータス<select class="input"><option>未承認</option></select></label>
+      <button class="primary">検索する</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="admin-join-sort">
+    <div class="modal-card">
+      <h2 class="modal-title">入会申請並び替え</h2>
+      <label>並び替え<select class="input"><option>申請日</option></select></label>
+      <button class="primary">並び替える</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="admin-approve">
+    <div class="modal-card">
+      <h2 class="modal-title">承認確認</h2>
+      <p>承認しますか？</p>
+      <button class="primary">承認する</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="admin-reject">
+    <div class="modal-card">
+      <h2 class="modal-title">却下確認</h2>
+      <p>却下しますか？</p>
+      <button class="danger">却下する</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="admin-event-search">
+    <div class="modal-card">
+      <h2 class="modal-title">イベント申請検索</h2>
+      <label>申請日<input type="date" class="input" /></label>
+      <label>申請者名<input type="text" class="input" /></label>
+      <label>ステータス<select class="input"><option>審査中</option></select></label>
+      <button class="primary">検索する</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="admin-event-sort">
+    <div class="modal-card">
+      <h2 class="modal-title">イベント申請並び替え</h2>
+      <label>並び替え<select class="input"><option>申請日</option></select></label>
+      <button class="primary">並び替える</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="admin-ad-search">
+    <div class="modal-card">
+      <h2 class="modal-title">広告申請検索</h2>
+      <label>申請日<input type="date" class="input" /></label>
+      <label>申請者名<input type="text" class="input" /></label>
+      <label>広告種別<select class="input"><option>バナー</option></select></label>
+      <button class="primary">検索する</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="admin-ad-sort">
+    <div class="modal-card">
+      <h2 class="modal-title">広告申請並び替え</h2>
+      <label>並び替え<select class="input"><option>申請日</option></select></label>
+      <button class="primary">並び替える</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="admin-news-search">
+    <div class="modal-card">
+      <h2 class="modal-title">お知らせ検索</h2>
+      <label>投稿日付<input type="date" class="input" /></label>
+      <label>種別<select class="input"><option>公式</option></select></label>
+      <label>タイトル<input type="text" class="input" /></label>
+      <button class="primary">検索する</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="admin-news-sort">
+    <div class="modal-card">
+      <h2 class="modal-title">お知らせ並び替え</h2>
+      <label>並び替え<select class="input"><option>投稿日付</option></select></label>
+      <button class="primary">並び替える</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="admin-report-search">
+    <div class="modal-card">
+      <h2 class="modal-title">通報検索</h2>
+      <label>通報日<input type="date" class="input" /></label>
+      <label>通報者<input type="text" class="input" /></label>
+      <button class="primary">検索する</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="admin-invite-search">
+    <div class="modal-card">
+      <h2 class="modal-title">招待コード履歴検索</h2>
+      <label>発行日<input type="date" class="input" /></label>
+      <label>招待コード<input type="text" class="input" /></label>
+      <label>利用会員<input type="text" class="input" /></label>
+      <label>利用日<input type="date" class="input" /></label>
+      <button class="primary">検索する</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="admin-invite-sort">
+    <div class="modal-card">
+      <h2 class="modal-title">招待コード履歴並び替え</h2>
+      <label>並び替え<select class="input"><option>発行日</option></select></label>
+      <button class="primary">並び替える</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="admin-log-search">
+    <div class="modal-card">
+      <h2 class="modal-title">利用履歴検索</h2>
+      <label>管理者名<input type="text" class="input" /></label>
+      <label>操作内容<input type="text" class="input" /></label>
+      <label>日時<input type="datetime-local" class="input" /></label>
+      <button class="primary">検索する</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="admin-log-sort">
+    <div class="modal-card">
+      <h2 class="modal-title">利用履歴並び替え</h2>
+      <label>並び替え<select class="input"><option>日時</option></select></label>
+      <button class="primary">並び替える</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="admin-payment-search">
+    <div class="modal-card">
+      <h2 class="modal-title">支払履歴検索</h2>
+      <label>会員名<input type="text" class="input" /></label>
+      <label>支払種別<select class="input"><option>月額</option></select></label>
+      <label>支払日<input type="date" class="input" /></label>
+      <label>支払状態<select class="input"><option>完了</option></select></label>
+      <button class="primary">検索する</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" data-modal="admin-payment-sort">
+    <div class="modal-card">
+      <h2 class="modal-title">支払履歴並び替え</h2>
+      <label>並び替え<select class="input"><option>支払日</option></select></label>
+      <button class="primary">並び替える</button>
+      <button class="secondary" data-action="close-modal">戻る</button>
+    </div>
+  </div>
+
+  <nav class="hamburger-menu hidden" id="member-menu">
+    <div class="menu-card">
+      <button class="icon-button" data-action="close-menu"><i data-lucide="x"></i></button>
+      <div class="menu-grid">
+        <button class="menu-item" data-nav="profile"><i data-lucide="user"></i>プロフィール</button>
+        <button class="menu-item" data-nav="payment-info"><i data-lucide="credit-card"></i>支払情報</button>
+        <button class="menu-item" data-nav="invite-code"><i data-lucide="key"></i>招待コード</button>
+        <button class="menu-item" data-nav="member-search"><i data-lucide="search"></i>仲間を調べる</button>
+        <button class="menu-item" data-nav="dm"><i data-lucide="message-square"></i>DM</button>
+        <button class="menu-item" data-nav="memo"><i data-lucide="sticky-note"></i>会員メモ</button>
+        <button class="menu-item" data-nav="promotions"><i data-lucide="megaphone"></i>宣伝・イベント・お知らせ</button>
+        <button class="menu-item" data-nav="login-info"><i data-lucide="settings"></i>ログイン情報変更</button>
+        <button class="menu-item" data-nav="terms-member"><i data-lucide="file-text"></i>利用規約を読む</button>
+        <button class="menu-item" data-nav="login"><i data-lucide="log-out"></i>ログアウト</button>
+      </div>
+    </div>
+  </nav>
+
+  <nav class="hamburger-menu hidden" id="admin-menu">
+    <div class="menu-card">
+      <button class="icon-button" data-action="close-menu"><i data-lucide="x"></i></button>
+      <div class="menu-grid">
+        <button class="menu-item" data-nav="admin-members"><i data-lucide="users"></i>会員一覧</button>
+        <button class="menu-item" data-nav="admin-dm"><i data-lucide="message-square"></i>公式DM</button>
+        <button class="menu-item" data-nav="admin-join"><i data-lucide="clipboard"></i>新規入会申し込み</button>
+        <button class="menu-item" data-nav="admin-events"><i data-lucide="calendar"></i>イベント掲載申込</button>
+        <button class="menu-item" data-nav="admin-ads"><i data-lucide="image"></i>広告掲載申込</button>
+        <button class="menu-item" data-nav="admin-verify"><i data-lucide="shield"></i>本人確認書類</button>
+        <button class="menu-item" data-nav="admin-profile-fields"><i data-lucide="list"></i>プロフィール項目編集</button>
+        <button class="menu-item" data-nav="admin-announcements"><i data-lucide="bell"></i>公式お知らせ管理</button>
+        <button class="menu-item" data-nav="admin-reports"><i data-lucide="alert-triangle"></i>通報管理</button>
+        <button class="menu-item" data-nav="admin-invites"><i data-lucide="key"></i>招待コード履歴</button>
+        <button class="menu-item" data-nav="admin-logs"><i data-lucide="history"></i>全管理者利用履歴</button>
+        <button class="menu-item" data-nav="admin-payments"><i data-lucide="wallet"></i>全会員支払履歴</button>
+        <button class="menu-item" data-nav="admin-points"><i data-lucide="settings"></i>広告ポイント配分設定</button>
+        <button class="menu-item" data-nav="admin-terms"><i data-lucide="file-text"></i>利用規約を読む</button>
+        <button class="menu-item" data-nav="login"><i data-lucide="log-out"></i>ログアウト</button>
+      </div>
+    </div>
+  </nav>
+
+  <script src="app.js"></script>
+</body>
+</html>
