@@ -423,90 +423,42 @@ function renderAdminDm(row) {
 }
 
 function renderAllLists() {
-  const profileList = document.getElementById('profile-list');
-  if (profileList) {
-    profileList.innerHTML = paginate('profile', dataSets.members, renderMemberTile);
-  }
+  const listMap = {
+    'profile-favorite': [dataSets.members, renderMemberTile],
+    'profile-1on1': [dataSets.members, renderMemberTile],
+    'profile-follow': [dataSets.members, renderMemberTile],
+    'profile-follower': [dataSets.members, renderMemberTile],
+    'search-member': [dataSets.members, renderMemberTile],
+    'search-recommended': [dataSets.members, renderMemberTile],
+    'search-new': [dataSets.members, renderMemberTile],
+    'invite': [dataSets.invites, renderInviteRow],
+    'memo': [dataSets.memos, renderMemoCard],
+    'dm-main': [adminData.dm, renderMemberDm],
+    'dm-settings': [adminData.dm, renderMemberDm],
+    'promo-timeline': [dataSets.promos, renderPromoRow],
+    'promo-news': [dataSets.promos, renderPromoRow],
+    'promo-promotion': [dataSets.promos, renderPromoRow],
+    'promo-ads': [dataSets.promos, renderPromoRow],
+    'admin-members': [adminData.members, renderAdminRow],
+    'admin-requests': [adminData.requests, renderAdminRequest],
+    'admin-events': [adminData.events, renderAdminEvent],
+    'admin-ads': [adminData.ads, renderAdminAd],
+    'admin-verify': [adminData.verify, renderAdminVerify],
+    'admin-reports': [adminData.reports, renderAdminReport],
+    'admin-invite-history': [adminData.inviteHistory, renderAdminInviteHistory],
+    'admin-usage': [adminData.usage, renderAdminUsage],
+    'admin-payment': [adminData.payment, renderAdminPayment],
+    'admin-news': [adminData.news, renderAdminNews],
+    'admin-dm': [adminData.dm, renderAdminDm],
+  };
 
-  const searchList = document.getElementById('search-list');
-  if (searchList) {
-    searchList.innerHTML = paginate('search', dataSets.members, renderMemberTile);
-  }
-
-  const inviteList = document.getElementById('invite-list');
-  if (inviteList) {
-    inviteList.innerHTML = paginate('invite', dataSets.invites, renderInviteRow);
-  }
-
-  const memoList = document.getElementById('memo-list');
-  if (memoList) {
-    memoList.innerHTML = paginate('memo', dataSets.memos, renderMemoCard);
-  }
-
-  const dmList = document.getElementById('dm-list');
-  if (dmList) {
-    dmList.innerHTML = paginate('dm', adminData.dm, renderMemberDm);
-  }
-
-  const promoList = document.getElementById('promo-list');
-  if (promoList) {
-    promoList.innerHTML = paginate('promo', dataSets.promos, renderPromoRow);
-  }
-
-  const adminMemberList = document.getElementById('admin-member-list');
-  if (adminMemberList) {
-    adminMemberList.innerHTML = paginate('admin-members', adminData.members, renderAdminRow);
-  }
-
-  const adminRequestList = document.getElementById('admin-request-list');
-  if (adminRequestList) {
-    adminRequestList.innerHTML = paginate('admin-requests', adminData.requests, renderAdminRequest);
-  }
-
-  const adminEventList = document.getElementById('admin-event-list');
-  if (adminEventList) {
-    adminEventList.innerHTML = paginate('admin-events', adminData.events, renderAdminEvent);
-  }
-
-  const adminAdList = document.getElementById('admin-ad-list');
-  if (adminAdList) {
-    adminAdList.innerHTML = paginate('admin-ads', adminData.ads, renderAdminAd);
-  }
-
-  const adminVerifyList = document.getElementById('admin-verify-list');
-  if (adminVerifyList) {
-    adminVerifyList.innerHTML = paginate('admin-verify', adminData.verify, renderAdminVerify);
-  }
-
-  const adminReportList = document.getElementById('admin-report-list');
-  if (adminReportList) {
-    adminReportList.innerHTML = paginate('admin-reports', adminData.reports, renderAdminReport);
-  }
-
-  const adminInviteHistoryList = document.getElementById('admin-invite-history-list');
-  if (adminInviteHistoryList) {
-    adminInviteHistoryList.innerHTML = paginate('admin-invite-history', adminData.inviteHistory, renderAdminInviteHistory);
-  }
-
-  const adminUsageList = document.getElementById('admin-usage-list');
-  if (adminUsageList) {
-    adminUsageList.innerHTML = paginate('admin-usage', adminData.usage, renderAdminUsage);
-  }
-
-  const adminPaymentList = document.getElementById('admin-payment-list');
-  if (adminPaymentList) {
-    adminPaymentList.innerHTML = paginate('admin-payment', adminData.payment, renderAdminPayment);
-  }
-
-  const adminNewsList = document.getElementById('admin-news-list');
-  if (adminNewsList) {
-    adminNewsList.innerHTML = paginate('admin-news', adminData.news, renderAdminNews);
-  }
-
-  const adminDmList = document.getElementById('admin-dm-list');
-  if (adminDmList) {
-    adminDmList.innerHTML = paginate('admin-dm', adminData.dm, renderAdminDm);
-  }
+  document.querySelectorAll('[data-list]').forEach((element) => {
+    const listName = element.dataset.list;
+    const config = listMap[listName];
+    if (!config) return;
+    const [data, renderer] = config;
+    element.innerHTML = paginate(listName, data, renderer);
+  });
 
   renderDmMessages(document.getElementById('member-dm-messages'), memberMessages, 'member-dm-messages');
   renderDmMessages(document.getElementById('admin-dm-messages'), adminMessages, 'admin-dm-messages');
@@ -640,6 +592,23 @@ function updateTabs() {
     const active = btn.dataset.tab === tabs.promo;
     btn.classList.toggle('text-slate-900', active);
     btn.classList.toggle('text-slate-400', !active);
+  });
+
+  toggleTabFrames('profile', tabs.profile);
+  toggleTabFrames('search', tabs.search);
+  toggleTabFrames('dm', tabs.dm);
+  toggleTabFrames('promo', tabs.promo);
+}
+
+function toggleTabFrames(group, value) {
+  document.querySelectorAll(`[data-tab-frame=\"${group}\"]`).forEach((frame) => {
+    const isActive = frame.dataset.tabValue === value;
+    if (isActive) {
+      frame.classList.add('is-active');
+      requestAnimationFrame(() => frame.classList.add('is-active'));
+    } else {
+      frame.classList.remove('is-active');
+    }
   });
 }
 
@@ -892,28 +861,36 @@ function handleAction(action, target) {
     case 'open-external-link':
       showDialog('外部リンク', '別ウィンドウで開きます。', 'OK');
       break;
+    case 'scroll-top':
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      break;
     case 'back':
     case 'back-to-home':
       showScreen(state.activeRole === 'admin' ? 'screen-admin-home' : 'screen-member-home', state.activeRole);
       break;
     case 'login-tab':
       setTab('login', target.dataset.tab);
+      resetPagination();
       updateTabs();
       break;
     case 'profile-tab':
       setTab('profile', target.dataset.tab);
+      resetPagination();
       updateTabs();
       break;
     case 'search-tab':
       setTab('search', target.dataset.tab);
+      resetPagination();
       updateTabs();
       break;
     case 'dm-tab':
       setTab('dm', target.dataset.tab);
+      resetPagination();
       updateTabs();
       break;
     case 'promo-tab':
       setTab('promo', target.dataset.tab);
+      resetPagination();
       updateTabs();
       break;
     case 'load-more': {
