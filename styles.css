@@ -14,6 +14,50 @@ body {
   animation: drift 16s ease-in-out infinite alternate;
 }
 
+#floating-orbs {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+#floating-orbs .orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(40px);
+  opacity: 0.6;
+  mix-blend-mode: multiply;
+}
+
+#floating-orbs .orb-1 {
+  width: 320px;
+  height: 320px;
+  background: rgba(255, 196, 120, 0.6);
+  animation: orb-float-1 18s ease-in-out infinite alternate;
+}
+
+#floating-orbs .orb-2 {
+  width: 260px;
+  height: 260px;
+  background: rgba(255, 153, 124, 0.55);
+  animation: orb-float-2 20s ease-in-out infinite alternate;
+}
+
+#floating-orbs .orb-3 {
+  width: 300px;
+  height: 300px;
+  background: rgba(255, 231, 178, 0.6);
+  animation: orb-float-3 22s ease-in-out infinite alternate;
+}
+
+#floating-orbs .orb-4 {
+  width: 220px;
+  height: 220px;
+  background: rgba(255, 214, 165, 0.55);
+  animation: orb-float-4 19s ease-in-out infinite alternate;
+}
+
 @keyframes drift {
   0% {
     transform: translate3d(-20vw, -20vh, 0) scale(1.1);
@@ -23,6 +67,42 @@ body {
   }
   100% {
     transform: translate3d(30vw, -15vh, 0) scale(1.05);
+  }
+}
+
+@keyframes orb-float-1 {
+  0% {
+    transform: translate(-10%, 10%);
+  }
+  100% {
+    transform: translate(60%, -20%);
+  }
+}
+
+@keyframes orb-float-2 {
+  0% {
+    transform: translate(70%, 20%);
+  }
+  100% {
+    transform: translate(10%, 70%);
+  }
+}
+
+@keyframes orb-float-3 {
+  0% {
+    transform: translate(20%, 70%);
+  }
+  100% {
+    transform: translate(80%, 10%);
+  }
+}
+
+@keyframes orb-float-4 {
+  0% {
+    transform: translate(40%, -10%);
+  }
+  100% {
+    transform: translate(-10%, 60%);
   }
 }
 
@@ -38,6 +118,14 @@ body {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
+}
+
+.page-title {
+  display: none;
+}
+
+.page-title.show-title {
+  display: block;
 }
 
 .action-bar {
@@ -89,6 +177,12 @@ body {
   background: #fff;
   border: 1px solid #e2e8f0;
   text-align: left;
+}
+
+.member-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
 }
 
 #profile-actions.is-disabled {

@@ -52,6 +52,14 @@ const dataSets = {
   })),
 };
 
+const notices = [
+  { title: 'DM', tag: '未読', text: '新しいDMが届きました。' },
+  { title: 'イベント', tag: '開催', text: 'イベント掲載が承認されました。' },
+  { title: '公式お知らせ', tag: '更新', text: '新規会員が追加されました。' },
+  { title: '申請', tag: '承認', text: '広告申請が承認されました。' },
+  { title: 'DM', tag: '返信', text: '返信が届いています。' },
+];
+
 const adminData = {
   members: Array.from({ length: 50 }, (_, i) => ({
     id: i + 1,
@@ -200,7 +208,7 @@ function paginate(listName, data, renderItem) {
 
 function renderMemberTile(member) {
   return `
-    <button data-action="open-profile-dialog" class="flex flex-col rounded-2xl border border-slate-200 bg-white p-4 text-left">
+    <button data-action="open-profile-dialog" class="flex w-full flex-col rounded-2xl border border-slate-200 bg-white p-4 text-left">
       <div class="relative">
         <img src="${member.avatar}" alt="${member.name}" class="h-24 w-full rounded-xl object-cover" />
         <span class="absolute -bottom-2 -right-2 inline-flex h-6 w-6 items-center justify-center rounded-full bg-amber-400 text-xs font-bold text-white">${member.badge}</span>
@@ -253,7 +261,7 @@ function renderMemberDm(row) {
 
 function renderPromoRow(item) {
   return `
-    <button data-action="open-member-promo-detail" class="grid gap-4 rounded-2xl border border-slate-200 bg-white p-4 text-left md:grid-cols-[80px_1fr]">
+    <button data-action="open-member-promo-detail" class="grid min-w-full gap-4 rounded-2xl border border-slate-200 bg-white p-4 text-left md:grid-cols-[80px_1fr]">
       <img src="${item.thumb}" alt="${item.title}" class="h-20 w-20 rounded-xl object-cover" />
       <div>
         <div class="text-sm font-semibold">${item.title}</div>
@@ -480,23 +488,45 @@ function renderAllLists() {
 }
 
 function renderHeaderAds() {
-  const adHtml = ads
-    .map(
-      (ad) => `
-      <button class="min-w-[140px] overflow-hidden rounded-2xl border border-slate-200 bg-white">
-        <img src="${ad.image}" alt="${ad.label}" class="h-20 w-full object-cover" />
-      </button>
-    `
-    )
-    .join('');
-  bannerAds.innerHTML = adHtml;
-  memberFooterAds.innerHTML = adHtml;
+  startSlideshow(bannerAds, ads, renderAdSlide);
+  startSlideshow(memberFooterAds, ads, renderAdSlide);
 }
 
 function renderHomeMembers() {
   const tiles = dataSets.members.slice(0, 8).map(renderMemberTile).join('');
   recentMembers.innerHTML = tiles;
   recommendedMembers.innerHTML = tiles;
+}
+
+function renderNoticeSlide(item) {
+  return `
+    <div class="rounded-2xl border border-slate-200 bg-white p-4">
+      <div class="flex items-center justify-between">
+        <span class="text-sm font-semibold">${item.title}</span>
+        <span class="rounded-full bg-slate-100 px-2 py-0.5 text-xs">${item.tag}</span>
+      </div>
+      <p class="mt-2 text-sm text-slate-600">${item.text}</p>
+    </div>
+  `;
+}
+
+function renderAdSlide(item) {
+  return `
+    <button class="flex w-full max-w-md items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white/80 px-6 py-6">
+      <img src="${item.image}" alt="${item.label}" class="h-28 w-full object-contain object-center" />
+    </button>
+  `;
+}
+
+function startSlideshow(container, items, renderer, interval = 4000) {
+  if (!container) return;
+  let index = 0;
+  container.innerHTML = renderer(items[index]);
+  setInterval(() => {
+    index = (index + 1) % items.length;
+    container.innerHTML = renderer(items[index]);
+    lucide.createIcons();
+  }, interval);
 }
 
 function showDialog(title, message, primaryText = 'OK') {
@@ -892,6 +922,7 @@ function bindEvents() {
 renderHeaderAds();
 renderHomeMembers();
 renderAllLists();
+startSlideshow(document.getElementById('notice-slideshow'), notices, renderNoticeSlide, 3500);
 updateTabs();
 bindEvents();
 showScreen(state.activeScreen, 'guest');

@@ -10,6 +10,12 @@
 </head>
 <body class="bg-amber-50 text-slate-900">
   <div id="animated-bg" aria-hidden="true"></div>
+  <div id="floating-orbs" aria-hidden="true">
+    <span class="orb orb-1"></span>
+    <span class="orb orb-2"></span>
+    <span class="orb orb-3"></span>
+    <span class="orb orb-4"></span>
+  </div>
   <div id="app" class="relative min-h-screen">
     <div id="global-header" class="fixed top-0 left-0 right-0 z-40 hidden">
       <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
@@ -27,7 +33,7 @@
         <div class="w-full overflow-hidden rounded-2xl bg-white/80 px-4 py-3 shadow">
           <div class="flex items-center gap-4 overflow-x-auto">
             <div class="flex-1">
-              <div class="flex gap-3 overflow-x-auto pb-2" id="footer-ads" MA-database>
+              <div class="flex justify-center pb-2" id="footer-ads" MA-database>
                 <!-- JS inject -->
               </div>
             </div>
@@ -46,7 +52,7 @@
 
       <section id="screen-password-reset" class="screen hidden min-h-screen px-4 pt-24">
         <div class="mx-auto max-w-lg rounded-3xl bg-white/90 p-6 shadow">
-          <h1 class="mb-6 text-xl font-semibold">新パスワード入力</h1>
+          <h1 class="page-title mb-6 text-xl font-semibold">新パスワード入力</h1>
           <div class="space-y-4">
             <div>
               <label class="text-sm font-medium">新パスワード</label>
@@ -118,7 +124,7 @@
 
       <section id="screen-detail-info" class="screen hidden min-h-screen px-4 pt-20">
         <div class="mx-auto max-w-2xl rounded-3xl bg-white/90 p-8 shadow">
-          <h1 class="mb-6 text-xl font-semibold">詳細情報入力</h1>
+          <h1 class="page-title mb-6 text-xl font-semibold">詳細情報入力</h1>
           <div class="grid gap-4 md:grid-cols-2">
             <div>
               <label class="text-sm font-medium">電話番号</label>
@@ -156,7 +162,7 @@
 
       <section id="screen-password-reset-request" class="screen hidden min-h-screen px-4 pt-24">
         <div class="mx-auto max-w-xl rounded-3xl bg-white/90 p-8 shadow">
-          <h1 class="mb-6 text-xl font-semibold">パスワードリセット</h1>
+          <h1 class="page-title mb-6 text-xl font-semibold">パスワードリセット</h1>
           <div class="space-y-4">
             <div>
               <label class="text-sm font-medium">メールアドレス</label>
@@ -225,7 +231,7 @@
 
       <section id="screen-payment-setup" class="screen hidden min-h-screen px-4 pt-24">
         <div class="mx-auto max-w-3xl rounded-3xl bg-white/90 p-8 shadow">
-          <h1 class="text-xl font-semibold">支払方法設定</h1>
+          <h1 class="page-title text-xl font-semibold">支払方法設定</h1>
           <p class="mt-2 text-sm text-slate-600">クレジットカードで月額更新費と従量課金をお支払いいただきます。</p>
           <div class="mt-6 flex flex-col gap-3">
             <button data-action="open-stripe" class="rounded-xl bg-slate-900 px-4 py-3 text-white">支払方法を設定する</button>
@@ -237,74 +243,25 @@
       <section id="screen-member-home" class="screen hidden min-h-screen px-4 pt-24">
         <div class="mx-auto max-w-6xl space-y-8 pb-32">
           <div class="rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">ホーム</h1>
+            <h1 class="page-title text-2xl font-semibold">ホーム</h1>
           </div>
 
           <div class="grid gap-6 lg:grid-cols-2">
             <div class="rounded-3xl bg-white/90 p-6 shadow max-w-[calc(100vw-32px)]">
               <div class="flex items-center justify-between">
                 <h2 class="text-lg font-semibold">新着通知</h2>
-                <span class="text-xs text-slate-500">最大5件</span>
               </div>
-              <div class="mt-4 max-h-56 space-y-3 overflow-y-auto">
-                <div class="rounded-2xl border border-slate-200 p-4">
-                  <div class="flex items-center justify-between">
-                    <span class="text-sm font-semibold">DM</span>
-                    <span class="rounded-full bg-slate-100 px-2 py-0.5 text-xs">未読</span>
-                  </div>
-                  <p class="mt-2 text-sm text-slate-600">新しいDMが届きました。</p>
-                </div>
-                <div class="rounded-2xl border border-slate-200 p-4">
-                  <div class="flex items-center justify-between">
-                    <span class="text-sm font-semibold">イベント</span>
-                    <span class="rounded-full bg-slate-100 px-2 py-0.5 text-xs">開催</span>
-                  </div>
-                  <p class="mt-2 text-sm text-slate-600">イベント掲載が承認されました。</p>
-                </div>
-                <div class="rounded-2xl border border-slate-200 p-4">
-                  <div class="flex items-center justify-between">
-                    <span class="text-sm font-semibold">公式お知らせ</span>
-                    <span class="rounded-full bg-slate-100 px-2 py-0.5 text-xs">更新</span>
-                  </div>
-                  <p class="mt-2 text-sm text-slate-600">新規会員が追加されました。</p>
-                </div>
-                <div class="rounded-2xl border border-slate-200 p-4">
-                  <div class="flex items-center justify-between">
-                    <span class="text-sm font-semibold">申請</span>
-                    <span class="rounded-full bg-slate-100 px-2 py-0.5 text-xs">承認</span>
-                  </div>
-                  <p class="mt-2 text-sm text-slate-600">広告申請が承認されました。</p>
-                </div>
-                <div class="rounded-2xl border border-slate-200 p-4">
-                  <div class="flex items-center justify-between">
-                    <span class="text-sm font-semibold">DM</span>
-                    <span class="rounded-full bg-slate-100 px-2 py-0.5 text-xs">返信</span>
-                  </div>
-                  <p class="mt-2 text-sm text-slate-600">返信が届いています。</p>
-                </div>
-              </div>
+              <div class="mt-4 h-24 overflow-hidden" id="notice-slideshow"></div>
             </div>
 
-            <div class="rounded-3xl bg-white/90 p-6 shadow">
-              <div class="flex items-center justify-between">
-                <h2 class="text-lg font-semibold">バナー広告</h2>
-                <span class="text-xs text-slate-500">最大5件</span>
-              </div>
-              <div class="mt-4 flex gap-4 overflow-x-auto pb-4" id="banner-ads" MA-database>
-                <!-- JS inject -->
-              </div>
-              <div class="mt-2 flex gap-2">
-                <span class="h-2 w-2 rounded-full bg-slate-900"></span>
-                <span class="h-2 w-2 rounded-full bg-slate-200"></span>
-                <span class="h-2 w-2 rounded-full bg-slate-200"></span>
-              </div>
+            <div class="rounded-3xl p-6 max-w-[calc(100vw-32px)]">
+              <div class="mt-4 flex justify-center" id="banner-ads" MA-database></div>
             </div>
           </div>
 
           <div class="rounded-3xl bg-white/90 p-6 shadow">
             <div class="flex items-center justify-between">
               <h2 class="text-lg font-semibold">直近にログインした会員</h2>
-              <span class="text-xs text-slate-500">最大8件</span>
             </div>
             <div class="mt-4 flex gap-4 overflow-x-auto pb-4" id="recent-members" MA-database>
               <!-- JS inject -->
@@ -314,7 +271,6 @@
           <div class="rounded-3xl bg-white/90 p-6 shadow">
             <div class="flex items-center justify-between">
               <h2 class="text-lg font-semibold">おすすめ会員</h2>
-              <span class="text-xs text-slate-500">最大8件</span>
             </div>
             <div class="mt-4 flex gap-4 overflow-x-auto pb-4" id="recommended-members" MA-database>
               <!-- JS inject -->
@@ -340,7 +296,7 @@
       <section id="screen-terms-member" class="screen hidden min-h-screen px-4 pt-24">
         <div class="mx-auto max-w-4xl space-y-6 pb-32">
           <div class="rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">利用規約</h1>
+            <h1 class="page-title show-title text-2xl font-semibold">利用規約</h1>
             <p class="mt-4 text-sm leading-relaxed text-slate-600">
               利用規約本文テキスト。サービスの利用条件、禁止事項、免責事項などが記載されます。
             </p>
@@ -352,7 +308,7 @@
       <section id="screen-terms-admin" class="screen hidden min-h-screen px-4 pt-24">
         <div class="mx-auto max-w-4xl space-y-6">
           <div class="rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">利用規約</h1>
+            <h1 class="page-title text-2xl font-semibold">利用規約</h1>
             <p class="mt-4 text-sm leading-relaxed text-slate-600">
               管理者向けの利用規約本文テキスト。
             </p>
@@ -365,13 +321,9 @@
         <div class="mx-auto max-w-6xl pb-32">
           <div class="action-bar">
             <button data-action="back-to-home" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
-            <div class="flex gap-2">
-              <button data-action="open-search-dialog" class="rounded-xl border border-slate-300 px-3 py-2">検索</button>
-              <button data-action="open-sort-dialog" class="rounded-xl border border-slate-300 px-3 py-2">並び替え</button>
-            </div>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-6 shadow">
-            <h1 class="text-2xl font-semibold">プロフィール</h1>
+            <h1 class="page-title text-2xl font-semibold">プロフィール</h1>
             <div class="mt-6 flex flex-col gap-6 md:flex-row">
               <div class="flex-1 rounded-2xl border border-slate-200 bg-white p-5">
                 <div class="flex items-center gap-4">
@@ -399,7 +351,11 @@
               <button data-action="profile-tab" data-tab="follow" class="tab px-3 py-2 text-sm font-semibold text-slate-400">フォロー</button>
               <button data-action="profile-tab" data-tab="follower" class="tab px-3 py-2 text-sm font-semibold text-slate-400">フォロワー</button>
             </div>
-            <div class="mt-6" id="profile-list" MA-database data-list="profile"></div>
+            <div class="mt-4 flex gap-2">
+              <button data-action="open-search-dialog" class="rounded-xl border border-slate-300 px-3 py-2">検索</button>
+              <button data-action="open-sort-dialog" class="rounded-xl border border-slate-300 px-3 py-2">並び替え</button>
+            </div>
+            <div class="member-grid mt-6" id="profile-list" MA-database data-list="profile"></div>
             <button data-action="load-more" data-target="profile" class="mt-4 w-full rounded-xl border border-slate-300 px-4 py-3">次の30件を表示</button>
           </div>
         </div>
@@ -411,7 +367,7 @@
             <button data-action="open-profile" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">プロフィール編集</h1>
+            <h1 class="page-title text-2xl font-semibold">プロフィール編集</h1>
             <div class="mt-6 grid gap-4 md:grid-cols-2">
               <div>
                 <label class="text-sm font-medium">名前</label>
@@ -461,7 +417,7 @@
             <button data-action="open-profile" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">本人確認書類提出</h1>
+            <h1 class="page-title text-2xl font-semibold">本人確認書類提出</h1>
             <div class="mt-6 space-y-4">
               <div>
                 <label class="text-sm font-medium">本人確認書類画像アップロード</label>
@@ -492,7 +448,7 @@
             <button data-action="back-to-home" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">支払情報</h1>
+            <h1 class="page-title text-2xl font-semibold">支払情報</h1>
             <p class="mt-2 text-sm text-slate-600">保有ポイント：12,450pt</p>
             <p class="mt-2 text-sm text-rose-500">月額更新費が未払いです。</p>
             <div class="mt-6 flex flex-col gap-3">
@@ -515,7 +471,7 @@
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
             <div class="flex items-center justify-between">
-              <h1 class="text-2xl font-semibold">招待コード</h1>
+              <h1 class="page-title text-2xl font-semibold">招待コード</h1>
               <button data-action="open-invite-create" class="rounded-xl bg-slate-900 px-4 py-2 text-white">招待コード新規作成</button>
             </div>
             <div class="mt-6" id="invite-list" MA-database data-list="invite"></div>
@@ -528,19 +484,19 @@
         <div class="mx-auto max-w-6xl pb-32">
           <div class="action-bar">
             <button data-action="back-to-home" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
-            <div class="flex gap-2">
-              <button data-action="open-member-search" class="rounded-xl border border-slate-300 px-3 py-2">検索</button>
-              <button data-action="open-member-sort" class="rounded-xl border border-slate-300 px-3 py-2">並び替え</button>
-            </div>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">仲間を調べる</h1>
+            <h1 class="page-title text-2xl font-semibold">仲間を調べる</h1>
             <div class="mt-6 flex gap-4 border-b border-slate-200">
               <button data-action="search-tab" data-tab="member-search" class="tab px-3 py-2 text-sm font-semibold">会員検索</button>
               <button data-action="search-tab" data-tab="recommended" class="tab px-3 py-2 text-sm font-semibold text-slate-400">おすすめ会員</button>
               <button data-action="search-tab" data-tab="new" class="tab px-3 py-2 text-sm font-semibold text-slate-400">新しい仲間</button>
             </div>
-            <div class="mt-6" id="search-list" MA-database data-list="search"></div>
+            <div class="mt-4 flex gap-2">
+              <button data-action="open-member-search" class="rounded-xl border border-slate-300 px-3 py-2">検索</button>
+              <button data-action="open-member-sort" class="rounded-xl border border-slate-300 px-3 py-2">並び替え</button>
+            </div>
+            <div class="member-grid mt-6" id="search-list" MA-database data-list="search"></div>
             <button data-action="load-more" data-target="search" class="mt-4 w-full rounded-xl border border-slate-300 px-4 py-3">次の30件を表示</button>
           </div>
         </div>
@@ -550,16 +506,16 @@
         <div class="mx-auto max-w-6xl pb-32">
           <div class="action-bar">
             <button data-action="back-to-home" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
-            <div class="flex gap-2">
-              <button data-action="open-dm-search" class="rounded-xl border border-slate-300 px-3 py-2">検索</button>
-              <button data-action="open-dm-sort" class="rounded-xl border border-slate-300 px-3 py-2">並び替え</button>
-            </div>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">DM</h1>
+            <h1 class="page-title text-2xl font-semibold">DM</h1>
             <div class="mt-6 flex gap-4 border-b border-slate-200">
               <button data-action="dm-tab" data-tab="dm" class="tab px-3 py-2 text-sm font-semibold">DM</button>
               <button data-action="dm-tab" data-tab="settings" class="tab px-3 py-2 text-sm font-semibold text-slate-400">設定</button>
+            </div>
+            <div class="mt-4 flex gap-2">
+              <button data-action="open-dm-search" class="rounded-xl border border-slate-300 px-3 py-2">検索</button>
+              <button data-action="open-dm-sort" class="rounded-xl border border-slate-300 px-3 py-2">並び替え</button>
             </div>
             <div class="mt-6" id="dm-list" MA-database data-list="dm"></div>
             <button data-action="load-more" data-target="dm" class="mt-4 w-full rounded-xl border border-slate-300 px-4 py-3">次の30件を表示</button>
@@ -577,7 +533,7 @@
             </div>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">会員メモ</h1>
+            <h1 class="page-title text-2xl font-semibold">会員メモ</h1>
             <div class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3" id="memo-list" MA-database data-list="memo"></div>
             <button data-action="load-more" data-target="memo" class="mt-4 w-full rounded-xl border border-slate-300 px-4 py-3">次の30件を表示</button>
           </div>
@@ -590,7 +546,7 @@
             <button data-action="open-memo" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">会員メモ詳細</h1>
+            <h1 class="page-title text-2xl font-semibold">会員メモ詳細</h1>
             <div class="mt-6 space-y-4">
               <input type="text" placeholder="タイトル" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3" />
               <textarea rows="6" placeholder="メモ内容" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3"></textarea>
@@ -607,14 +563,10 @@
         <div class="mx-auto max-w-6xl pb-32">
           <div class="action-bar">
             <button data-action="back-to-home" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
-            <div class="flex gap-2">
-              <button data-action="open-promo-search" class="rounded-xl border border-slate-300 px-3 py-2">検索</button>
-              <button data-action="open-promo-sort" class="rounded-xl border border-slate-300 px-3 py-2">並び替え</button>
-            </div>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
             <div class="flex items-center justify-between">
-              <h1 class="text-2xl font-semibold">宣伝・イベント・お知らせ</h1>
+              <h1 class="page-title text-2xl font-semibold">宣伝・イベント・お知らせ</h1>
               <button data-action="open-new-post" class="rounded-xl bg-slate-900 px-4 py-2 text-white">新規申請/投稿</button>
             </div>
             <div class="mt-6 flex gap-4 border-b border-slate-200">
@@ -622,6 +574,10 @@
               <button data-action="promo-tab" data-tab="news" class="tab px-3 py-2 text-sm font-semibold text-slate-400">お知らせ</button>
               <button data-action="promo-tab" data-tab="promotion" class="tab px-3 py-2 text-sm font-semibold text-slate-400">宣伝</button>
               <button data-action="promo-tab" data-tab="ads" class="tab px-3 py-2 text-sm font-semibold text-slate-400">広告</button>
+            </div>
+            <div class="mt-4 flex gap-2">
+              <button data-action="open-promo-search" class="rounded-xl border border-slate-300 px-3 py-2">検索</button>
+              <button data-action="open-promo-sort" class="rounded-xl border border-slate-300 px-3 py-2">並び替え</button>
             </div>
             <div class="mt-6" id="promo-list" MA-database data-list="promo"></div>
             <button data-action="load-more" data-target="promo" class="mt-4 w-full rounded-xl border border-slate-300 px-4 py-3">次の30件を表示</button>
@@ -635,7 +591,7 @@
             <button data-action="open-promo" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">お知らせ詳細</h1>
+            <h1 class="page-title text-2xl font-semibold">お知らせ詳細</h1>
             <div class="mt-6 space-y-4">
               <div class="flex items-center gap-3">
                 <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=120&q=80" alt="member" class="h-12 w-12 rounded-full object-cover" />
@@ -659,7 +615,7 @@
             <button data-action="back-to-home" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">ログイン情報変更</h1>
+            <h1 class="page-title text-2xl font-semibold">ログイン情報変更</h1>
             <div class="mt-6 grid gap-4 md:grid-cols-2">
               <div>
                 <label class="text-sm font-medium">メールアドレス</label>
@@ -743,7 +699,7 @@
       <section id="screen-admin-home" class="screen hidden min-h-screen px-4 pt-24">
         <div class="mx-auto max-w-6xl space-y-6">
           <div class="rounded-3xl bg-white/90 p-6 shadow">
-            <h1 class="text-2xl font-semibold">管理者ホーム</h1>
+            <h1 class="page-title text-2xl font-semibold">管理者ホーム</h1>
             <div class="mt-4 grid gap-4">
               <div class="rounded-2xl border border-slate-200 bg-white p-4">
                 <div class="text-sm font-semibold">タスクの説明</div>
@@ -786,7 +742,7 @@
             </div>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">会員一覧</h1>
+            <h1 class="page-title text-2xl font-semibold">会員一覧</h1>
             <div class="mt-6" id="admin-member-list" MA-database data-list="admin-members"></div>
             <button data-action="load-more" data-target="admin-members" class="mt-4 w-full rounded-xl border border-slate-300 px-4 py-3">次の30件を表示</button>
           </div>
@@ -799,7 +755,7 @@
             <button data-action="open-admin-members" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">会員詳細</h1>
+            <h1 class="page-title text-2xl font-semibold">会員詳細</h1>
             <div class="mt-6 flex items-center gap-4">
               <div class="relative">
                 <img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=200&q=80" alt="member" class="h-20 w-20 rounded-2xl" />
@@ -828,7 +784,7 @@
             <button data-action="open-admin-member-detail" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">会員編集</h1>
+            <h1 class="page-title text-2xl font-semibold">会員編集</h1>
             <div class="mt-6 grid gap-4 md:grid-cols-2">
               <div>
                 <label class="text-sm font-medium">会員名</label>
@@ -888,7 +844,7 @@
             </div>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">公式DM</h1>
+            <h1 class="page-title text-2xl font-semibold">公式DM</h1>
             <div class="mt-6" id="admin-dm-list" MA-database data-list="admin-dm"></div>
             <button data-action="load-more" data-target="admin-dm" class="mt-4 w-full rounded-xl border border-slate-300 px-4 py-3">次の30件を表示</button>
           </div>
@@ -929,7 +885,7 @@
             </div>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">新規入会申し込み</h1>
+            <h1 class="page-title text-2xl font-semibold">新規入会申し込み</h1>
             <div class="mt-6" id="admin-request-list" MA-database data-list="admin-requests"></div>
             <button data-action="load-more" data-target="admin-requests" class="mt-4 w-full rounded-xl border border-slate-300 px-4 py-3">次の30件を表示</button>
           </div>
@@ -942,7 +898,7 @@
             <button data-action="open-admin-requests" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">入会申請詳細</h1>
+            <h1 class="page-title text-2xl font-semibold">入会申請詳細</h1>
             <div class="mt-6 space-y-2 text-sm text-slate-600">
               <p>申請者名：佐藤 理沙</p>
               <p>電話番号：090-0000-0000</p>
@@ -968,7 +924,7 @@
             </div>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">イベント掲載申込</h1>
+            <h1 class="page-title text-2xl font-semibold">イベント掲載申込</h1>
             <div class="mt-6" id="admin-event-list" MA-database data-list="admin-events"></div>
             <button data-action="load-more" data-target="admin-events" class="mt-4 w-full rounded-xl border border-slate-300 px-4 py-3">次の30件を表示</button>
           </div>
@@ -981,7 +937,7 @@
             <button data-action="open-admin-events" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">イベント申請詳細</h1>
+            <h1 class="page-title text-2xl font-semibold">イベント申請詳細</h1>
             <div class="mt-6 space-y-4">
               <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=600&q=80" alt="event" class="h-48 w-full rounded-2xl object-cover" />
               <div class="text-sm text-slate-600">イベントタイトル：ビジネスマッチング交流会</div>
@@ -1008,7 +964,7 @@
             </div>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">広告掲載申込</h1>
+            <h1 class="page-title text-2xl font-semibold">広告掲載申込</h1>
             <div class="mt-6" id="admin-ad-list" MA-database data-list="admin-ads"></div>
             <button data-action="load-more" data-target="admin-ads" class="mt-4 w-full rounded-xl border border-slate-300 px-4 py-3">次の30件を表示</button>
           </div>
@@ -1021,7 +977,7 @@
             <button data-action="open-admin-ads" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">広告申請詳細</h1>
+            <h1 class="page-title text-2xl font-semibold">広告申請詳細</h1>
             <div class="mt-6 space-y-4">
               <img src="https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=600&q=80" alt="ad" class="h-48 w-full rounded-2xl object-cover" />
               <div class="text-sm text-slate-600">広告種別：バナー広告</div>
@@ -1043,7 +999,7 @@
             <button data-action="open-admin-home" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">本人確認書類</h1>
+            <h1 class="page-title text-2xl font-semibold">本人確認書類</h1>
             <div class="mt-6" id="admin-verify-list" MA-database data-list="admin-verify"></div>
             <button data-action="load-more" data-target="admin-verify" class="mt-4 w-full rounded-xl border border-slate-300 px-4 py-3">次の30件を表示</button>
           </div>
@@ -1056,7 +1012,7 @@
             <button data-action="open-admin-verify" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">本人確認書類詳細</h1>
+            <h1 class="page-title text-2xl font-semibold">本人確認書類詳細</h1>
             <div class="mt-6 space-y-4">
               <img src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=600&q=80" alt="doc" class="h-48 w-full rounded-2xl object-cover" />
               <div class="text-sm text-slate-600">提出書類種別：運転免許証</div>
@@ -1077,7 +1033,7 @@
             <button data-action="open-admin-home" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">プロフィール項目編集</h1>
+            <h1 class="page-title text-2xl font-semibold">プロフィール項目編集</h1>
             <div class="mt-6">
               <h2 class="text-sm font-semibold text-slate-600">既存項目</h2>
               <div class="mt-2 flex flex-wrap gap-2">
@@ -1120,7 +1076,7 @@
             </div>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">公式お知らせ管理</h1>
+            <h1 class="page-title text-2xl font-semibold">公式お知らせ管理</h1>
             <div class="mt-6" id="admin-news-list" MA-database data-list="admin-news"></div>
             <button data-action="load-more" data-target="admin-news" class="mt-4 w-full rounded-xl border border-slate-300 px-4 py-3">次の30件を表示</button>
           </div>
@@ -1133,7 +1089,7 @@
             <button data-action="open-admin-news" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">お知らせ新規作成</h1>
+            <h1 class="page-title text-2xl font-semibold">お知らせ新規作成</h1>
             <div class="mt-6 space-y-4">
               <div>
                 <label class="text-sm font-medium">サムネ画像</label>
@@ -1162,7 +1118,7 @@
             <button data-action="open-admin-news" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">お知らせ詳細</h1>
+            <h1 class="page-title text-2xl font-semibold">お知らせ詳細</h1>
             <div class="mt-6 space-y-4">
               <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=600&q=80" alt="news" class="h-48 w-full rounded-2xl object-cover" />
               <div class="text-lg font-semibold">公式お知らせタイトル</div>
@@ -1181,7 +1137,7 @@
             <button data-action="open-admin-news-detail" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">お知らせ編集</h1>
+            <h1 class="page-title text-2xl font-semibold">お知らせ編集</h1>
             <div class="mt-6 space-y-4">
               <div>
                 <label class="text-sm font-medium">サムネ画像</label>
@@ -1210,7 +1166,7 @@
             <button data-action="open-admin-home" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">通報管理</h1>
+            <h1 class="page-title text-2xl font-semibold">通報管理</h1>
             <div class="mt-6" id="admin-report-list" MA-database data-list="admin-reports"></div>
             <button data-action="load-more" data-target="admin-reports" class="mt-4 w-full rounded-xl border border-slate-300 px-4 py-3">次の30件を表示</button>
           </div>
@@ -1223,7 +1179,7 @@
             <button data-action="open-admin-reports" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">通報詳細</h1>
+            <h1 class="page-title text-2xl font-semibold">通報詳細</h1>
             <div class="mt-6 space-y-2 text-sm text-slate-600">
               <p>通報内容：迷惑行為</p>
               <p>通報者：田中 真</p>
@@ -1246,7 +1202,7 @@
             </div>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">招待コード履歴</h1>
+            <h1 class="page-title text-2xl font-semibold">招待コード履歴</h1>
             <div class="mt-6" id="admin-invite-history-list" MA-database data-list="admin-invite-history"></div>
             <button data-action="load-more" data-target="admin-invite-history" class="mt-4 w-full rounded-xl border border-slate-300 px-4 py-3">次の30件を表示</button>
           </div>
@@ -1263,7 +1219,7 @@
             </div>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">全管理者利用履歴</h1>
+            <h1 class="page-title text-2xl font-semibold">全管理者利用履歴</h1>
             <div class="mt-6" id="admin-usage-list" MA-database data-list="admin-usage"></div>
             <button data-action="load-more" data-target="admin-usage" class="mt-4 w-full rounded-xl border border-slate-300 px-4 py-3">次の30件を表示</button>
           </div>
@@ -1280,7 +1236,7 @@
             </div>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">全会員支払履歴</h1>
+            <h1 class="page-title text-2xl font-semibold">全会員支払履歴</h1>
             <div class="mt-6" id="admin-payment-list" MA-database data-list="admin-payment"></div>
             <button data-action="load-more" data-target="admin-payment" class="mt-4 w-full rounded-xl border border-slate-300 px-4 py-3">次の30件を表示</button>
           </div>
@@ -1293,7 +1249,7 @@
             <button data-action="open-admin-home" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
           </div>
           <div class="mt-24 rounded-3xl bg-white/90 p-8 shadow">
-            <h1 class="text-2xl font-semibold">広告ポイント配分設定</h1>
+            <h1 class="page-title text-2xl font-semibold">広告ポイント配分設定</h1>
             <div class="mt-6 space-y-4">
               <div>
                 <label class="text-sm font-medium">バナー広告ポイント設定</label>
@@ -1319,7 +1275,7 @@
     <div id="hamburger-member" class="modal hidden">
       <div class="modal-card">
         <div class="flex items-center justify-between">
-          <h2 class="text-lg font-semibold">メニュー</h2>
+          <h2 class="page-title text-lg font-semibold">メニュー</h2>
           <button data-action="close-hamburger" class="rounded-full bg-slate-100 p-2"><i data-lucide="x" class="h-5 w-5"></i></button>
         </div>
         <div class="mt-6 grid gap-3">
@@ -1340,7 +1296,7 @@
     <div id="hamburger-admin" class="modal hidden">
       <div class="modal-card">
         <div class="flex items-center justify-between">
-          <h2 class="text-lg font-semibold">管理者メニュー</h2>
+          <h2 class="page-title text-lg font-semibold">管理者メニュー</h2>
           <button data-action="close-hamburger" class="rounded-full bg-slate-100 p-2"><i data-lucide="x" class="h-5 w-5"></i></button>
         </div>
         <div class="mt-6 grid gap-3">
@@ -1366,7 +1322,7 @@
     <div id="dialog-profile" class="modal hidden">
       <div class="modal-card">
         <div class="flex items-center justify-between">
-          <h2 class="text-lg font-semibold">プロフィール詳細</h2>
+          <h2 class="page-title text-lg font-semibold">プロフィール詳細</h2>
           <button data-action="close-profile-dialog" class="rounded-full bg-slate-100 p-2"><i data-lucide="x" class="h-5 w-5"></i></button>
         </div>
         <div class="mt-6 space-y-4">
@@ -1398,7 +1354,7 @@
     <div id="dialog-memo-list" class="modal hidden">
       <div class="modal-card">
         <div class="flex items-center justify-between">
-          <h2 class="text-lg font-semibold">会員メモ一覧</h2>
+          <h2 class="page-title text-lg font-semibold">会員メモ一覧</h2>
           <button data-action="close-memo-dialog" class="rounded-full bg-slate-100 p-2"><i data-lucide="x" class="h-5 w-5"></i></button>
         </div>
         <div class="mt-4 flex items-center gap-3">
@@ -1416,7 +1372,7 @@
 
     <div id="dialog-generic" class="modal hidden">
       <div class="modal-card">
-        <h2 id="dialog-title" class="text-lg font-semibold">ダイアログタイトル</h2>
+        <h2 id="dialog-title" class="page-title text-lg font-semibold">ダイアログタイトル</h2>
         <p id="dialog-message" class="mt-2 text-sm text-slate-600">説明テキスト</p>
         <div id="dialog-actions" class="mt-6 flex gap-3">
           <button data-action="dialog-primary" class="flex-1 rounded-xl bg-slate-900 px-4 py-3 text-white">OK</button>
@@ -1427,7 +1383,7 @@
 
     <div id="dialog-search" class="modal hidden">
       <div class="modal-card">
-        <h2 class="text-lg font-semibold">検索</h2>
+        <h2 class="page-title text-lg font-semibold">検索</h2>
         <div class="mt-4 grid gap-3">
           <input type="text" placeholder="キーワード" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3" />
           <select class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3">
@@ -1448,7 +1404,7 @@
 
     <div id="dialog-sort" class="modal hidden">
       <div class="modal-card">
-        <h2 class="text-lg font-semibold">並び替え</h2>
+        <h2 class="page-title text-lg font-semibold">並び替え</h2>
         <div class="mt-4 grid gap-3">
           <select class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3">
             <option>新着順</option>
