@@ -60,6 +60,20 @@ const notices = [
   { title: 'DM', tag: '返信', text: '返信が届いています。' },
 ];
 
+const memberMessages = Array.from({ length: 50 }, (_, i) => ({
+  id: i + 1,
+  type: i % 2 === 0 ? 'in' : 'out',
+  avatar: 'https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=120&q=80',
+  text: `メッセージ内容 ${i + 1}`,
+}));
+
+const adminMessages = Array.from({ length: 50 }, (_, i) => ({
+  id: i + 1,
+  type: i % 2 === 0 ? 'in' : 'out',
+  avatar: 'https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=120&q=80',
+  text: `公式メッセージ内容 ${i + 1}`,
+}));
+
 const adminData = {
   members: Array.from({ length: 50 }, (_, i) => ({
     id: i + 1,
@@ -141,7 +155,7 @@ const adminData = {
 
 const ads = Array.from({ length: 5 }, (_, i) => ({
   id: i + 1,
-  image: `https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=300&q=80&sig=${i}`,
+  image: `https://images.unsplash.com/photo-${1500530855697 + i * 101}?auto=format&fit=crop&w=300&q=80&sig=${i}`,
   label: `広告 ${i + 1}`,
 }));
 
@@ -180,6 +194,16 @@ function showScreen(id, role = state.activeRole) {
   resetPagination();
   if (nextScreen) {
     nextScreen.classList.add('active');
+  }
+  if (id === 'screen-dm-detail' || id === 'screen-admin-dm-message') {
+    setTimeout(() => {
+      const container = id === 'screen-dm-detail'
+        ? document.getElementById('member-dm-messages')
+        : document.getElementById('admin-dm-messages');
+      if (container) {
+        container.scrollTop = container.scrollHeight;
+      }
+    }, 350);
   }
 }
 
@@ -484,6 +508,9 @@ function renderAllLists() {
     adminDmList.innerHTML = paginate('admin-dm', adminData.dm, renderAdminDm);
   }
 
+  renderDmMessages(document.getElementById('member-dm-messages'), memberMessages, 'member-dm-messages');
+  renderDmMessages(document.getElementById('admin-dm-messages'), adminMessages, 'admin-dm-messages');
+
   lucide.createIcons();
 }
 
@@ -518,13 +545,44 @@ function renderAdSlide(item) {
   `;
 }
 
+function renderMessageItem(message) {
+  if (message.type === 'out') {
+    return `
+      <div class="flex justify-end">
+        <div class="rounded-2xl bg-slate-900 p-4 text-white shadow">${message.text}</div>
+      </div>
+    `;
+  }
+  return `
+    <div class="flex gap-3">
+      <img src="${message.avatar}" alt="member" class="h-10 w-10 rounded-full" />
+      <div class="rounded-2xl bg-white/90 p-4 shadow">${message.text}</div>
+    </div>
+  `;
+}
+
+function renderDmMessages(container, messages, listName) {
+  if (!container) return;
+  const page = state.pagination[listName] || 0;
+  const showAll = page > 0;
+  const items = showAll ? messages : messages.slice(messages.length - 30);
+  const button = !showAll
+    ? `<button data-action="load-more" data-target="${listName}" class="w-full rounded-xl border border-slate-300 px-4 py-3">次の30件を表示する</button>`
+    : '';
+  container.innerHTML = `${button}${items.map(renderMessageItem).join('')}`;
+}
+
 function startSlideshow(container, items, renderer, interval = 4000) {
   if (!container) return;
   let index = 0;
-  container.innerHTML = renderer(items[index]);
+  container.innerHTML = `<div class="slide-item is-active">${renderer(items[index])}</div>`;
   setInterval(() => {
     index = (index + 1) % items.length;
-    container.innerHTML = renderer(items[index]);
+    container.innerHTML = `<div class="slide-item">${renderer(items[index])}</div>`;
+    requestAnimationFrame(() => {
+      const slide = container.querySelector('.slide-item');
+      if (slide) slide.classList.add('is-active');
+    });
     lucide.createIcons();
   }, interval);
 }
@@ -919,10 +977,21 @@ function bindEvents() {
   });
 }
 
+const splash = document.getElementById('splash-screen');
+
 renderHeaderAds();
 renderHomeMembers();
 renderAllLists();
 startSlideshow(document.getElementById('notice-slideshow'), notices, renderNoticeSlide, 3500);
 updateTabs();
 bindEvents();
-showScreen(state.activeScreen, 'guest');
+
+setTimeout(() => {
+  if (splash) {
+    splash.classList.add('is-hidden');
+    setTimeout(() => {
+      splash.style.display = 'none';
+    }, 600);
+  }
+  showScreen(state.activeScreen, 'guest');
+}, 2000);

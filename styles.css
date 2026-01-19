@@ -11,7 +11,7 @@ body {
     radial-gradient(circle at 80% 30%, rgba(255, 153, 124, 0.45), transparent 48%),
     radial-gradient(circle at 30% 80%, rgba(255, 231, 178, 0.55), transparent 46%),
     linear-gradient(120deg, rgba(255, 250, 240, 0.95), rgba(255, 226, 198, 0.9));
-  animation: drift 16s ease-in-out infinite alternate;
+  animation: drift 5.3s ease-in-out infinite alternate;
 }
 
 #floating-orbs {
@@ -25,8 +25,7 @@ body {
 #floating-orbs .orb {
   position: absolute;
   border-radius: 9999px;
-  filter: blur(40px);
-  opacity: 0.6;
+  filter: blur(20px);
   mix-blend-mode: multiply;
 }
 
@@ -34,28 +33,28 @@ body {
   width: 320px;
   height: 320px;
   background: rgba(255, 196, 120, 0.6);
-  animation: orb-float-1 18s ease-in-out infinite alternate;
+  animation: orb-float-1 6s ease-in-out infinite alternate;
 }
 
 #floating-orbs .orb-2 {
   width: 260px;
   height: 260px;
   background: rgba(255, 153, 124, 0.55);
-  animation: orb-float-2 20s ease-in-out infinite alternate;
+  animation: orb-float-2 6.7s ease-in-out infinite alternate;
 }
 
 #floating-orbs .orb-3 {
   width: 300px;
   height: 300px;
   background: rgba(255, 231, 178, 0.6);
-  animation: orb-float-3 22s ease-in-out infinite alternate;
+  animation: orb-float-3 7.3s ease-in-out infinite alternate;
 }
 
 #floating-orbs .orb-4 {
   width: 220px;
   height: 220px;
   background: rgba(255, 214, 165, 0.55);
-  animation: orb-float-4 19s ease-in-out infinite alternate;
+  animation: orb-float-4 6.3s ease-in-out infinite alternate;
 }
 
 @keyframes drift {
@@ -72,37 +71,37 @@ body {
 
 @keyframes orb-float-1 {
   0% {
-    transform: translate(-10%, 10%);
+    transform: translate(-10vw, 5vh);
   }
   100% {
-    transform: translate(60%, -20%);
+    transform: translate(70vw, 60vh);
   }
 }
 
 @keyframes orb-float-2 {
   0% {
-    transform: translate(70%, 20%);
+    transform: translate(80vw, -10vh);
   }
   100% {
-    transform: translate(10%, 70%);
+    transform: translate(-5vw, 70vh);
   }
 }
 
 @keyframes orb-float-3 {
   0% {
-    transform: translate(20%, 70%);
+    transform: translate(-15vw, 75vh);
   }
   100% {
-    transform: translate(80%, 10%);
+    transform: translate(85vw, -5vh);
   }
 }
 
 @keyframes orb-float-4 {
   0% {
-    transform: translate(40%, -10%);
+    transform: translate(50vw, 80vh);
   }
   100% {
-    transform: translate(-10%, 60%);
+    transform: translate(-10vw, -10vh);
   }
 }
 
@@ -126,6 +125,22 @@ body {
 
 .page-title.show-title {
   display: block;
+}
+
+.splash-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease;
+}
+
+.splash-screen.is-hidden {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .action-bar {
@@ -183,6 +198,21 @@ body {
   display: grid;
   gap: 16px;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+.slideshow {
+  position: relative;
+}
+
+.slide-item {
+  opacity: 0;
+  transform: translateX(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.slide-item.is-active {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 #profile-actions.is-disabled {
