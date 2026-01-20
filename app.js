@@ -21,6 +21,25 @@ const state = {
   pagination: {},
 };
 
+const avatarImages = [
+  'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=120&q=80',
+  'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=120&q=80',
+  'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80',
+  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80',
+  'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80',
+  'https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=120&q=80',
+  'https://images.unsplash.com/photo-1520813792240-56fc4a3765a7?auto=format&fit=crop&w=120&q=80',
+  'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=120&q=80',
+];
+
+const promoThumbs = [
+  'https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=120&q=80',
+  'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=120&q=80',
+  'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=120&q=80',
+  'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=120&q=80',
+  'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=120&q=80',
+];
+
 const dataSets = {
   members: Array.from({ length: 50 }, (_, i) => ({
     id: i + 1,
@@ -28,7 +47,7 @@ const dataSets = {
     age: `${20 + (i % 30)}代`,
     region: ['東京', '大阪', '福岡'][i % 3],
     industry: ['IT', '医療', '教育', '製造'][i % 4],
-    avatar: `https://images.unsplash.com/photo-${1500000000000 + i}?auto=format&fit=crop&w=120&q=80`,
+    avatar: avatarImages[i % avatarImages.length],
     badge: '★',
   })),
   invites: Array.from({ length: 50 }, (_, i) => ({
@@ -41,14 +60,14 @@ const dataSets = {
   memos: Array.from({ length: 50 }, (_, i) => ({
     id: i + 1,
     title: `メモタイトル ${i + 1}`,
-    avatar: `https://images.unsplash.com/photo-${1500000000100 + i}?auto=format&fit=crop&w=120&q=80`,
+    avatar: avatarImages[(i + 2) % avatarImages.length],
   })),
   promos: Array.from({ length: 50 }, (_, i) => ({
     id: i + 1,
     title: `投稿タイトル ${i + 1}`,
     date: `2024/07/${(i % 28) + 1}`,
     type: ['タイムライン', 'お知らせ', '宣伝', '広告'][i % 4],
-    thumb: `https://images.unsplash.com/photo-${1500000000200 + i}?auto=format&fit=crop&w=120&q=80`,
+    thumb: promoThumbs[i % promoThumbs.length],
   })),
 };
 
@@ -153,11 +172,33 @@ const adminData = {
   })),
 };
 
-const ads = Array.from({ length: 5 }, (_, i) => ({
-  id: i + 1,
-  image: `https://images.unsplash.com/photo-${1500530855697 + i * 101}?auto=format&fit=crop&w=300&q=80&sig=${i}`,
-  label: `広告 ${i + 1}`,
-}));
+const ads = [
+  {
+    id: 1,
+    image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=300&q=80',
+    label: '広告 1',
+  },
+  {
+    id: 2,
+    image: 'https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=300&q=80',
+    label: '広告 2',
+  },
+  {
+    id: 3,
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=300&q=80',
+    label: '広告 3',
+  },
+  {
+    id: 4,
+    image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=300&q=80',
+    label: '広告 4',
+  },
+  {
+    id: 5,
+    image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=300&q=80',
+    label: '広告 5',
+  },
+];
 
 const tabs = {
   login: 'login',
@@ -175,7 +216,7 @@ function showScreen(id, role = state.activeRole) {
   screens.forEach((screen) => {
     if (screen.id === id) {
       screen.classList.remove('hidden');
-      requestAnimationFrame(() => screen.classList.add('active'));
+      screen.classList.add('active');
     } else if (screen.classList.contains('active')) {
       screen.classList.remove('active');
       setTimeout(() => {
@@ -531,10 +572,8 @@ function startSlideshow(container, items, renderer, interval = 4000) {
   setInterval(() => {
     index = (index + 1) % items.length;
     container.innerHTML = `<div class="slide-item">${renderer(items[index])}</div>`;
-    requestAnimationFrame(() => {
-      const slide = container.querySelector('.slide-item');
-      if (slide) slide.classList.add('is-active');
-    });
+    const slide = container.querySelector('.slide-item');
+    if (slide) slide.classList.add('is-active');
     lucide.createIcons();
   }, interval);
 }
@@ -605,7 +644,6 @@ function toggleTabFrames(group, value) {
     const isActive = frame.dataset.tabValue === value;
     if (isActive) {
       frame.classList.add('is-active');
-      requestAnimationFrame(() => frame.classList.add('is-active'));
     } else {
       frame.classList.remove('is-active');
     }

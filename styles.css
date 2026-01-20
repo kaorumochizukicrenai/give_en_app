@@ -145,7 +145,7 @@ body {
 
 .action-bar {
   position: sticky;
-  top: 0;
+  top: 3rem;
   left: 0;
   right: 0;
   z-index: 20;
@@ -208,9 +208,20 @@ body {
 
 .sticky-row {
   position: sticky;
-  top: 3.5rem;
+  top: 7rem;
   z-index: 15;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 5px 0px;
+  backdrop-filter: blur(3.5px);
+}
+
+.sticky-row button {
   background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 30px rgba(148, 72, 35, 0.15);
+}
+
+.sticky-row-secondary {
+  top: 11rem;
 }
 
 .slideshow {
@@ -251,18 +262,7 @@ body {
   display: none;
 }
 
-@media (max-width: 768px) {
-  .action-bar {
-    flex-direction: column;
-    gap: 10px;
-  }
-}
-
 @media (max-width: 420px) {
-  .action-bar {
-    padding: 10px 12px;
-  }
-
   .modal-card {
     width: min(92vw, 360px);
     padding: 20px;
