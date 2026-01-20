@@ -14,6 +14,10 @@ const dialogSearch = document.getElementById('dialog-search');
 const dialogSort = document.getElementById('dialog-sort');
 const dialogProfile = document.getElementById('dialog-profile');
 const dialogMemoList = document.getElementById('dialog-memo-list');
+const dialogDmSettings = document.getElementById('dialog-dm-settings');
+const dialogDmReport = document.getElementById('dialog-dm-report');
+const dialogDmBlockConfirm = document.getElementById('dialog-dm-block-confirm');
+const dialogDmUnblockConfirm = document.getElementById('dialog-dm-unblock-confirm');
 
 const state = {
   activeScreen: 'screen-login',
@@ -312,7 +316,7 @@ function renderMemoCard(memo) {
 
 function renderMemberDm(row) {
   return `
-    <div class="grid items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 md:grid-cols-[56px_1fr_auto]">
+    <div class="grid grid-cols-[56px_1fr_auto] items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4">
       <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=120&q=80" alt="${row.name}" class="h-12 w-12 rounded-full object-cover" />
       <button data-action="open-dm-detail" class="text-left">
         <div class="text-sm font-semibold">${row.name}</div>
@@ -320,6 +324,23 @@ function renderMemberDm(row) {
         <div class="text-xs text-slate-500">さらに続くテキストが表示されます。</div>
       </button>
       <button data-action="open-dm-settings" class="rounded-xl border border-slate-200 px-3 py-2"><i data-lucide="settings" class="h-4 w-4"></i></button>
+    </div>
+  `;
+}
+
+function renderMemberDmSettings(row) {
+  return `
+    <div class="grid grid-cols-[56px_1fr_auto] items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4">
+      <img src="${row.avatar}" alt="${row.name}" class="h-12 w-12 rounded-full object-cover" />
+      <div>
+        <div class="text-sm font-semibold">${row.name}</div>
+        <div class="text-xs text-slate-500">ブロック済み / ${row.region} / ${row.industry}</div>
+        <div class="text-xs text-slate-400">ブロック日：2024/07/${(row.id % 28) + 1}</div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button data-action="open-dm-unblock-confirm" class="rounded-xl border border-slate-200 px-3 py-2 text-slate-600"><i data-lucide="user-check" class="h-4 w-4"></i></button>
+        <button data-action="open-dm-report" class="rounded-xl border border-slate-200 px-3 py-2 text-rose-500"><i data-lucide="flag" class="h-4 w-4"></i></button>
+      </div>
     </div>
   `;
 }
@@ -475,7 +496,7 @@ function renderAllLists() {
     'invite': [dataSets.invites, renderInviteRow],
     'memo': [dataSets.memos, renderMemoCard],
     'dm-main': [adminData.dm, renderMemberDm],
-    'dm-settings': [adminData.dm, renderMemberDm],
+    'dm-settings': [dataSets.members, renderMemberDmSettings],
     'promo-timeline': [dataSets.promos, renderPromoRow],
     'promo-news': [dataSets.promos, renderPromoRow],
     'promo-promotion': [dataSets.promos, renderPromoRow],
@@ -743,7 +764,19 @@ function handleAction(action, target) {
       showScreen('screen-dm-memo-list', 'member');
       break;
     case 'open-dm-settings':
-      showDialog('設定', 'ブロック / 通報を選択してください', 'OK');
+      openDialog(dialogDmSettings);
+      break;
+    case 'open-dm-report':
+      closeDialogs();
+      openDialog(dialogDmReport);
+      break;
+    case 'open-dm-block-confirm':
+      closeDialogs();
+      openDialog(dialogDmBlockConfirm);
+      break;
+    case 'open-dm-unblock-confirm':
+      closeDialogs();
+      openDialog(dialogDmUnblockConfirm);
       break;
     case 'open-hamburger':
       overlay.classList.remove('hidden');
@@ -888,8 +921,11 @@ function handleAction(action, target) {
     case 'open-delete-confirm':
       showDialog('削除確認', '削除しますか？', '削除する');
       break;
-    case 'open-new-post':
-      showDialog('新規申請', '新規投稿・広告申請画面へ移動します。', 'OK');
+    case 'open-new-promo-post':
+      showScreen('screen-promo-post', 'member');
+      break;
+    case 'open-new-ad-application':
+      showScreen('screen-promo-ad-application', 'member');
       break;
     case 'open-stripe':
       showDialog('Stripe', '別ウィンドウでStripe画面に移動します。', 'OK');

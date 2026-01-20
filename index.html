@@ -238,7 +238,7 @@
       </section>
 
       <section id="screen-member-home" class="screen hidden min-h-screen px-4 pt-24">
-        <div class="mx-auto max-w-6xl space-y-8 pb-32">
+        <div class="mx-auto max-w-6xl space-y-8 pb-36">
           <div class="grid gap-6 lg:grid-cols-2">
             <div class="rounded-3xl bg-white/90 p-6 shadow max-w-[calc(100vw-32px)]">
               <div class="flex items-center justify-between">
@@ -278,14 +278,14 @@
           <div class="rounded-3xl bg-white/90 p-6 shadow">
             <h2 class="text-lg font-semibold">クイックアクセス</h2>
             <div class="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-              <button data-action="open-profile" class="rounded-2xl border border-slate-200 bg-white p-4 text-left">プロフィール</button>
-              <button data-action="open-payment-info" class="rounded-2xl border border-slate-200 bg-white p-4 text-left">支払情報</button>
-              <button data-action="open-invite" class="rounded-2xl border border-slate-200 bg-white p-4 text-left">招待コード</button>
-              <button data-action="open-search" class="rounded-2xl border border-slate-200 bg-white p-4 text-left">仲間を調べる</button>
-              <button data-action="open-dm" class="rounded-2xl border border-slate-200 bg-white p-4 text-left">DM</button>
-              <button data-action="open-memo" class="rounded-2xl border border-slate-200 bg-white p-4 text-left">会員メモ</button>
-              <button data-action="open-promo" class="rounded-2xl border border-slate-200 bg-white p-4 text-left">宣伝・イベント・お知らせ</button>
-              <button data-action="open-login-settings" class="rounded-2xl border border-slate-200 bg-white p-4 text-left">ログイン情報変更</button>
+              <button data-action="open-profile" class="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white p-4 text-left"><i data-lucide="user" class="h-4 w-4"></i>プロフィール</button>
+              <button data-action="open-payment-info" class="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white p-4 text-left"><i data-lucide="credit-card" class="h-4 w-4"></i>支払情報</button>
+              <button data-action="open-invite" class="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white p-4 text-left"><i data-lucide="ticket" class="h-4 w-4"></i>招待コード</button>
+              <button data-action="open-search" class="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white p-4 text-left"><i data-lucide="search" class="h-4 w-4"></i>仲間を調べる</button>
+              <button data-action="open-dm" class="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white p-4 text-left"><i data-lucide="messages-square" class="h-4 w-4"></i>DM</button>
+              <button data-action="open-memo" class="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white p-4 text-left"><i data-lucide="notebook" class="h-4 w-4"></i>会員メモ</button>
+              <button data-action="open-promo" class="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white p-4 text-left"><i data-lucide="megaphone" class="h-4 w-4"></i>宣伝・イベント・お知らせ</button>
+              <button data-action="open-login-settings" class="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white p-4 text-left"><i data-lucide="settings" class="h-4 w-4"></i>ログイン情報変更</button>
             </div>
           </div>
         </div>
@@ -344,7 +344,7 @@
                 <button data-action="open-verify" class="rounded-xl border border-slate-300 px-4 py-3">本人確認書類を提出</button>
               </div>
             </div>
-            <div class="mt-6 flex gap-4 border-b border-slate-200 sticky-row">
+            <div class="mt-6 flex border-b border-slate-200 sticky-row">
               <button data-action="profile-tab" data-tab="favorite" class="tab px-1 py-2 w-full text-sm font-semibold">お気に入り</button>
               <button data-action="profile-tab" data-tab="1on1" class="tab px-1 py-2 w-full text-sm font-semibold text-slate-400">1on1</button>
               <button data-action="profile-tab" data-tab="follow" class="tab px-1 py-2 w-full text-sm font-semibold text-slate-400">フォロー</button>
@@ -523,7 +523,7 @@
           </div>
           <div class="mt-8 rounded-3xl bg-white/90 p-8 shadow">
             <h1 class="page-title text-2xl font-semibold">仲間を調べる</h1>
-            <div class="mt-6 flex gap-4 border-b border-slate-200 sticky-row">
+            <div class="mt-6 flex border-b border-slate-200 sticky-row">
               <button data-action="search-tab" data-tab="member-search" class="tab px-1 py-2 w-full text-sm font-semibold">会員検索</button>
               <button data-action="search-tab" data-tab="recommended" class="tab px-1 py-2 w-full text-sm font-semibold text-slate-400">おすすめ会員</button>
               <button data-action="search-tab" data-tab="new" class="tab px-1 py-2 w-full text-sm font-semibold text-slate-400">新しい仲間</button>
@@ -564,7 +564,7 @@
           </div>
           <div class="mt-8 rounded-3xl bg-white/90 p-8 shadow">
             <h1 class="page-title text-2xl font-semibold">DM</h1>
-            <div class="mt-6 flex gap-4 border-b border-slate-200 sticky-row">
+            <div class="mt-6 flex border-b border-slate-200 sticky-row">
               <button data-action="dm-tab" data-tab="dm" class="tab px-1 py-2 w-full text-sm font-semibold">DM</button>
               <button data-action="dm-tab" data-tab="settings" class="tab px-1 py-2 w-full text-sm font-semibold text-slate-400">設定</button>
             </div>
@@ -636,8 +636,8 @@
             <div class="flex items-center justify-between">
               <h1 class="page-title text-2xl font-semibold">宣伝・イベント・お知らせ</h1>
             </div>
-            <div class="mt-6 flex gap-4 border-b border-slate-200 sticky-row">
-              <button data-action="promo-tab" data-tab="timeline" class="tab px-1 py-2 w-full text-sm font-semibold">タイムライン</button>
+            <div class="mt-6 flex border-b border-slate-200 sticky-row">
+              <button data-action="promo-tab" data-tab="timeline" class="tab px-1 py-2 w-full text-sm font-semibold">ﾀｲﾑﾗｲﾝ</button>
               <button data-action="promo-tab" data-tab="news" class="tab px-1 py-2 w-full text-sm font-semibold text-slate-400">お知らせ</button>
               <button data-action="promo-tab" data-tab="promotion" class="tab px-1 py-2 w-full text-sm font-semibold text-slate-400">宣伝</button>
               <button data-action="promo-tab" data-tab="ads" class="tab px-1 py-2 w-full text-sm font-semibold text-slate-400">広告</button>
@@ -662,7 +662,7 @@
               <div class="mt-4 flex gap-2 sticky-row sticky-row-secondary">
                 <button data-action="open-promo-search" class="rounded-xl border border-slate-300 px-3 py-2">検索</button>
                 <button data-action="open-promo-sort" class="rounded-xl border border-slate-300 px-3 py-2">並び替え</button>
-                <button data-action="open-new-post" class="rounded-xl border border-slate-300 px-3 py-2">新規申請/投稿</button>
+                <button data-action="open-new-promo-post" class="rounded-xl border border-slate-300 px-3 py-2">新規投稿</button>
               </div>
               <div class="mt-6" MA-database data-list="promo-promotion"></div>
               <button data-action="load-more" data-target="promo-promotion" class="mt-4 w-full rounded-xl border border-slate-300 px-4 py-3">次の30件を表示</button>
@@ -671,7 +671,7 @@
               <div class="mt-4 flex gap-2 sticky-row sticky-row-secondary">
                 <button data-action="open-promo-search" class="rounded-xl border border-slate-300 px-3 py-2">検索</button>
                 <button data-action="open-promo-sort" class="rounded-xl border border-slate-300 px-3 py-2">並び替え</button>
-                <button data-action="open-new-post" class="rounded-xl border border-slate-300 px-3 py-2">新規申請/投稿</button>
+                <button data-action="open-new-ad-application" class="rounded-xl border border-slate-300 px-3 py-2">新規申請</button>
               </div>
               <div class="mt-6" MA-database data-list="promo-ads"></div>
               <button data-action="load-more" data-target="promo-ads" class="mt-4 w-full rounded-xl border border-slate-300 px-4 py-3">次の30件を表示</button>
@@ -701,6 +701,63 @@
               <div class="text-sm text-slate-600">投稿本文が表示されます。お知らせやタイムラインの詳細内容が入ります。</div>
               <button data-action="open-external-link" class="text-sm text-slate-700 underline">https://example.com</button>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-promo-post" class="screen hidden min-h-screen px-4 pt-24">
+        <div class="mx-auto max-w-4xl pb-32">
+          <div class="action-bar">
+            <button data-action="open-promo" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
+            <button data-action="scroll-top" class="rounded-xl border border-slate-300 px-3 py-2 action-btn">topに戻る</button>
+          </div>
+          <div class="mt-8 rounded-3xl bg-white/90 p-8 shadow">
+            <h1 class="page-title text-2xl font-semibold">ﾀｲﾑﾗｲﾝ新規投稿</h1>
+            <div class="mt-6 space-y-4">
+              <div>
+                <label class="text-sm font-medium">サムネ画像</label>
+                <input type="file" accept=".png,.jpg,.jpeg" data-preview-target="promo-post-preview" data-error-target="promo-post-error" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3" />
+                <p class="mt-2 text-sm text-slate-500">画像をアップロードしてください</p>
+                <p id="promo-post-error" class="mt-2 hidden text-sm text-rose-500">10MB未満のPNG/JPGのみ対応しています。</p>
+                <img id="promo-post-preview" alt="preview" class="mt-3 hidden h-32 w-32 rounded-2xl object-cover" />
+              </div>
+              <input type="text" placeholder="タイトル" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3" />
+              <textarea rows="6" placeholder="本文" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3"></textarea>
+              <input type="url" placeholder="関連URL" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3" />
+            </div>
+            <button class="mt-6 rounded-xl bg-slate-900 px-4 py-3 text-white">投稿する</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-promo-ad-application" class="screen hidden min-h-screen px-4 pt-24">
+        <div class="mx-auto max-w-4xl pb-32">
+          <div class="action-bar">
+            <button data-action="open-promo" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
+            <button data-action="scroll-top" class="rounded-xl border border-slate-300 px-3 py-2 action-btn">topに戻る</button>
+          </div>
+          <div class="mt-8 rounded-3xl bg-white/90 p-8 shadow">
+            <h1 class="page-title text-2xl font-semibold">広告掲載申請</h1>
+            <div class="mt-6 space-y-4">
+              <div>
+                <label class="text-sm font-medium">掲載枠</label>
+                <select class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3">
+                  <option>バナー広告</option>
+                  <option>フッター広告</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-sm font-medium">広告画像</label>
+                <input type="file" accept=".png,.jpg,.jpeg" data-preview-target="promo-ad-preview" data-error-target="promo-ad-error" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3" />
+                <p class="mt-2 text-sm text-slate-500">画像をアップロードしてください</p>
+                <p id="promo-ad-error" class="mt-2 hidden text-sm text-rose-500">10MB未満のPNG/JPGのみ対応しています。</p>
+                <img id="promo-ad-preview" alt="preview" class="mt-3 hidden h-32 w-32 rounded-2xl object-cover" />
+              </div>
+              <input type="text" placeholder="広告タイトル" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3" />
+              <textarea rows="5" placeholder="掲載内容" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3"></textarea>
+              <input type="url" placeholder="リンクURL" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3" />
+            </div>
+            <button class="mt-6 rounded-xl bg-slate-900 px-4 py-3 text-white">申請する</button>
           </div>
         </div>
       </section>
@@ -952,7 +1009,6 @@
           <div class="fixed left-0 right-0 top-16 z-20 bg-white/80 px-4 py-3 backdrop-blur">
             <div class="mx-auto flex max-w-4xl items-center justify-between">
               <button data-action="open-admin-dm" class="rounded-xl border border-slate-300 px-3 py-2"><i data-lucide="arrow-left" class="h-4 w-4"></i></button>
-              <button data-action="open-admin-dm-settings" class="rounded-xl border border-slate-300 px-3 py-2"><i data-lucide="settings" class="h-4 w-4"></i></button>
             </div>
           </div>
           <div class="mt-8 space-y-4 overflow-y-auto max-h-[calc(100vh-14rem)]" id="admin-dm-messages"></div>
@@ -1481,6 +1537,63 @@
           <button data-action="open-memo-detail" class="rounded-xl border border-slate-200 px-3 py-3 text-sm">メモタイトル 2</button>
           <button data-action="open-memo-detail" class="rounded-xl border border-slate-200 px-3 py-3 text-sm">メモタイトル 3</button>
           <button data-action="open-memo-detail" class="rounded-xl border border-slate-200 px-3 py-3 text-sm">メモタイトル 4</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-dm-settings" class="modal hidden">
+      <div class="modal-card">
+        <div class="flex items-center justify-between">
+          <h2 class="page-title text-lg font-semibold">DM設定</h2>
+          <button data-action="dialog-close" class="rounded-full bg-slate-100 p-2"><i data-lucide="x" class="h-5 w-5"></i></button>
+        </div>
+        <p class="mt-4 text-sm text-slate-600">操作を選択してください。</p>
+        <div class="mt-6 grid gap-3">
+          <button data-action="open-dm-report" class="rounded-xl border border-slate-300 px-4 py-3 text-left">通報する</button>
+          <button data-action="open-dm-block-confirm" class="rounded-xl border border-slate-300 px-4 py-3 text-left">ブロックする</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-dm-report" class="modal hidden">
+      <div class="modal-card">
+        <div class="flex items-center justify-between">
+          <h2 class="page-title text-lg font-semibold">通報ダイアログ</h2>
+          <button data-action="dialog-close" class="rounded-full bg-slate-100 p-2"><i data-lucide="x" class="h-5 w-5"></i></button>
+        </div>
+        <div class="mt-4 space-y-3">
+          <select class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3">
+            <option>迷惑行為</option>
+            <option>不適切な発言</option>
+            <option>スパム</option>
+          </select>
+          <textarea rows="4" placeholder="詳細内容" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3"></textarea>
+        </div>
+        <div class="mt-6 flex gap-3">
+          <button data-action="dialog-primary" class="flex-1 rounded-xl bg-slate-900 px-4 py-3 text-white">通報する</button>
+          <button data-action="dialog-close" class="flex-1 rounded-xl border border-slate-300 px-4 py-3">戻る</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-dm-block-confirm" class="modal hidden">
+      <div class="modal-card">
+        <h2 class="page-title text-lg font-semibold">ブロック確認ダイアログ</h2>
+        <p class="mt-2 text-sm text-slate-600">この会員をブロックしますか？</p>
+        <div class="mt-6 flex gap-3">
+          <button data-action="dialog-primary" class="flex-1 rounded-xl bg-slate-900 px-4 py-3 text-white">ブロックする</button>
+          <button data-action="dialog-close" class="flex-1 rounded-xl border border-slate-300 px-4 py-3">戻る</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-dm-unblock-confirm" class="modal hidden">
+      <div class="modal-card">
+        <h2 class="page-title text-lg font-semibold">ブロック解除確認ダイアログ</h2>
+        <p class="mt-2 text-sm text-slate-600">ブロックを解除しますか？</p>
+        <div class="mt-6 flex gap-3">
+          <button data-action="dialog-primary" class="flex-1 rounded-xl bg-slate-900 px-4 py-3 text-white">解除する</button>
+          <button data-action="dialog-close" class="flex-1 rounded-xl border border-slate-300 px-4 py-3">戻る</button>
         </div>
       </div>
     </div>
