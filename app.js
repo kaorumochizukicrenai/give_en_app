@@ -180,7 +180,7 @@ const ads = [
   },
   {
     id: 2,
-    image: 'https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=300&q=80',
+    image: 'https://images.unsplash.com/photo-1473181488821-2d23949a045a?auto=format&fit=crop&w=300&q=80',
     label: '広告 2',
   },
   {
@@ -216,7 +216,7 @@ function showScreen(id, role = state.activeRole) {
   screens.forEach((screen) => {
     if (screen.id === id) {
       screen.classList.remove('hidden');
-      screen.classList.add('active');
+      requestAnimationFrame(() => screen.classList.add('active'));
     } else if (screen.classList.contains('active')) {
       screen.classList.remove('active');
       setTimeout(() => {
@@ -234,7 +234,7 @@ function showScreen(id, role = state.activeRole) {
   closeDialogs();
   resetPagination();
   if (nextScreen) {
-    nextScreen.classList.add('active');
+    requestAnimationFrame(() => nextScreen.classList.add('active'));
   }
   if (id === 'screen-dm-detail' || id === 'screen-admin-dm-message') {
     setTimeout(() => {
@@ -273,7 +273,7 @@ function paginate(listName, data, renderItem) {
 
 function renderMemberTile(member) {
   return `
-    <button data-action="open-profile-dialog" class="flex w-full flex-col rounded-2xl border border-slate-200 bg-white p-4 text-left">
+    <button data-action="open-profile-dialog" class="member-tile flex w-full flex-col rounded-2xl border border-slate-200 bg-white p-4 text-left">
       <div class="relative">
         <img src="${member.avatar}" alt="${member.name}" class="h-24 w-full rounded-xl object-cover" />
         <span class="absolute -bottom-2 -right-2 inline-flex h-6 w-6 items-center justify-center rounded-full bg-amber-400 text-xs font-bold text-white">${member.badge}</span>
@@ -532,8 +532,10 @@ function renderNoticeSlide(item) {
 
 function renderAdSlide(item) {
   return `
-    <button class="flex w-full max-w-md items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white/80 px-6 py-6">
-      <img src="${item.image}" alt="${item.label}" class="h-28 w-full object-contain object-center" />
+    <button class="ad-slide-button">
+      <span class="ad-slide-frame">
+        <img src="${item.image}" alt="${item.label}" class="ad-slide-image" />
+      </span>
     </button>
   `;
 }
@@ -568,12 +570,18 @@ function renderDmMessages(container, messages, listName) {
 function startSlideshow(container, items, renderer, interval = 4000) {
   if (!container) return;
   let index = 0;
-  container.innerHTML = `<div class="slide-item is-active">${renderer(items[index])}</div>`;
+  container.innerHTML = `<div class="slide-item">${renderer(items[index])}</div>`;
+  const initialSlide = container.querySelector('.slide-item');
+  if (initialSlide) {
+    requestAnimationFrame(() => initialSlide.classList.add('is-active'));
+  }
   setInterval(() => {
     index = (index + 1) % items.length;
     container.innerHTML = `<div class="slide-item">${renderer(items[index])}</div>`;
     const slide = container.querySelector('.slide-item');
-    if (slide) slide.classList.add('is-active');
+    if (slide) {
+      requestAnimationFrame(() => slide.classList.add('is-active'));
+    }
     lucide.createIcons();
   }, interval);
 }
@@ -643,7 +651,8 @@ function toggleTabFrames(group, value) {
   document.querySelectorAll(`[data-tab-frame=\"${group}\"]`).forEach((frame) => {
     const isActive = frame.dataset.tabValue === value;
     if (isActive) {
-      frame.classList.add('is-active');
+      frame.classList.remove('is-active');
+      requestAnimationFrame(() => frame.classList.add('is-active'));
     } else {
       frame.classList.remove('is-active');
     }
@@ -689,6 +698,18 @@ function handleAction(action, target) {
       showScreen('screen-invite', 'member');
       break;
     case 'open-search':
+      showScreen('screen-search', 'member');
+      break;
+    case 'open-search-recent':
+      setTab('search', 'member-search');
+      resetPagination();
+      updateTabs();
+      showScreen('screen-search', 'member');
+      break;
+    case 'open-search-recommended':
+      setTab('search', 'recommended');
+      resetPagination();
+      updateTabs();
       showScreen('screen-search', 'member');
       break;
     case 'open-dm':
@@ -989,6 +1010,40 @@ function bindEvents() {
         document.getElementById(id).classList.toggle('hidden');
       }
     }
+  });
+
+  document.querySelectorAll('input[type="file"][data-preview-target]').forEach((input) => {
+    input.addEventListener('change', (event) => {
+      const file = event.target.files && event.target.files[0];
+      const previewId = input.dataset.previewTarget;
+      const errorId = input.dataset.errorTarget;
+      const preview = document.getElementById(previewId);
+      const error = document.getElementById(errorId);
+
+      if (error) error.classList.add('hidden');
+      if (preview) preview.classList.add('hidden');
+
+      if (!file) {
+        return;
+      }
+
+      const isValidType = ['image/png', 'image/jpeg'].includes(file.type);
+      const isValidSize = file.size < 10 * 1024 * 1024;
+
+      if (!isValidType || !isValidSize) {
+        if (error) error.classList.remove('hidden');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (preview) {
+          preview.src = reader.result;
+          preview.classList.remove('hidden');
+        }
+      };
+      reader.readAsDataURL(file);
+    });
   });
 }
 
