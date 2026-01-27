@@ -570,8 +570,29 @@
             <div class="mt-6 flex flex-col gap-3">
               <button data-action="open-stripe" class="rounded-xl bg-slate-900 px-4 py-3 text-white">支払方法設定</button>
               <button data-action="open-stripe" class="rounded-xl border border-slate-300 px-4 py-3">従量課金チャージ</button>
-              <button data-action="open-stripe" class="rounded-xl border border-slate-300 px-4 py-3">支払履歴一覧</button>
+              <button data-action="open-payment-history" class="rounded-xl border border-slate-300 px-4 py-3">支払履歴一覧</button>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-payment-history" class="screen hidden min-h-screen px-4 pt-24">
+        <div class="mx-auto max-w-6xl pb-32">
+          <div class="action-bar">
+            <button data-action="open-payment-info" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
+            <div class="flex gap-2 sticky-row">
+              <button data-action="open-payment-search" class="rounded-xl border border-slate-300 px-3 py-2">検索</button>
+              <button data-action="open-payment-sort" class="rounded-xl border border-slate-300 px-3 py-2">並び替え</button>
+            </div>
+            <button data-action="scroll-top" class="rounded-xl border border-slate-300 px-3 py-2 action-btn">topに戻る</button>
+          </div>
+          <div class="mt-8 rounded-3xl bg-white/90 p-8 shadow">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <h1 class="page-title text-2xl font-semibold">支払履歴一覧</h1>
+              <button class="rounded-xl border border-slate-300 px-4 py-2 text-sm">ポイント履歴</button>
+            </div>
+            <div class="mt-6" id="payment-history-list" MA-database data-list="payment-history"></div>
+            <button data-action="load-more" data-target="payment-history" class="mt-4 w-full rounded-xl border border-slate-300 px-4 py-3">次の30件を表示</button>
           </div>
         </div>
       </section>
@@ -757,7 +778,7 @@
                 <button data-action="open-promo-search" class="rounded-xl border border-slate-300 px-3 py-2">検索</button>
                 <button data-action="open-promo-sort" class="rounded-xl border border-slate-300 px-3 py-2">並び替え</button>
               </div>
-              <div class="mt-6" MA-database data-list="promo-promotion"></div>
+              <div class="promo-tile-grid mt-6" MA-database data-list="promo-promotion"></div>
               <button data-action="load-more" data-target="promo-promotion" class="mt-4 w-full rounded-xl border border-slate-300 px-4 py-3">次の30件を表示</button>
             </div>
             <div class="tab-frame" data-tab-frame="promo" data-tab-value="news">
@@ -765,7 +786,7 @@
                 <button data-action="open-promo-search" class="rounded-xl border border-slate-300 px-3 py-2">検索</button>
                 <button data-action="open-promo-sort" class="rounded-xl border border-slate-300 px-3 py-2">並び替え</button>
               </div>
-              <div class="mt-6" MA-database data-list="promo-news"></div>
+              <div class="promo-tile-grid mt-6" MA-database data-list="promo-news"></div>
               <button data-action="load-more" data-target="promo-news" class="mt-4 w-full rounded-xl border border-slate-300 px-4 py-3">次の30件を表示</button>
             </div>
             <div class="tab-frame" data-tab-frame="promo" data-tab-value="history-promotion">
@@ -800,11 +821,14 @@
             <h1 class="page-title text-2xl font-semibold">宣伝詳細</h1>
             <div class="mt-6 space-y-4">
               <div class="flex items-center gap-3">
-                <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=120&q=80" alt="member" class="h-12 w-12 rounded-full object-cover" />
-                <div>
+                <button data-action="open-profile-dialog" class="relative">
+                  <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=120&q=80" alt="member" class="h-12 w-12 rounded-full object-cover" />
+                  <span class="promo-avatar-badge">★</span>
+                </button>
+                <button data-action="open-profile-dialog" class="text-left">
                   <div class="text-sm font-semibold">高橋 翔太</div>
                   <div class="text-xs text-slate-500">投稿日：2024/07/20</div>
-                </div>
+                </button>
               </div>
               <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80" alt="thumbnail" class="h-60 w-full rounded-2xl object-cover" />
               <div class="text-lg font-semibold">投稿タイトル</div>
@@ -825,9 +849,9 @@
             <h1 class="page-title text-2xl font-semibold">お知らせ詳細</h1>
             <div class="mt-6 space-y-4">
               <div class="flex items-center gap-3">
-                <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=120&q=80" alt="member" class="h-12 w-12 rounded-full object-cover" />
+                <img src="logotest.png" alt="Give縁公式" class="h-12 w-12 rounded-full object-cover" />
                 <div>
-                  <div class="text-sm font-semibold">高橋 翔太</div>
+                  <div class="text-sm font-semibold">Give縁公式</div>
                   <div class="text-xs text-slate-500">投稿日：2024/07/20</div>
                 </div>
               </div>
@@ -1019,42 +1043,44 @@
               <button data-action="open-dm-settings" class="rounded-xl border border-slate-300 px-3 py-2"><i data-lucide="settings" class="h-4 w-4"></i></button>
             </div>
           </div>
-          <div class="mt-8 space-y-4 overflow-y-auto max-h-[calc(100vh-20.6rem)]" id="member-dm-messages"></div>
-          <div class="fixed bottom-[7.1rem] left-0 right-0 z-20 bg-white/80 px-4 py-4 backdrop-blur">
-            <div class="mx-auto flex max-w-4xl items-center gap-3">
-              <button data-action="open-dm-memo" class="rounded-xl border border-slate-300 px-3 py-2"><i data-lucide="notebook" class="h-4 w-4"></i></button>
-              <textarea rows="1" class="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-3" placeholder="メッセージを入力"></textarea>
-              <button class="rounded-xl bg-slate-900 px-3 py-2 text-white"><i data-lucide="send" class="h-4 w-4"></i></button>
+          <div class="relative">
+            <div class="mt-8 space-y-4 overflow-y-auto max-h-[calc(100vh-20.6rem)]" id="member-dm-messages"></div>
+            <div class="fixed bottom-[7.1rem] left-0 right-0 z-20 bg-white/80 px-4 py-4 backdrop-blur">
+              <div class="mx-auto flex max-w-4xl items-center gap-3">
+                <button data-action="open-dm-memo" class="rounded-xl border border-slate-300 px-3 py-2"><i data-lucide="notebook" class="h-4 w-4"></i></button>
+                <textarea rows="1" class="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-3" placeholder="メッセージを入力"></textarea>
+                <button class="rounded-xl bg-slate-900 px-3 py-2 text-white"><i data-lucide="send" class="h-4 w-4"></i></button>
+              </div>
+            </div>
+            <div id="dm-memo-list-panel" class="dm-memo-panel hidden">
+              <div class="dm-memo-panel__card">
+                <div class="flex items-center justify-between">
+                  <div class="text-sm font-semibold">メモ一覧</div>
+                  <button data-action="close-dm-memo-list" class="rounded-full bg-slate-100 p-2"><i data-lucide="x" class="h-4 w-4"></i></button>
+                </div>
+                <button data-action="open-dm-memo-detail" class="mt-4 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm">新規追加</button>
+                <div class="mt-4 space-y-2">
+                  <button data-action="open-dm-memo-detail" class="w-full rounded-xl border border-slate-200 px-3 py-3 text-left text-sm">打ち合わせメモ</button>
+                  <button data-action="open-dm-memo-detail" class="w-full rounded-xl border border-slate-200 px-3 py-3 text-left text-sm">今後の相談事項</button>
+                  <button data-action="open-dm-memo-detail" class="w-full rounded-xl border border-slate-200 px-3 py-3 text-left text-sm">次回のアクション</button>
+                </div>
+              </div>
+            </div>
+            <div id="dm-memo-detail-panel" class="dm-memo-panel hidden">
+              <div class="dm-memo-panel__card">
+                <div class="flex items-center justify-between">
+                  <button data-action="close-dm-memo-detail" class="rounded-xl border border-slate-300 px-3 py-2 text-sm">戻る</button>
+                  <div class="text-sm font-semibold">メモ詳細</div>
+                  <button data-action="close-dm-memo-detail" class="rounded-full bg-slate-100 p-2"><i data-lucide="x" class="h-4 w-4"></i></button>
+                </div>
+                <div class="mt-4 space-y-4">
+                  <input type="text" placeholder="タイトル" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm" />
+                  <textarea rows="6" placeholder="本文" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm"></textarea>
+                </div>
+                <button class="mt-4 w-full rounded-xl bg-slate-900 px-4 py-3 text-white">保存</button>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      <section id="screen-dm-memo-list" class="screen hidden min-h-screen px-4 pt-24">
-        <div class="mx-auto max-w-4xl pb-32">
-          <div class="fixed bottom-0 left-0 right-0 z-20 bg-white/80 px-4 py-4 backdrop-blur">
-            <div class="mx-auto flex max-w-4xl items-center justify-between">
-              <div class="text-sm font-semibold">メモ一覧</div>
-              <button data-action="create-dm-memo" class="rounded-xl border border-slate-300 px-3 py-2">新規メモ作成</button>
-            </div>
-          </div>
-          <div class="mt-8 grid gap-4">
-            <div class="rounded-2xl border border-slate-200 bg-white/90 p-4">打ち合わせメモ</div>
-            <div class="rounded-2xl border border-slate-200 bg-white/90 p-4">今後の相談事項</div>
-          </div>
-        </div>
-      </section>
-
-      <section id="screen-dm-memo-edit" class="screen hidden min-h-screen px-4 pt-24">
-        <div class="mx-auto max-w-4xl pb-32">
-          <div class="fixed bottom-0 left-0 right-0 z-20 bg-white/80 px-4 py-4 backdrop-blur">
-            <div class="mx-auto flex max-w-4xl items-center gap-3">
-              <button data-action="back-dm-memo-list" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
-              <input type="text" placeholder="メモタイトル" class="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-2" />
-              <textarea rows="1" placeholder="メモ内容" class="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-2"></textarea>
-            </div>
-          </div>
-          <div class="mt-8 text-sm text-slate-500">自動保存中</div>
         </div>
       </section>
 
@@ -1668,15 +1694,14 @@
         <div class="mt-6 grid gap-3">
           <button data-action="go-home" class="menu-item"><i data-lucide="home" class="h-4 w-4"></i>ホーム画面に戻る</button>
           <button data-action="open-profile" class="menu-item"><i data-lucide="user" class="h-4 w-4"></i>プロフィール</button>
-          <button data-action="open-payment-info" class="menu-item"><i data-lucide="credit-card" class="h-4 w-4"></i>支払情報</button>
-          <button data-action="open-invite" class="menu-item"><i data-lucide="ticket" class="h-4 w-4"></i>招待コード</button>
           <button data-action="open-search" class="menu-item"><i data-lucide="search" class="h-4 w-4"></i>検索</button>
           <button data-action="open-dm" class="menu-item"><i data-lucide="messages-square" class="h-4 w-4"></i>DM</button>
-          <button data-action="open-memo" class="menu-item"><i data-lucide="notebook" class="h-4 w-4"></i>会員メモ</button>
           <button data-action="open-promo" class="menu-item"><i data-lucide="megaphone" class="h-4 w-4"></i>宣伝・イベント・お知らせ</button>
+          <button data-action="open-memo" class="menu-item"><i data-lucide="notebook" class="h-4 w-4"></i>会員メモ</button>
+          <button data-action="open-invite" class="menu-item"><i data-lucide="ticket" class="h-4 w-4"></i>招待コード</button>
           <button data-action="open-partner-services" class="menu-item"><i data-lucide="grid" class="h-4 w-4"></i>提携サービス</button>
+          <button data-action="open-payment-info" class="menu-item"><i data-lucide="credit-card" class="h-4 w-4"></i>支払情報</button>
           <button data-action="open-login-settings" class="menu-item"><i data-lucide="settings" class="h-4 w-4"></i>ログイン情報変更</button>
-          <button data-action="open-terms-member" class="menu-item"><i data-lucide="file-text" class="h-4 w-4"></i>利用規約を読む</button>
           <button data-action="logout" class="menu-item text-rose-500"><i data-lucide="log-out" class="h-4 w-4"></i>ログアウト</button>
         </div>
       </div>
@@ -1954,7 +1979,10 @@
 
     <div id="dialog-promo-visibility-options" class="modal hidden">
       <div class="modal-card">
-        <h2 class="page-title text-lg font-semibold">掲載設定</h2>
+        <div class="flex items-center justify-between">
+          <h2 class="page-title text-lg font-semibold">掲載設定</h2>
+          <button data-action="dialog-close" class="rounded-full bg-slate-100 p-2"><i data-lucide="x" class="h-4 w-4"></i></button>
+        </div>
         <p class="mt-2 text-sm text-slate-600">操作を選択してください。</p>
         <div class="mt-6 grid gap-3">
           <button data-action="open-promo-visibility-confirm" class="rounded-xl border border-slate-300 px-4 py-3 text-left">非表示にする / 再表示する</button>

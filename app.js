@@ -19,6 +19,8 @@ const dialogDmSettings = document.getElementById('dialog-dm-settings');
 const dialogDmReport = document.getElementById('dialog-dm-report');
 const dialogDmBlockConfirm = document.getElementById('dialog-dm-block-confirm');
 const dialogDmUnblockConfirm = document.getElementById('dialog-dm-unblock-confirm');
+const dmMemoListPanel = document.getElementById('dm-memo-list-panel');
+const dmMemoDetailPanel = document.getElementById('dm-memo-detail-panel');
 
 const inviteCode = 'give-A1b2C3d4';
 
@@ -87,6 +89,13 @@ const dataSets = {
   promoNews: promoBase.map((item) => ({
     ...item,
     detailTarget: 'news',
+  })),
+  paymentHistory: Array.from({ length: 50 }, (_, i) => ({
+    id: i + 1,
+    type: i % 2 === 0 ? '月額更新費' : '従量課金',
+    amount: `¥${(i + 1) * 100}`,
+    date: `2024/07/${(i % 28) + 1}`,
+    status: i % 2 === 0 ? '完了' : '未払い',
   })),
   promoHistoryPromotion: promoBase.map((item, index) => ({
     ...item,
@@ -385,17 +394,29 @@ function renderMemberDmSettings(row) {
 }
 
 function renderPromoRow(item) {
+  const isNews = item.detailTarget === 'news';
+  const avatar = isNews ? 'logotest.png' : item.authorAvatar;
+  const name = isNews ? 'Give縁公式' : item.authorName;
+  const badge = isNews
+    ? ''
+    : `<span class="promo-avatar-badge promo-avatar-badge--small">${item.badge}</span>`;
   return `
-    <button data-action="open-member-promo-detail" data-detail="${item.detailTarget}" class="grid min-w-full gap-4 rounded-2xl border border-slate-200 bg-white p-4 text-left md:grid-cols-[80px_1fr]">
-      <img src="${item.thumb}" alt="${item.title}" class="h-20 w-20 rounded-xl object-cover" />
-      <div>
-        <div class="text-sm font-semibold">${item.title}</div>
-        <div class="mt-2 flex items-center gap-2">
-          <img src="${item.authorAvatar}" alt="${item.authorName}" class="h-6 w-6 rounded-full object-cover" />
-          <span class="text-xs font-semibold">${item.authorName}</span>
-          <span class="inline-flex h-4 w-4 items-center justify-center rounded-full bg-amber-400 text-[10px] font-bold text-white">${item.badge}</span>
+    <button data-action="open-member-promo-detail" data-detail="${item.detailTarget}" class="promo-tile">
+      <div class="promo-tile__media">
+        <div class="promo-tile__media-frame">
+          <img src="${item.thumb}" alt="${item.title}" class="promo-tile__media-img" />
         </div>
-        <div class="mt-1 text-xs text-slate-500">投稿日：${item.date}</div>
+      </div>
+      <div class="promo-tile__meta">
+        <div class="promo-tile__avatar">
+          <img src="${avatar}" alt="${name}" class="h-11 w-11 rounded-full object-cover" />
+          ${badge}
+        </div>
+        <div>
+          ${isNews ? `<div class="text-xs font-semibold text-slate-500">${name}</div>` : ''}
+          <div class="text-sm font-semibold">${item.title}</div>
+          <div class="mt-1 text-xs text-slate-500">投稿日：${item.date}</div>
+        </div>
       </div>
     </button>
   `;
@@ -408,22 +429,17 @@ function renderPromoHistoryRow(item) {
   const iconAction = isApproved ? 'open-promo-visibility-options' : 'open-promo-cancel-confirm';
   const hiddenLabel = item.hidden ? '非表示です' : '';
   return `
-    <div class="grid min-w-full gap-4 rounded-2xl border border-slate-200 bg-white p-4 text-left md:grid-cols-[80px_1fr_auto]">
+    <div class="promo-history-row">
       <button data-action="open-member-promo-detail" data-detail="${item.detailTarget}" class="contents">
-        <img src="${item.thumb}" alt="${item.title}" class="h-20 w-20 rounded-xl object-cover" />
+        <img src="${item.thumb}" alt="${item.title}" class="promo-history-row__thumb" />
         <div>
           <div class="text-sm font-semibold">${item.title}</div>
-          <div class="mt-2 flex items-center gap-2">
-            <img src="${item.authorAvatar}" alt="${item.authorName}" class="h-6 w-6 rounded-full object-cover" />
-            <span class="text-xs font-semibold">${item.authorName}</span>
-            <span class="inline-flex h-4 w-4 items-center justify-center rounded-full bg-amber-400 text-[10px] font-bold text-white">${item.badge}</span>
-          </div>
           <div class="mt-1 text-xs text-slate-500">投稿日：${item.date}</div>
           <div class="mt-2 text-xs font-semibold text-slate-700">${statusLabel}</div>
           ${hiddenLabel ? `<div class="mt-1 text-xs text-rose-500">${hiddenLabel}</div>` : ''}
         </div>
       </button>
-      <button data-action="${iconAction}" class="h-10 w-10 rounded-xl border border-slate-200 text-slate-600"><i data-lucide="${iconName}" class="h-4 w-4"></i></button>
+      <button data-action="${iconAction}" class="promo-history-row__action"><i data-lucide="${iconName}" class="h-4 w-4"></i></button>
     </div>
   `;
 }
@@ -540,6 +556,17 @@ function renderAdminPayment(row) {
   `;
 }
 
+function renderPaymentHistory(row) {
+  return `
+    <div class="grid items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 md:grid-cols-4">
+      <div class="text-sm">${row.date}</div>
+      <div class="text-sm font-semibold">${row.type}</div>
+      <div class="text-sm">${row.amount}</div>
+      <div class="text-sm text-slate-500">${row.status}</div>
+    </div>
+  `;
+}
+
 function renderAdminNews(row) {
   return `
     <div class="grid items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 md:grid-cols-4">
@@ -579,6 +606,7 @@ function renderAllLists() {
     'promo-news': [dataSets.promoNews, renderPromoRow],
     'promo-history': [dataSets.promoHistoryPromotion, renderPromoHistoryRow],
     'promo-ads-history': [dataSets.promoHistoryAds, renderPromoHistoryRow],
+    'payment-history': [dataSets.paymentHistory, renderPaymentHistory],
     'partner-services': [dataSets.partnerServices, renderPartnerServiceTile],
     'admin-members': [adminData.members, renderAdminRow],
     'admin-requests': [adminData.requests, renderAdminRequest],
@@ -819,6 +847,9 @@ function handleAction(action, target) {
     case 'open-payment-info':
       showScreen('screen-payment-info', 'member');
       break;
+    case 'open-payment-history':
+      showScreen('screen-payment-history', 'member');
+      break;
     case 'open-invite':
       showScreen('screen-invite', 'member');
       break;
@@ -903,13 +934,18 @@ function handleAction(action, target) {
       showScreen('screen-terms-admin', 'admin');
       break;
     case 'open-dm-memo':
-      showScreen('screen-dm-memo-list', 'member');
+      dmMemoListPanel?.classList.remove('hidden');
+      dmMemoDetailPanel?.classList.add('hidden');
       break;
-    case 'create-dm-memo':
-      showScreen('screen-dm-memo-edit', 'member');
+    case 'close-dm-memo-list':
+      dmMemoListPanel?.classList.add('hidden');
+      dmMemoDetailPanel?.classList.add('hidden');
       break;
-    case 'back-dm-memo-list':
-      showScreen('screen-dm-memo-list', 'member');
+    case 'open-dm-memo-detail':
+      dmMemoDetailPanel?.classList.remove('hidden');
+      break;
+    case 'close-dm-memo-detail':
+      dmMemoDetailPanel?.classList.add('hidden');
       break;
     case 'open-dm-settings':
       openDialog(dialogDmSettings);
@@ -961,6 +997,7 @@ function handleAction(action, target) {
     case 'open-memo-search':
     case 'open-dm-search':
     case 'open-promo-search':
+    case 'open-payment-search':
     case 'open-partner-search':
     case 'open-admin-member-search':
     case 'open-admin-request-search':
@@ -979,6 +1016,7 @@ function handleAction(action, target) {
     case 'open-memo-sort':
     case 'open-dm-sort':
     case 'open-promo-sort':
+    case 'open-payment-sort':
     case 'open-partner-sort':
     case 'open-admin-member-sort':
     case 'open-admin-request-sort':
