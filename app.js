@@ -20,6 +20,8 @@ const dialogDmReport = document.getElementById('dialog-dm-report');
 const dialogDmBlockConfirm = document.getElementById('dialog-dm-block-confirm');
 const dialogDmUnblockConfirm = document.getElementById('dialog-dm-unblock-confirm');
 
+const inviteCode = 'give-A1b2C3d4';
+
 const state = {
   activeScreen: 'screen-login',
   activeRole: 'member',
@@ -45,19 +47,6 @@ const promoThumbs = [
   'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=120&q=80',
 ];
 
-const partnerServiceImages = [
-  'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=240&q=80',
-  'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=240&q=80',
-  'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=240&q=80',
-  'https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=240&q=80',
-  'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=240&q=80',
-  'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=240&q=80',
-  'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=240&q=80',
-  'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=240&q=80',
-  'https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=240&q=80',
-  'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=240&q=80',
-];
-
 const dataSets = {
   members: Array.from({ length: 50 }, (_, i) => ({
     id: i + 1,
@@ -70,10 +59,10 @@ const dataSets = {
   })),
   invites: Array.from({ length: 50 }, (_, i) => ({
     id: i + 1,
-    created: `2024/07/${(i % 28) + 1}`,
-    expires: `2024/08/${(i % 28) + 1}`,
-    code: `INV-${1000 + i}`,
-    used: i % 3 === 0 ? '使用済み' : '未使用',
+    usedDate: `2024/07/${(i % 28) + 1}`,
+    name: `利用者 ${i + 1}`,
+    email: `user${i + 1}@example.com`,
+    status: i % 2 === 0 ? '承認済み' : '未承認',
   })),
   memos: Array.from({ length: 50 }, (_, i) => ({
     id: i + 1,
@@ -86,6 +75,12 @@ const dataSets = {
     date: `2024/07/${(i % 28) + 1}`,
     type: ['タイムライン', 'お知らせ', '宣伝', '広告'][i % 4],
     thumb: promoThumbs[i % promoThumbs.length],
+  })),
+  partnerServices: Array.from({ length: 50 }, (_, i) => ({
+    id: i + 1,
+    name: `提携サービス ${i + 1}`,
+    image: promoThumbs[i % promoThumbs.length],
+    url: `https://example.com/service/${i + 1}`,
   })),
 };
 
@@ -221,9 +216,9 @@ const ads = [
 const tabs = {
   login: 'login',
   profile: 'favorite',
-  search: 'promotion',
+  search: 'member-search',
   dm: 'dm',
-  promo: 'timeline',
+  promo: 'promotion',
 };
 
 function showScreen(id, role = state.activeRole) {
@@ -246,7 +241,7 @@ function showScreen(id, role = state.activeRole) {
       screen.classList.add('hidden');
     }
   });
-  const showHeader = id.startsWith('screen-admin') || id.startsWith('screen-member') || id.startsWith('screen-profile') || id.startsWith('screen-payment') || id.startsWith('screen-invite') || id.startsWith('screen-search') || id.startsWith('screen-dm') || id.startsWith('screen-memo') || id.startsWith('screen-promo') || id.startsWith('screen-login-settings') || id.startsWith('screen-terms');
+  const showHeader = id.startsWith('screen-admin') || id.startsWith('screen-member') || id.startsWith('screen-profile') || id.startsWith('screen-payment') || id.startsWith('screen-invite') || id.startsWith('screen-search') || id.startsWith('screen-dm') || id.startsWith('screen-memo') || id.startsWith('screen-promo') || id.startsWith('screen-login-settings') || id.startsWith('screen-terms') || id.startsWith('screen-partner');
   header.classList.toggle('hidden', !showHeader);
   footer.classList.toggle('hidden', !(showHeader && role === 'member' && !id.startsWith('screen-terms-admin') && !id.startsWith('screen-admin')));
   closeDialogs();
@@ -304,12 +299,11 @@ function renderMemberTile(member) {
 
 function renderInviteRow(invite) {
   return `
-    <div class="grid items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 md:grid-cols-5">
-      <div class="text-sm">${invite.created}</div>
-      <div class="text-sm">${invite.expires}</div>
-      <div class="text-sm font-semibold">${invite.code}</div>
-      <div class="text-sm text-slate-500">${invite.used}</div>
-      <button data-action="open-invite-delete" class="flex items-center justify-end text-rose-500"><i data-lucide="trash" class="h-4 w-4"></i></button>
+    <div class="grid items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 md:grid-cols-4">
+      <div class="text-sm">${invite.usedDate}</div>
+      <div class="text-sm font-semibold">${invite.name}</div>
+      <div class="text-sm">${invite.email}</div>
+      <div class="text-sm text-slate-500">${invite.status}</div>
     </div>
   `;
 }
@@ -372,10 +366,10 @@ function renderPromoRow(item) {
   `;
 }
 
-function renderPartnerServiceTile(image, index) {
+function renderPartnerServiceTile(item, index) {
   return `
-    <button class="partner-tile">
-      <img src="${image}" alt="提携サービス ${index + 1}" class="partner-tile__image" />
+    <button class="partner-tile" data-action="open-partner-service-link" data-url="${item.url}">
+      <img src="${item.image}" alt="${item.name || `提携サービス ${index + 1}`}" class="partner-tile__image" />
     </button>
   `;
 }
@@ -512,10 +506,9 @@ function renderAllLists() {
     'profile-1on1': [dataSets.members, renderMemberTile],
     'profile-follow': [dataSets.members, renderMemberTile],
     'profile-follower': [dataSets.members, renderMemberTile],
-    'search-promotion': [dataSets.promos, renderPromoRow],
-    'search-news': [dataSets.promos, renderPromoRow],
-    'search-ads': [dataSets.promos, renderPromoRow],
-    'search-history': [dataSets.promos, renderPromoRow],
+    'search-member': [dataSets.members, renderMemberTile],
+    'search-recommended': [dataSets.members, renderMemberTile],
+    'search-new': [dataSets.members, renderMemberTile],
     'invite': [dataSets.invites, renderInviteRow],
     'memo': [dataSets.memos, renderMemoCard],
     'dm-main': [adminData.dm, renderMemberDm],
@@ -524,6 +517,7 @@ function renderAllLists() {
     'promo-news': [dataSets.promos, renderPromoRow],
     'promo-promotion': [dataSets.promos, renderPromoRow],
     'promo-ads': [dataSets.promos, renderPromoRow],
+    'partner-services': [dataSets.partnerServices, renderPartnerServiceTile],
     'admin-members': [adminData.members, renderAdminRow],
     'admin-requests': [adminData.requests, renderAdminRequest],
     'admin-events': [adminData.events, renderAdminEvent],
@@ -561,8 +555,15 @@ function renderHomeMembers() {
   recentMembers.innerHTML = tiles;
   recommendedMembers.innerHTML = tiles;
   if (partnerServices) {
-    partnerServices.innerHTML = partnerServiceImages.slice(0, 10).map(renderPartnerServiceTile).join('');
+    partnerServices.innerHTML = dataSets.partnerServices.slice(0, 10).map(renderPartnerServiceTile).join('');
   }
+}
+
+function renderInviteCode() {
+  document.querySelectorAll('[data-invite-code]').forEach((element) => {
+    element.textContent = inviteCode;
+    element.dataset.code = inviteCode;
+  });
 }
 
 function renderNoticeSlide(item) {
@@ -748,13 +749,13 @@ function handleAction(action, target) {
       showScreen('screen-search', 'member');
       break;
     case 'open-search-recent':
-      setTab('search', 'promotion');
+      setTab('search', 'member-search');
       resetPagination();
       updateTabs();
       showScreen('screen-search', 'member');
       break;
     case 'open-search-recommended':
-      setTab('search', 'promotion');
+      setTab('search', 'recommended');
       resetPagination();
       updateTabs();
       showScreen('screen-search', 'member');
@@ -772,7 +773,12 @@ function handleAction(action, target) {
       showScreen('screen-promo', 'member');
       break;
     case 'open-partner-services':
-      showDialog('提携サービス', '提携サービス一覧へ移動します。', 'OK');
+      showScreen('screen-partner-services', 'member');
+      break;
+    case 'open-partner-service-link':
+      if (target.dataset.url) {
+        window.open(target.dataset.url, '_blank', 'noopener');
+      }
       break;
     case 'open-login-settings':
       showScreen('screen-login-settings', 'member');
@@ -823,6 +829,7 @@ function handleAction(action, target) {
     case 'open-memo-search':
     case 'open-dm-search':
     case 'open-promo-search':
+    case 'open-partner-search':
     case 'open-admin-member-search':
     case 'open-admin-request-search':
     case 'open-admin-event-search':
@@ -840,6 +847,7 @@ function handleAction(action, target) {
     case 'open-memo-sort':
     case 'open-dm-sort':
     case 'open-promo-sort':
+    case 'open-partner-sort':
     case 'open-admin-member-sort':
     case 'open-admin-request-sort':
     case 'open-admin-event-sort':
@@ -851,11 +859,25 @@ function handleAction(action, target) {
     case 'open-admin-dm-sort':
       openDialog(dialogSort);
       break;
-    case 'open-invite-create':
-      showDialog('招待コード新規作成', '新規で招待コードを作成しますか？', '作成する');
+    case 'copy-invite-code': {
+      const code = target.dataset.code || inviteCode;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).then(() => {
+          showDialog('コピーしました', '招待コードをコピーしました。', 'OK');
+        });
+      } else {
+        showDialog('コピーに失敗しました', 'この環境ではコピーできません。', 'OK');
+      }
       break;
-    case 'open-invite-delete':
-      showDialog('招待コード削除', 'この招待コードを無効にしますか？', '削除する');
+    }
+    case 'open-detail-info-dev':
+      showScreen('screen-detail-info', 'guest');
+      break;
+    case 'open-password-reset-dev':
+      showScreen('screen-password-reset', 'guest');
+      break;
+    case 'open-tutorial-dev':
+      showScreen('screen-tutorial-1', 'guest');
       break;
     case 'open-memo-delete':
       showDialog('メモ削除', '削除しますか？', '削除する');
@@ -1117,6 +1139,7 @@ const splash = document.getElementById('splash-screen');
 renderHeaderAds();
 renderHomeMembers();
 renderAllLists();
+renderInviteCode();
 startSlideshow(document.getElementById('notice-slideshow'), notices, renderNoticeSlide, 3500);
 updateTabs();
 bindEvents();
