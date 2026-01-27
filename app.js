@@ -47,11 +47,22 @@ const promoThumbs = [
   'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=120&q=80',
 ];
 
+const promoBase = Array.from({ length: 50 }, (_, i) => ({
+  id: i + 1,
+  title: `投稿タイトル ${i + 1}`,
+  date: `2024/07/${(i % 28) + 1}`,
+  thumb: promoThumbs[i % promoThumbs.length],
+  authorName: `投稿者 ${i + 1}`,
+  authorAvatar: avatarImages[i % avatarImages.length],
+  badge: '★',
+}));
+
 const dataSets = {
   members: Array.from({ length: 50 }, (_, i) => ({
     id: i + 1,
     name: `会員 ${i + 1}`,
     age: `${20 + (i % 30)}代`,
+    gender: i % 2 === 0 ? '女性' : '男性',
     region: ['東京', '大阪', '福岡'][i % 3],
     industry: ['IT', '医療', '教育', '製造'][i % 4],
     avatar: avatarImages[i % avatarImages.length],
@@ -69,12 +80,25 @@ const dataSets = {
     title: `メモタイトル ${i + 1}`,
     avatar: avatarImages[(i + 2) % avatarImages.length],
   })),
-  promos: Array.from({ length: 50 }, (_, i) => ({
-    id: i + 1,
-    title: `投稿タイトル ${i + 1}`,
-    date: `2024/07/${(i % 28) + 1}`,
-    type: ['タイムライン', 'お知らせ', '宣伝', '広告'][i % 4],
-    thumb: promoThumbs[i % promoThumbs.length],
+  promoPromotion: promoBase.map((item) => ({
+    ...item,
+    detailTarget: 'promotion',
+  })),
+  promoNews: promoBase.map((item) => ({
+    ...item,
+    detailTarget: 'news',
+  })),
+  promoHistoryPromotion: promoBase.map((item, index) => ({
+    ...item,
+    detailTarget: 'promotion-history',
+    status: index % 2 === 0 ? '承認済み' : '未承認',
+    hidden: index % 3 === 0,
+  })),
+  promoHistoryAds: promoBase.map((item, index) => ({
+    ...item,
+    detailTarget: 'ads-history',
+    status: index % 2 === 0 ? '承認済み' : '未承認',
+    hidden: index % 4 === 0,
   })),
   partnerServices: Array.from({ length: 50 }, (_, i) => ({
     id: i + 1,
@@ -190,26 +214,31 @@ const ads = [
     id: 1,
     image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=300&q=80',
     label: '広告 1',
+    url: 'https://example.com/ads/1',
   },
   {
     id: 2,
     image: 'https://images.unsplash.com/photo-1473181488821-2d23949a045a?auto=format&fit=crop&w=300&q=80',
     label: '広告 2',
+    url: 'https://example.com/ads/2',
   },
   {
     id: 3,
     image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=300&q=80',
     label: '広告 3',
+    url: 'https://example.com/ads/3',
   },
   {
     id: 4,
     image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=300&q=80',
     label: '広告 4',
+    url: 'https://example.com/ads/4',
   },
   {
     id: 5,
     image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=300&q=80',
     label: '広告 5',
+    url: 'https://example.com/ads/5',
   },
 ];
 
@@ -241,7 +270,7 @@ function showScreen(id, role = state.activeRole) {
       screen.classList.add('hidden');
     }
   });
-  const showHeader = id.startsWith('screen-admin') || id.startsWith('screen-member') || id.startsWith('screen-profile') || id.startsWith('screen-payment') || id.startsWith('screen-invite') || id.startsWith('screen-search') || id.startsWith('screen-dm') || id.startsWith('screen-memo') || id.startsWith('screen-promo') || id.startsWith('screen-login-settings') || id.startsWith('screen-terms') || id.startsWith('screen-partner');
+  const showHeader = id.startsWith('screen-admin') || id.startsWith('screen-member') || id.startsWith('screen-profile') || id.startsWith('screen-payment') || id.startsWith('screen-invite') || id.startsWith('screen-search') || id.startsWith('screen-dm') || id.startsWith('screen-memo') || id.startsWith('screen-promo') || id.startsWith('screen-login-settings') || id.startsWith('screen-terms') || id.startsWith('screen-partner') || id.startsWith('screen-verify');
   header.classList.toggle('hidden', !showHeader);
   footer.classList.toggle('hidden', !(showHeader && role === 'member' && !id.startsWith('screen-terms-admin') && !id.startsWith('screen-admin')));
   closeDialogs();
@@ -292,7 +321,8 @@ function renderMemberTile(member) {
         <span class="absolute -bottom-2 -right-2 inline-flex h-6 w-6 items-center justify-center rounded-full bg-amber-400 text-xs font-bold text-white">${member.badge}</span>
       </div>
       <div class="mt-3 text-sm font-semibold">${member.name}</div>
-      <div class="text-xs text-slate-500">${member.age} / ${member.region} / ${member.industry}</div>
+      <div class="text-xs text-slate-500">${member.age} / ${member.gender} / ${member.region}</div>
+      <div class="text-xs text-slate-500">${member.industry}</div>
     </button>
   `;
 }
@@ -342,7 +372,8 @@ function renderMemberDmSettings(row) {
       <img src="${row.avatar}" alt="${row.name}" class="h-12 w-12 rounded-full object-cover" />
       <div>
         <div class="text-sm font-semibold">${row.name}</div>
-        <div class="text-xs text-slate-500">ブロック済み / ${row.region} / ${row.industry}</div>
+        <div class="text-xs text-slate-500">ブロック済み / ${row.age} / ${row.gender} / ${row.region}</div>
+        <div class="text-xs text-slate-500">${row.industry}</div>
         <div class="text-xs text-slate-400">ブロック日：2024/07/${(row.id % 28) + 1}</div>
       </div>
       <div class="flex items-center gap-2">
@@ -355,14 +386,45 @@ function renderMemberDmSettings(row) {
 
 function renderPromoRow(item) {
   return `
-    <button data-action="open-member-promo-detail" class="grid min-w-full gap-4 rounded-2xl border border-slate-200 bg-white p-4 text-left md:grid-cols-[80px_1fr]">
+    <button data-action="open-member-promo-detail" data-detail="${item.detailTarget}" class="grid min-w-full gap-4 rounded-2xl border border-slate-200 bg-white p-4 text-left md:grid-cols-[80px_1fr]">
       <img src="${item.thumb}" alt="${item.title}" class="h-20 w-20 rounded-xl object-cover" />
       <div>
         <div class="text-sm font-semibold">${item.title}</div>
+        <div class="mt-2 flex items-center gap-2">
+          <img src="${item.authorAvatar}" alt="${item.authorName}" class="h-6 w-6 rounded-full object-cover" />
+          <span class="text-xs font-semibold">${item.authorName}</span>
+          <span class="inline-flex h-4 w-4 items-center justify-center rounded-full bg-amber-400 text-[10px] font-bold text-white">${item.badge}</span>
+        </div>
         <div class="mt-1 text-xs text-slate-500">投稿日：${item.date}</div>
-        <div class="mt-1 inline-flex rounded-full bg-slate-100 px-2 py-1 text-xs">${item.type}</div>
       </div>
     </button>
+  `;
+}
+
+function renderPromoHistoryRow(item) {
+  const statusLabel = item.status;
+  const isApproved = statusLabel === '承認済み';
+  const iconName = isApproved ? 'settings' : 'x-circle';
+  const iconAction = isApproved ? 'open-promo-visibility-options' : 'open-promo-cancel-confirm';
+  const hiddenLabel = item.hidden ? '非表示です' : '';
+  return `
+    <div class="grid min-w-full gap-4 rounded-2xl border border-slate-200 bg-white p-4 text-left md:grid-cols-[80px_1fr_auto]">
+      <button data-action="open-member-promo-detail" data-detail="${item.detailTarget}" class="contents">
+        <img src="${item.thumb}" alt="${item.title}" class="h-20 w-20 rounded-xl object-cover" />
+        <div>
+          <div class="text-sm font-semibold">${item.title}</div>
+          <div class="mt-2 flex items-center gap-2">
+            <img src="${item.authorAvatar}" alt="${item.authorName}" class="h-6 w-6 rounded-full object-cover" />
+            <span class="text-xs font-semibold">${item.authorName}</span>
+            <span class="inline-flex h-4 w-4 items-center justify-center rounded-full bg-amber-400 text-[10px] font-bold text-white">${item.badge}</span>
+          </div>
+          <div class="mt-1 text-xs text-slate-500">投稿日：${item.date}</div>
+          <div class="mt-2 text-xs font-semibold text-slate-700">${statusLabel}</div>
+          ${hiddenLabel ? `<div class="mt-1 text-xs text-rose-500">${hiddenLabel}</div>` : ''}
+        </div>
+      </button>
+      <button data-action="${iconAction}" class="h-10 w-10 rounded-xl border border-slate-200 text-slate-600"><i data-lucide="${iconName}" class="h-4 w-4"></i></button>
+    </div>
   `;
 }
 
@@ -513,10 +575,10 @@ function renderAllLists() {
     'memo': [dataSets.memos, renderMemoCard],
     'dm-main': [adminData.dm, renderMemberDm],
     'dm-settings': [dataSets.members, renderMemberDmSettings],
-    'promo-timeline': [dataSets.promos, renderPromoRow],
-    'promo-news': [dataSets.promos, renderPromoRow],
-    'promo-promotion': [dataSets.promos, renderPromoRow],
-    'promo-ads': [dataSets.promos, renderPromoRow],
+    'promo-promotion': [dataSets.promoPromotion, renderPromoRow],
+    'promo-news': [dataSets.promoNews, renderPromoRow],
+    'promo-history': [dataSets.promoHistoryPromotion, renderPromoHistoryRow],
+    'promo-ads-history': [dataSets.promoHistoryAds, renderPromoHistoryRow],
     'partner-services': [dataSets.partnerServices, renderPartnerServiceTile],
     'admin-members': [adminData.members, renderAdminRow],
     'admin-requests': [adminData.requests, renderAdminRequest],
@@ -561,8 +623,10 @@ function renderHomeMembers() {
 
 function renderInviteCode() {
   document.querySelectorAll('[data-invite-code]').forEach((element) => {
-    element.textContent = inviteCode;
     element.dataset.code = inviteCode;
+  });
+  document.querySelectorAll('[data-invite-code-text]').forEach((element) => {
+    element.textContent = inviteCode;
   });
 }
 
@@ -580,7 +644,7 @@ function renderNoticeSlide(item) {
 
 function renderAdSlide(item) {
   return `
-    <button class="ad-slide-button">
+    <button class="ad-slide-button" data-action="open-ad-link" data-url="${item.url}">
       <span class="ad-slide-frame">
         <img src="${item.image}" alt="${item.label}" class="ad-slide-image" />
       </span>
@@ -634,11 +698,18 @@ function startSlideshow(container, items, renderer, interval = 4000) {
   }, interval);
 }
 
-function showDialog(title, message, primaryText = 'OK') {
+function showDialog(title, message, primaryText = 'OK', options = {}) {
   dialogTitle.textContent = title;
   dialogMessage.textContent = message;
   const primaryButton = dialogGeneric.querySelector('[data-action="dialog-primary"]');
+  const secondaryButton = dialogGeneric.querySelector('[data-action="dialog-close"]');
   primaryButton.textContent = primaryText;
+  dialogGeneric.dataset.nextAction = options.nextAction || '';
+  if (options.secondary === false) {
+    secondaryButton.classList.add('hidden');
+  } else {
+    secondaryButton.classList.remove('hidden');
+  }
   openDialog(dialogGeneric);
 }
 
@@ -718,6 +789,9 @@ function handleAction(action, target) {
     case 'open-password-reset':
       showScreen('screen-password-reset-request', 'guest');
       break;
+    case 'send-password-reset':
+      showDialog('送信しました', '送信しました。メールをご確認ください', 'OK', { secondary: false, nextAction: 'reload' });
+      break;
     case 'password-reset-submit':
       showScreen('screen-password-reset-done', 'guest');
       break;
@@ -737,7 +811,10 @@ function handleAction(action, target) {
       showScreen('screen-verify', 'member');
       break;
     case 'submit-verify':
-      showDialog('送信完了', '送信しました', 'OK');
+      showDialog('送信完了', '送信しました', 'OK', { secondary: false, nextAction: 'verify-complete' });
+      break;
+    case 'save-profile-edit':
+      showDialog('変更しました', 'プロフィール情報を変更しました。', 'OK', { secondary: false });
       break;
     case 'open-payment-info':
       showScreen('screen-payment-info', 'member');
@@ -769,6 +846,22 @@ function handleAction(action, target) {
     case 'open-memo-detail':
       showScreen('screen-memo-detail', 'member');
       break;
+    case 'open-memo-dialog':
+      if (state.activeScreen === 'screen-memo' || state.activeScreen === 'screen-memo-detail') {
+        closeDialogs();
+      } else {
+        openDialog(dialogMemoList);
+      }
+      break;
+    case 'open-memo-detail-dialog':
+      closeDialogs();
+      openDialog(document.getElementById('dialog-memo-detail'));
+      break;
+    case 'open-ad-link':
+      if (target.dataset.url) {
+        window.open(target.dataset.url, '_blank', 'noopener');
+      }
+      break;
     case 'open-promo':
       showScreen('screen-promo', 'member');
       break;
@@ -782,6 +875,26 @@ function handleAction(action, target) {
       break;
     case 'open-login-settings':
       showScreen('screen-login-settings', 'member');
+      break;
+    case 'open-member-leave':
+      openDialog(document.getElementById('dialog-member-leave-confirm'));
+      break;
+    case 'toggle-password-change': {
+      const fields = document.getElementById('login-password-fields');
+      if (fields) {
+        fields.classList.toggle('hidden', !target.checked);
+      }
+      break;
+    }
+    case 'open-login-settings-confirm':
+      openDialog(document.getElementById('dialog-login-settings-confirm'));
+      break;
+    case 'confirm-login-settings':
+      closeDialogs();
+      openDialog(document.getElementById('dialog-login-settings-complete'));
+      break;
+    case 'confirm-member-leave':
+      window.location.reload();
       break;
     case 'open-terms-member':
       showScreen('screen-terms-member', 'member');
@@ -805,9 +918,25 @@ function handleAction(action, target) {
       closeDialogs();
       openDialog(dialogDmReport);
       break;
+    case 'open-dm-report-confirm':
+      closeDialogs();
+      openDialog(document.getElementById('dialog-dm-report-confirm'));
+      break;
+    case 'confirm-dm-report':
+      closeDialogs();
+      showScreen('screen-dm', 'member');
+      break;
+    case 'back-dm-report':
+      closeDialogs();
+      openDialog(dialogDmReport);
+      break;
     case 'open-dm-block-confirm':
       closeDialogs();
       openDialog(dialogDmBlockConfirm);
+      break;
+    case 'confirm-dm-block':
+      closeDialogs();
+      showScreen('screen-dm', 'member');
       break;
     case 'open-dm-unblock-confirm':
       closeDialogs();
@@ -821,7 +950,10 @@ function handleAction(action, target) {
       closeDialogs();
       break;
     case 'logout':
-      showScreen('screen-login', 'guest');
+      openDialog(document.getElementById('dialog-logout-confirm'));
+      break;
+    case 'confirm-logout':
+      window.location.reload();
       break;
     case 'open-search-dialog':
     case 'open-member-search':
@@ -863,15 +995,22 @@ function handleAction(action, target) {
       const code = target.dataset.code || inviteCode;
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(code).then(() => {
-          showDialog('コピーしました', '招待コードをコピーしました。', 'OK');
+          showDialog('コピーしました', '招待コードをコピーしました。', 'OK', { secondary: false });
         });
       } else {
-        showDialog('コピーに失敗しました', 'この環境ではコピーできません。', 'OK');
+        showDialog('コピーに失敗しました', 'この環境ではコピーできません。', 'OK', { secondary: false });
       }
       break;
     }
     case 'open-detail-info-dev':
       showScreen('screen-detail-info', 'guest');
+      break;
+    case 'submit-detail-info':
+      openDialog(document.getElementById('dialog-detail-info-confirm'));
+      break;
+    case 'confirm-detail-info':
+      closeDialogs();
+      showScreen('screen-register-complete', 'guest');
       break;
     case 'open-password-reset-dev':
       showScreen('screen-password-reset', 'guest');
@@ -975,8 +1114,28 @@ function handleAction(action, target) {
     case 'open-new-promo-post':
       showScreen('screen-promo-post', 'member');
       break;
+    case 'submit-promo-post':
+      openDialog(document.getElementById('dialog-promo-post-confirm'));
+      break;
+    case 'confirm-promo-post':
+      closeDialogs();
+      setTab('promo', 'history-promotion');
+      resetPagination();
+      updateTabs();
+      showScreen('screen-promo', 'member');
+      break;
     case 'open-new-ad-application':
       showScreen('screen-promo-ad-application', 'member');
+      break;
+    case 'submit-promo-ad':
+      openDialog(document.getElementById('dialog-promo-ad-confirm'));
+      break;
+    case 'confirm-promo-ad':
+      closeDialogs();
+      setTab('promo', 'history-ads');
+      resetPagination();
+      updateTabs();
+      showScreen('screen-promo', 'member');
       break;
     case 'open-stripe':
       showDialog('Stripe', '別ウィンドウでStripe画面に移動します。', 'OK');
@@ -984,22 +1143,65 @@ function handleAction(action, target) {
     case 'open-profile-dialog':
       openProfileDialog(false);
       break;
+    case 'toggle-profile-action': {
+      const isActive = target.classList.toggle('is-active');
+      target.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      break;
+    }
     case 'close-profile-dialog':
       closeDialogs();
-      break;
-    case 'open-memo-dialog':
-      closeDialogs();
-      openDialog(dialogMemoList);
       break;
     case 'close-memo-dialog':
       closeDialogs();
       break;
     case 'create-memo-from-dialog':
       closeDialogs();
-      showScreen('screen-memo-detail', 'member');
+      openDialog(document.getElementById('dialog-memo-detail'));
       break;
     case 'open-member-promo-detail':
-      showScreen('screen-promo-detail', 'member');
+      switch (target.dataset.detail) {
+        case 'promotion':
+          showScreen('screen-promo-detail-promotion', 'member');
+          break;
+        case 'news':
+          showScreen('screen-promo-detail-news', 'member');
+          break;
+        case 'promotion-history':
+          showScreen('screen-promo-detail-history-promotion', 'member');
+          break;
+        case 'ads-history':
+          showScreen('screen-promo-detail-history-ads', 'member');
+          break;
+        default:
+          showScreen('screen-promo-detail-news', 'member');
+          break;
+      }
+      break;
+    case 'open-promo-cancel-confirm':
+      openDialog(document.getElementById('dialog-promo-cancel-confirm'));
+      break;
+    case 'confirm-promo-cancel':
+      closeDialogs();
+      showScreen('screen-promo', 'member');
+      break;
+    case 'open-promo-visibility-options':
+      openDialog(document.getElementById('dialog-promo-visibility-options'));
+      break;
+    case 'open-promo-visibility-confirm':
+      closeDialogs();
+      openDialog(document.getElementById('dialog-promo-visibility-confirm'));
+      break;
+    case 'confirm-promo-visibility':
+      closeDialogs();
+      showScreen('screen-promo', 'member');
+      break;
+    case 'open-promo-delete-confirm':
+      closeDialogs();
+      openDialog(document.getElementById('dialog-promo-delete-confirm'));
+      break;
+    case 'confirm-promo-delete':
+      closeDialogs();
+      showScreen('screen-promo', 'member');
       break;
     case 'open-dm-detail':
       showScreen('screen-dm-detail', 'member');
@@ -1049,10 +1251,20 @@ function handleAction(action, target) {
       closeDialogs();
       break;
     case 'dialog-primary':
-      closeDialogs();
+      {
+        const nextAction = dialogGeneric.dataset.nextAction;
+        closeDialogs();
+        dialogGeneric.dataset.nextAction = '';
+        if (nextAction === 'verify-complete') {
+          showScreen('screen-profile', 'member');
+        }
+        if (nextAction === 'reload') {
+          window.location.reload();
+        }
+      }
       break;
     case 'complete-tutorial':
-      showScreen('screen-payment-setup', 'member');
+      showScreen('screen-member-home', 'member');
       break;
     case 'next-tutorial':
       showScreen(target.dataset.next, 'member');

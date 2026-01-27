@@ -334,6 +334,23 @@ body {
   pointer-events: none;
 }
 
+.profile-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.profile-action.is-active {
+  border-color: #0f172a;
+  background: #0f172a;
+  color: #fff;
+}
+
+.profile-action.is-active svg {
+  color: #fff;
+}
+
 #overlay.hidden,
 .modal.hidden {
   display: none;
