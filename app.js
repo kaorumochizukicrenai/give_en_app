@@ -6,6 +6,7 @@ const memberFooterAds = document.getElementById('footer-ads');
 const bannerAds = document.getElementById('banner-ads');
 const recentMembers = document.getElementById('recent-members');
 const recommendedMembers = document.getElementById('recommended-members');
+const partnerServices = document.getElementById('partner-services');
 
 const dialogGeneric = document.getElementById('dialog-generic');
 const dialogTitle = document.getElementById('dialog-title');
@@ -42,6 +43,19 @@ const promoThumbs = [
   'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=120&q=80',
   'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=120&q=80',
   'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=120&q=80',
+];
+
+const partnerServiceImages = [
+  'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=240&q=80',
+  'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=240&q=80',
+  'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=240&q=80',
+  'https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=240&q=80',
+  'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=240&q=80',
+  'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=240&q=80',
+  'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=240&q=80',
+  'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=240&q=80',
+  'https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=240&q=80',
+  'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=240&q=80',
 ];
 
 const dataSets = {
@@ -207,7 +221,7 @@ const ads = [
 const tabs = {
   login: 'login',
   profile: 'favorite',
-  search: 'member-search',
+  search: 'promotion',
   dm: 'dm',
   promo: 'timeline',
 };
@@ -358,6 +372,14 @@ function renderPromoRow(item) {
   `;
 }
 
+function renderPartnerServiceTile(image, index) {
+  return `
+    <button class="partner-tile">
+      <img src="${image}" alt="提携サービス ${index + 1}" class="partner-tile__image" />
+    </button>
+  `;
+}
+
 function renderAdminRow(row) {
   return `
     <div class="grid items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 md:grid-cols-5">
@@ -490,9 +512,10 @@ function renderAllLists() {
     'profile-1on1': [dataSets.members, renderMemberTile],
     'profile-follow': [dataSets.members, renderMemberTile],
     'profile-follower': [dataSets.members, renderMemberTile],
-    'search-member': [dataSets.members, renderMemberTile],
-    'search-recommended': [dataSets.members, renderMemberTile],
-    'search-new': [dataSets.members, renderMemberTile],
+    'search-promotion': [dataSets.promos, renderPromoRow],
+    'search-news': [dataSets.promos, renderPromoRow],
+    'search-ads': [dataSets.promos, renderPromoRow],
+    'search-history': [dataSets.promos, renderPromoRow],
     'invite': [dataSets.invites, renderInviteRow],
     'memo': [dataSets.memos, renderMemoCard],
     'dm-main': [adminData.dm, renderMemberDm],
@@ -537,6 +560,9 @@ function renderHomeMembers() {
   const tiles = dataSets.members.slice(0, 8).map(renderMemberTile).join('');
   recentMembers.innerHTML = tiles;
   recommendedMembers.innerHTML = tiles;
+  if (partnerServices) {
+    partnerServices.innerHTML = partnerServiceImages.slice(0, 10).map(renderPartnerServiceTile).join('');
+  }
 }
 
 function renderNoticeSlide(item) {
@@ -722,13 +748,13 @@ function handleAction(action, target) {
       showScreen('screen-search', 'member');
       break;
     case 'open-search-recent':
-      setTab('search', 'member-search');
+      setTab('search', 'promotion');
       resetPagination();
       updateTabs();
       showScreen('screen-search', 'member');
       break;
     case 'open-search-recommended':
-      setTab('search', 'recommended');
+      setTab('search', 'promotion');
       resetPagination();
       updateTabs();
       showScreen('screen-search', 'member');
@@ -744,6 +770,9 @@ function handleAction(action, target) {
       break;
     case 'open-promo':
       showScreen('screen-promo', 'member');
+      break;
+    case 'open-partner-services':
+      showDialog('提携サービス', '提携サービス一覧へ移動します。', 'OK');
       break;
     case 'open-login-settings':
       showScreen('screen-login-settings', 'member');
