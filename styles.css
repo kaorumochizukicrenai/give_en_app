@@ -366,10 +366,10 @@ textarea {
 .dm-memo-panel {
   position: fixed;
   left: 50%;
-  width: min(100%, 720px);
+  width: min(100%, 950px);
   bottom: 7.1rem;
   height: calc(5.5rem * 3);
-  padding: 1rem 1.5rem;
+  padding: 1rem 1rem;
   z-index: 30;
   transform: translateX(-50%);
 }
@@ -381,6 +381,16 @@ textarea {
   background: #fff;
   padding: 1.25rem;
   box-shadow: 0 12px 30px rgba(15, 23, 42, 0.2);
+}
+
+.dm-memo-list-scroll {
+  height: 154px;
+  overflow-y: auto;
+}
+
+.dm-memo-textarea {
+  margin-top: 0;
+  height: 154px;
 }
 
 #dm-memo-detail-panel {

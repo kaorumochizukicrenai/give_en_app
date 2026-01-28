@@ -293,11 +293,7 @@
                   <div class="mt-1 text-right text-xs text-slate-400">タップでコピーできます</div>
                 </div>
               </div>
-              <div class="flex flex-col gap-3">
-                <button data-action="open-profile-preview" class="rounded-xl bg-slate-900 px-4 py-3 text-white">プロフィールプレビュー</button>
-                <button data-action="open-profile-edit" class="rounded-xl border border-slate-300 px-4 py-3">プロフィール編集</button>
-                <button data-action="open-verify" class="rounded-xl border border-slate-300 px-4 py-3">本人確認書類を提出</button>
-              </div>
+              <div class="flex flex-col gap-3"></div>
             </div>
           </div>
 
@@ -406,11 +402,7 @@
                   <div class="mt-1 text-right text-xs text-slate-400">タップでコピーできます</div>
                 </div>
               </div>
-              <div class="flex flex-col gap-3">
-                <button data-action="open-profile-preview" class="rounded-xl bg-slate-900 px-4 py-3 text-white">プロフィールプレビュー</button>
-                <button data-action="open-profile-edit" class="rounded-xl border border-slate-300 px-4 py-3">プロフィール編集</button>
-                <button data-action="open-verify" class="rounded-xl border border-slate-300 px-4 py-3">本人確認書類を提出</button>
-              </div>
+              <div class="flex flex-col gap-3"></div>
             </div>
             <div class="mt-6 flex border-b border-slate-200 sticky-row">
               <button data-action="profile-tab" data-tab="favorite" class="tab px-1 py-2 w-full text-sm font-semibold">お気に入り</button>
@@ -1072,28 +1064,33 @@
           </div>
             <div id="dm-memo-list-panel" class="dm-memo-panel hidden">
               <div class="dm-memo-panel__card">
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between gap-3">
                   <div class="text-sm font-semibold">メモ一覧</div>
+                  <button data-action="open-dm-memo-detail" class="rounded-xl border border-slate-300 px-3 py-2 text-sm">新規追加</button>
                   <button data-action="close-dm-memo-list" class="rounded-full bg-slate-100 p-2"><i data-lucide="x" class="h-4 w-4"></i></button>
                 </div>
-                <button data-action="open-dm-memo-detail" class="mt-4 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm">新規追加</button>
-                <div class="mt-4 space-y-2">
+                <div class="mt-4 space-y-2 dm-memo-list-scroll">
                   <button data-action="open-dm-memo-detail" class="w-full rounded-xl border border-slate-200 px-3 py-3 text-left text-sm">打ち合わせメモ</button>
                   <button data-action="open-dm-memo-detail" class="w-full rounded-xl border border-slate-200 px-3 py-3 text-left text-sm">今後の相談事項</button>
                   <button data-action="open-dm-memo-detail" class="w-full rounded-xl border border-slate-200 px-3 py-3 text-left text-sm">次回のアクション</button>
+                  <button data-action="open-dm-memo-detail" class="w-full rounded-xl border border-slate-200 px-3 py-3 text-left text-sm">商談メモ</button>
+                  <button data-action="open-dm-memo-detail" class="w-full rounded-xl border border-slate-200 px-3 py-3 text-left text-sm">企画の進捗</button>
+                  <button data-action="open-dm-memo-detail" class="w-full rounded-xl border border-slate-200 px-3 py-3 text-left text-sm">確認事項</button>
+                  <button data-action="open-dm-memo-detail" class="w-full rounded-xl border border-slate-200 px-3 py-3 text-left text-sm">次回面談</button>
+                  <button data-action="open-dm-memo-detail" class="w-full rounded-xl border border-slate-200 px-3 py-3 text-left text-sm">請求メモ</button>
+                  <button data-action="open-dm-memo-detail" class="w-full rounded-xl border border-slate-200 px-3 py-3 text-left text-sm">提案要点</button>
+                  <button data-action="open-dm-memo-detail" class="w-full rounded-xl border border-slate-200 px-3 py-3 text-left text-sm">フォローアップ</button>
                 </div>
               </div>
             </div>
             <div id="dm-memo-detail-panel" class="dm-memo-panel hidden">
               <div class="dm-memo-panel__card">
-                <div class="flex items-center justify-between">
+                <div class="grid grid-cols-[auto_1fr] items-center gap-3">
                   <button data-action="close-dm-memo-detail" class="rounded-xl border border-slate-300 px-3 py-2 text-sm">戻る</button>
-                  <div class="text-sm font-semibold">メモ詳細</div>
-                  <button data-action="close-dm-memo-detail" class="rounded-full bg-slate-100 p-2"><i data-lucide="x" class="h-4 w-4"></i></button>
+                  <input type="text" placeholder="タイトル" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm" />
                 </div>
-                <div class="mt-4 space-y-4">
-                  <input type="text" placeholder="タイトル" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm" />
-                  <textarea rows="6" placeholder="本文" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm"></textarea>
+                <div class="mt-4">
+                  <textarea rows="6" placeholder="本文" class="dm-memo-textarea w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm"></textarea>
                 </div>
                 <button class="mt-4 w-full rounded-xl bg-slate-900 px-4 py-3 text-white">保存</button>
               </div>
