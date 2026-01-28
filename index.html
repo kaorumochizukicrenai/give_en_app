@@ -62,7 +62,6 @@
             <p id="password-reset-error" class="hidden text-sm text-rose-500">入力内容に誤りがあります。</p>
             <div class="flex flex-col gap-3 pt-2">
               <button data-action="password-reset-submit" class="rounded-xl bg-slate-900 px-4 py-3 text-white">パスワードを更新する</button>
-              <button data-action="back-to-login" class="rounded-xl border border-slate-300 px-4 py-3">戻る</button>
             </div>
           </div>
           <div class="mt-6 flex justify-end">
@@ -569,30 +568,49 @@
             <p class="mt-2 text-sm text-rose-500">月額更新費が未払いです。</p>
             <div class="mt-6 flex flex-col gap-3">
               <button data-action="open-stripe" class="rounded-xl bg-slate-900 px-4 py-3 text-white">支払方法設定</button>
-              <button data-action="open-stripe" class="rounded-xl border border-slate-300 px-4 py-3">従量課金チャージ</button>
-              <button data-action="open-payment-history" class="rounded-xl border border-slate-300 px-4 py-3">支払履歴一覧</button>
+              <button data-action="open-charge" class="rounded-xl border border-slate-300 px-4 py-3">従量課金チャージ</button>
+              <button data-action="open-point-consumption" class="rounded-xl border border-slate-300 px-4 py-3">ポイント消費履歴</button>
+              <button data-action="open-stripe" class="rounded-xl border border-slate-300 px-4 py-3">支払履歴一覧</button>
             </div>
           </div>
         </div>
       </section>
 
-      <section id="screen-payment-history" class="screen hidden min-h-screen px-4 pt-24">
+      <section id="screen-point-consumption" class="screen hidden min-h-screen px-4 pt-24">
         <div class="mx-auto max-w-6xl pb-32">
           <div class="action-bar">
             <button data-action="open-payment-info" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
             <div class="flex gap-2 sticky-row">
-              <button data-action="open-payment-search" class="rounded-xl border border-slate-300 px-3 py-2">検索</button>
-              <button data-action="open-payment-sort" class="rounded-xl border border-slate-300 px-3 py-2">並び替え</button>
+              <button data-action="open-point-consumption-search" class="rounded-xl border border-slate-300 px-3 py-2">検索</button>
+              <button data-action="open-point-consumption-sort" class="rounded-xl border border-slate-300 px-3 py-2">並び替え</button>
             </div>
             <button data-action="scroll-top" class="rounded-xl border border-slate-300 px-3 py-2 action-btn">topに戻る</button>
           </div>
           <div class="mt-8 rounded-3xl bg-white/90 p-8 shadow">
             <div class="flex flex-wrap items-center justify-between gap-3">
-              <h1 class="page-title text-2xl font-semibold">支払履歴一覧</h1>
-              <button class="rounded-xl border border-slate-300 px-4 py-2 text-sm">ポイント履歴</button>
+              <h1 class="page-title text-2xl font-semibold">ポイント消費履歴</h1>
             </div>
-            <div class="mt-6" id="payment-history-list" MA-database data-list="payment-history"></div>
-            <button data-action="load-more" data-target="payment-history" class="mt-4 w-full rounded-xl border border-slate-300 px-4 py-3">次の30件を表示</button>
+            <div class="mt-6" id="point-consumption-list" MA-database data-list="point-consumption"></div>
+            <button data-action="load-more" data-target="point-consumption" class="mt-4 w-full rounded-xl border border-slate-300 px-4 py-3">次の30件を表示</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-charge" class="screen hidden min-h-screen px-4 pt-24">
+        <div class="mx-auto max-w-4xl pb-32">
+          <div class="action-bar">
+            <button data-action="open-payment-info" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
+            <button data-action="scroll-top" class="rounded-xl border border-slate-300 px-3 py-2 action-btn">topに戻る</button>
+          </div>
+          <div class="mt-8 rounded-3xl bg-white/90 p-8 shadow">
+            <h1 class="page-title text-2xl font-semibold">従量課金チャージ</h1>
+            <p class="mt-2 text-sm text-slate-600">現在の保有ポイント：12,450pt</p>
+            <div class="mt-6 grid gap-3">
+              <button data-action="open-charge-confirm" data-amount="1000" class="rounded-xl border border-slate-300 px-4 py-3">1,000円</button>
+              <button data-action="open-charge-confirm" data-amount="2000" class="rounded-xl border border-slate-300 px-4 py-3">2,000円</button>
+              <button data-action="open-charge-confirm" data-amount="3000" class="rounded-xl border border-slate-300 px-4 py-3">3,000円</button>
+              <button data-action="open-charge-confirm" data-amount="5000" class="rounded-xl border border-slate-300 px-4 py-3">5,000円</button>
+            </div>
           </div>
         </div>
       </section>
@@ -1044,14 +1062,14 @@
             </div>
           </div>
           <div class="relative">
-            <div class="mt-8 space-y-4 overflow-y-auto max-h-[calc(100vh-20.6rem)]" id="member-dm-messages"></div>
-            <div class="fixed bottom-[7.1rem] left-0 right-0 z-20 bg-white/80 px-4 py-4 backdrop-blur">
-              <div class="mx-auto flex max-w-4xl items-center gap-3">
-                <button data-action="open-dm-memo" class="rounded-xl border border-slate-300 px-3 py-2"><i data-lucide="notebook" class="h-4 w-4"></i></button>
-                <textarea rows="1" class="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-3" placeholder="メッセージを入力"></textarea>
-                <button class="rounded-xl bg-slate-900 px-3 py-2 text-white"><i data-lucide="send" class="h-4 w-4"></i></button>
-              </div>
+          <div class="mt-8 space-y-4 overflow-y-auto max-h-[calc(100vh-20.6rem)]" id="member-dm-messages"></div>
+          <div class="fixed bottom-[7.1rem] left-0 right-0 z-20 bg-white/80 px-4 py-4 backdrop-blur dm-input-bar">
+            <div class="mx-auto flex max-w-4xl items-center gap-3">
+              <button data-action="open-dm-memo" class="rounded-xl border border-slate-300 px-3 py-2"><i data-lucide="notebook" class="h-4 w-4"></i></button>
+              <textarea rows="1" class="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-3" placeholder="メッセージを入力"></textarea>
+              <button class="rounded-xl bg-slate-900 px-3 py-2 text-white"><i data-lucide="send" class="h-4 w-4"></i></button>
             </div>
+          </div>
             <div id="dm-memo-list-panel" class="dm-memo-panel hidden">
               <div class="dm-memo-panel__card">
                 <div class="flex items-center justify-between">
@@ -2008,6 +2026,17 @@
         <p class="mt-2 text-sm text-slate-600">削除しますか？</p>
         <div class="mt-6 flex gap-3">
           <button data-action="confirm-promo-delete" class="flex-1 rounded-xl bg-slate-900 px-4 py-3 text-white">削除する</button>
+          <button data-action="dialog-close" class="flex-1 rounded-xl border border-slate-300 px-4 py-3">戻る</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialog-charge-confirm" class="modal hidden">
+      <div class="modal-card">
+        <h2 class="page-title text-lg font-semibold">購入確認</h2>
+        <p class="mt-2 text-sm text-slate-600"><span id="charge-confirm-amount">0</span>円分ポイントを購入しますか？</p>
+        <div class="mt-6 flex gap-3">
+          <button data-action="confirm-charge" class="flex-1 rounded-xl bg-slate-900 px-4 py-3 text-white">購入する</button>
           <button data-action="dialog-close" class="flex-1 rounded-xl border border-slate-300 px-4 py-3">戻る</button>
         </div>
       </div>

@@ -90,12 +90,12 @@ const dataSets = {
     ...item,
     detailTarget: 'news',
   })),
-  paymentHistory: Array.from({ length: 50 }, (_, i) => ({
+  pointConsumption: Array.from({ length: 50 }, (_, i) => ({
     id: i + 1,
-    type: i % 2 === 0 ? '月額更新費' : '従量課金',
-    amount: `¥${(i + 1) * 100}`,
+    title: `ポイント消費 ${i + 1}`,
+    amount: `-${(i + 1) * 50}pt`,
     date: `2024/07/${(i % 28) + 1}`,
-    status: i % 2 === 0 ? '完了' : '未払い',
+    note: i % 2 === 0 ? '広告配信' : 'イベント申請',
   })),
   promoHistoryPromotion: promoBase.map((item, index) => ({
     ...item,
@@ -130,6 +130,8 @@ const memberMessages = Array.from({ length: 50 }, (_, i) => ({
   type: i % 2 === 0 ? 'in' : 'out',
   avatar: 'https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=120&q=80',
   text: `メッセージ内容 ${i + 1}`,
+  date: `2024/07/${(i % 28) + 1} 12:${(i % 60).toString().padStart(2, '0')}`,
+  read: i % 3 === 0,
 }));
 
 const adminMessages = Array.from({ length: 50 }, (_, i) => ({
@@ -279,7 +281,21 @@ function showScreen(id, role = state.activeRole) {
       screen.classList.add('hidden');
     }
   });
-  const showHeader = id.startsWith('screen-admin') || id.startsWith('screen-member') || id.startsWith('screen-profile') || id.startsWith('screen-payment') || id.startsWith('screen-invite') || id.startsWith('screen-search') || id.startsWith('screen-dm') || id.startsWith('screen-memo') || id.startsWith('screen-promo') || id.startsWith('screen-login-settings') || id.startsWith('screen-terms') || id.startsWith('screen-partner') || id.startsWith('screen-verify');
+  const showHeader = id.startsWith('screen-admin')
+    || id.startsWith('screen-member')
+    || id.startsWith('screen-profile')
+    || id.startsWith('screen-payment')
+    || id.startsWith('screen-point-consumption')
+    || id.startsWith('screen-charge')
+    || id.startsWith('screen-invite')
+    || id.startsWith('screen-search')
+    || id.startsWith('screen-dm')
+    || id.startsWith('screen-memo')
+    || id.startsWith('screen-promo')
+    || id.startsWith('screen-login-settings')
+    || id.startsWith('screen-terms')
+    || id.startsWith('screen-partner')
+    || id.startsWith('screen-verify');
   header.classList.toggle('hidden', !showHeader);
   footer.classList.toggle('hidden', !(showHeader && role === 'member' && !id.startsWith('screen-terms-admin') && !id.startsWith('screen-admin')));
   closeDialogs();
@@ -362,11 +378,13 @@ function renderMemoCard(memo) {
 }
 
 function renderMemberDm(row) {
+  const unreadLabel = row.id <= 5 ? '<div class="text-xs text-rose-500">未読メッセージあり</div>' : '';
   return `
     <div class="grid grid-cols-[56px_1fr_auto] items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4">
       <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=120&q=80" alt="${row.name}" class="h-12 w-12 rounded-full object-cover" />
       <button data-action="open-dm-detail" class="text-left">
         <div class="text-sm font-semibold">${row.name}</div>
+        ${unreadLabel}
         <div class="text-xs text-slate-500">最新メッセージの冒頭テキスト</div>
         <div class="text-xs text-slate-500">さらに続くテキストが表示されます。</div>
       </button>
@@ -556,13 +574,13 @@ function renderAdminPayment(row) {
   `;
 }
 
-function renderPaymentHistory(row) {
+function renderPointConsumption(row) {
   return `
     <div class="grid items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 md:grid-cols-4">
       <div class="text-sm">${row.date}</div>
-      <div class="text-sm font-semibold">${row.type}</div>
+      <div class="text-sm font-semibold">${row.title}</div>
       <div class="text-sm">${row.amount}</div>
-      <div class="text-sm text-slate-500">${row.status}</div>
+      <div class="text-sm text-slate-500">${row.note}</div>
     </div>
   `;
 }
@@ -606,7 +624,7 @@ function renderAllLists() {
     'promo-news': [dataSets.promoNews, renderPromoRow],
     'promo-history': [dataSets.promoHistoryPromotion, renderPromoHistoryRow],
     'promo-ads-history': [dataSets.promoHistoryAds, renderPromoHistoryRow],
-    'payment-history': [dataSets.paymentHistory, renderPaymentHistory],
+    'point-consumption': [dataSets.pointConsumption, renderPointConsumption],
     'partner-services': [dataSets.partnerServices, renderPartnerServiceTile],
     'admin-members': [adminData.members, renderAdminRow],
     'admin-requests': [adminData.requests, renderAdminRequest],
@@ -684,14 +702,22 @@ function renderMessageItem(message) {
   if (message.type === 'out') {
     return `
       <div class="flex justify-end">
-        <div class="rounded-2xl bg-slate-900 p-4 text-white shadow">${message.text}</div>
+        <div class="flex flex-col items-end gap-1">
+          <div class="rounded-2xl bg-slate-900 p-4 text-white shadow">${message.text}</div>
+          <div class="text-xs text-slate-400">送信日：${message.date} / ${message.read ? '既読' : '未読'}</div>
+        </div>
       </div>
     `;
   }
   return `
     <div class="flex gap-3">
-      <img src="${message.avatar}" alt="member" class="h-10 w-10 rounded-full" />
-      <div class="rounded-2xl bg-white/90 p-4 shadow">${message.text}</div>
+      <button data-action="open-profile-dialog" class="shrink-0">
+        <img src="${message.avatar}" alt="member" class="h-10 w-10 rounded-full" />
+      </button>
+      <div class="flex flex-col gap-1">
+        <div class="rounded-2xl bg-white/90 p-4 shadow">${message.text}</div>
+        <div class="text-xs text-slate-400">送信日：${message.date}</div>
+      </div>
     </div>
   `;
 }
@@ -847,8 +873,11 @@ function handleAction(action, target) {
     case 'open-payment-info':
       showScreen('screen-payment-info', 'member');
       break;
-    case 'open-payment-history':
-      showScreen('screen-payment-history', 'member');
+    case 'open-point-consumption':
+      showScreen('screen-point-consumption', 'member');
+      break;
+    case 'open-charge':
+      showScreen('screen-charge', 'member');
       break;
     case 'open-invite':
       showScreen('screen-invite', 'member');
@@ -933,6 +962,19 @@ function handleAction(action, target) {
     case 'open-terms-admin':
       showScreen('screen-terms-admin', 'admin');
       break;
+    case 'open-charge-confirm': {
+      const amount = target.dataset.amount || '';
+      const label = document.getElementById('charge-confirm-amount');
+      if (label) {
+        label.textContent = amount;
+      }
+      openDialog(document.getElementById('dialog-charge-confirm'));
+      break;
+    }
+    case 'confirm-charge':
+      closeDialogs();
+      showScreen('screen-payment-info', 'member');
+      break;
     case 'open-dm-memo':
       dmMemoListPanel?.classList.remove('hidden');
       dmMemoDetailPanel?.classList.add('hidden');
@@ -997,7 +1039,7 @@ function handleAction(action, target) {
     case 'open-memo-search':
     case 'open-dm-search':
     case 'open-promo-search':
-    case 'open-payment-search':
+    case 'open-point-consumption-search':
     case 'open-partner-search':
     case 'open-admin-member-search':
     case 'open-admin-request-search':
@@ -1016,7 +1058,7 @@ function handleAction(action, target) {
     case 'open-memo-sort':
     case 'open-dm-sort':
     case 'open-promo-sort':
-    case 'open-payment-sort':
+    case 'open-point-consumption-sort':
     case 'open-partner-sort':
     case 'open-admin-member-sort':
     case 'open-admin-request-sort':

@@ -334,6 +334,18 @@ body {
   pointer-events: none;
 }
 
+.dm-input-bar {
+  height: 5.5rem;
+}
+
+#member-dm-messages {
+  padding-bottom: 164px;
+}
+
+textarea {
+  resize: none;
+}
+
 .profile-action {
   display: flex;
   flex-direction: column;
@@ -351,27 +363,28 @@ body {
   color: #fff;
 }
 
-#dm-memo-detail-panel {
-  z-index: 40;
-}
-
 .dm-memo-panel {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
-  background: rgba(15, 23, 42, 0.2);
+  position: fixed;
+  left: 50%;
+  width: min(100%, 720px);
+  bottom: 7.1rem;
+  height: calc(5.5rem * 3);
+  padding: 1rem 1.5rem;
   z-index: 30;
+  transform: translateX(-50%);
 }
 
 .dm-memo-panel__card {
-  width: min(92vw, 360px);
-  border-radius: 1.5rem;
+  width: 100%;
+  height: 100%;
+  border-radius: 1.5rem 1.5rem 0 0;
   background: #fff;
-  padding: 1.5rem;
+  padding: 1.25rem;
   box-shadow: 0 12px 30px rgba(15, 23, 42, 0.2);
+}
+
+#dm-memo-detail-panel {
+  z-index: 40;
 }
 
 .promo-tile-grid {
