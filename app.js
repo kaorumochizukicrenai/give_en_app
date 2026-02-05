@@ -24,6 +24,9 @@ const dmMemoDetailPanel = document.getElementById('dm-memo-detail-panel');
 const detailPlanSelect = document.getElementById('detail-plan');
 const detailPlanPrice = document.getElementById('detail-plan-price');
 const detailInviteCodeInput = document.getElementById('detail-invite-code');
+const loginEmailInput = document.getElementById('login-email');
+const loginPasswordInput = document.getElementById('login-password');
+const loginError = document.getElementById('login-error');
 
 const inviteCode = 'give-A1b2C3d4';
 const vipInviteCode = 'VIP-2024';
@@ -272,6 +275,33 @@ const tabs = {
   dm: 'dm',
   promo: 'promotion',
 };
+
+function getExpoTokenFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('token_giveen20260205') || '';
+}
+
+function getStatusScreen() {
+  const params = new URLSearchParams(window.location.search);
+  const rawStatus = (params.get('status') || '').toLowerCase();
+  if (!rawStatus) return null;
+  if (rawStatus.includes('expired')) return 'screen-link-expired';
+  if (rawStatus.includes('reset')) return 'screen-password-reset';
+  if (rawStatus.includes('signup') || rawStatus.includes('verify')) return 'screen-detail-info';
+  return null;
+}
+
+async function apiFetch(path, options = {}) {
+  const response = await fetch(path, options);
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const error = new Error(data.message || 'API error');
+    error.status = response.status;
+    error.payload = data;
+    throw error;
+  }
+  return data;
+}
 
 function showScreen(id, role = state.activeRole) {
   const nextScreen = document.getElementById(id);
@@ -887,10 +917,86 @@ function toggleTabFrames(group, value) {
   });
 }
 
+function setLoginError(message) {
+  if (!loginError) return;
+  if (message) {
+    loginError.textContent = message;
+    loginError.classList.remove('hidden');
+  } else {
+    loginError.classList.add('hidden');
+  }
+}
+
+async function attemptLogin() {
+  const email = loginEmailInput?.value.trim() || '';
+  const password = loginPasswordInput?.value || '';
+  if (!email || !password) {
+    setLoginError('ログイン情報が間違っています。');
+    return;
+  }
+
+  setLoginError('');
+  showScreen('screen-loading', 'guest');
+  try {
+    const data = await apiFetch('/api/login.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password, expoToken: getExpoTokenFromUrl() }),
+    });
+    const role = data.user?.role || 'member';
+    const firstLogin = data.user?.first_login === 1;
+    if (role === 'admin') {
+      showScreen('screen-admin-home', 'admin');
+    } else if (firstLogin) {
+      showScreen('screen-tutorial-1', 'member');
+    } else {
+      showScreen('screen-member-home', 'member');
+    }
+  } catch (error) {
+    showScreen('screen-login', 'guest');
+    setLoginError('ログイン情報が間違っています。');
+  }
+}
+
+async function completeTutorial() {
+  try {
+    await apiFetch('/api/complete_tutorial.php', { method: 'POST' });
+  } catch (error) {
+    // ignore errors to keep UI flow smooth
+  }
+}
+
+async function bootstrapSession() {
+  const statusScreen = getStatusScreen();
+  if (statusScreen) {
+    showScreen(statusScreen, 'guest');
+    return;
+  }
+
+  const token = getExpoTokenFromUrl();
+  const query = token ? `?token=${encodeURIComponent(token)}` : '';
+  try {
+    const data = await apiFetch(`/api/bootstrap.php${query}`);
+    if (data.loggedIn && data.user) {
+      if (data.user.role === 'admin') {
+        showScreen('screen-admin-home', 'admin');
+      } else if (data.user.first_login === 1) {
+        showScreen('screen-tutorial-1', 'member');
+      } else {
+        showScreen('screen-member-home', 'member');
+      }
+    } else {
+      showScreen('screen-login', 'guest');
+    }
+  } catch (error) {
+    showScreen('screen-login', 'guest');
+  }
+}
+
 function handleAction(action, target) {
   switch (action) {
     case 'login':
-      showScreen('screen-member-home', 'member');
+      attemptLogin();
       break;
     case 'signup':
       showDialog('登録申請', '認証用のメールを送付しました', 'OK');
@@ -1086,7 +1192,11 @@ function handleAction(action, target) {
       openDialog(document.getElementById('dialog-logout-confirm'));
       break;
     case 'confirm-logout':
-      window.location.reload();
+      apiFetch('/api/logout.php', { method: 'POST' })
+        .catch(() => {})
+        .finally(() => {
+          window.location.reload();
+        });
       break;
     case 'open-search-dialog':
     case 'open-member-search':
@@ -1405,7 +1515,9 @@ function handleAction(action, target) {
       }
       break;
     case 'complete-tutorial':
-      showScreen('screen-member-home', 'member');
+      completeTutorial().finally(() => {
+        showScreen('screen-member-home', 'member');
+      });
       break;
     case 'next-tutorial':
       showScreen(target.dataset.next, 'member');
@@ -1517,5 +1629,5 @@ setTimeout(() => {
       splash.style.display = 'none';
     }, 600);
   }
-  showScreen(state.activeScreen, 'guest');
+  bootstrapSession();
 }, 2000);

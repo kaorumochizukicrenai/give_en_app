@@ -89,11 +89,11 @@
           <div id="login-tab-login" class="tab-panel mt-6 space-y-4">
             <div>
               <label class="text-sm font-medium">メールアドレス</label>
-              <input type="email" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3" />
+              <input id="login-email" type="email" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3" />
             </div>
             <div>
               <label class="text-sm font-medium">パスワード</label>
-              <input type="password" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3" />
+              <input id="login-password" type="password" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3" />
             </div>
             <p id="login-error" class="hidden text-sm text-rose-500">ログイン情報が間違っています。</p>
             <button data-action="login" class="w-full rounded-xl bg-slate-900 px-4 py-3 text-white">ログイン</button>
@@ -103,7 +103,7 @@
           <div id="login-tab-signup" class="tab-panel mt-6 hidden space-y-4">
             <div>
               <label class="text-sm font-medium">メールアドレス</label>
-              <input type="email" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3" />
+              <input id="signup-email" type="email" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3" />
             </div>
             <p class="text-sm text-slate-600">認証用のメールを送付するので、受け取れるメールアドレスをご入力ください。</p>
             <p id="signup-error" class="hidden text-sm text-rose-500">入力内容に誤りがあります。</p>
