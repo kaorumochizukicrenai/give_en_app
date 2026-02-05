@@ -228,6 +228,21 @@ body {
   top: 10rem;
 }
 
+.admin-news-actions {
+  flex-wrap: wrap;
+}
+
+.admin-news-actions .admin-news-create {
+  margin-left: auto;
+}
+
+@media (max-width: 640px) {
+  .admin-news-actions .admin-news-create {
+    flex-basis: 100%;
+    margin-left: 0;
+  }
+}
+
 .tab {
   background: transparent;
   box-shadow: none;

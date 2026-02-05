@@ -139,11 +139,19 @@
             </div>
             <div>
               <label class="text-sm font-medium">招待コード（任意）</label>
-              <input type="text" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3" />
+              <input id="detail-invite-code" type="text" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3" />
             </div>
             <div>
               <label class="text-sm font-medium">生年月日</label>
               <input type="date" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3" />
+            </div>
+            <div>
+              <label class="text-sm font-medium">性別</label>
+              <select class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3">
+                <option>女性</option>
+                <option>男性</option>
+                <option>回答しない</option>
+              </select>
             </div>
             <div>
               <label class="text-sm font-medium">郵便番号</label>
@@ -160,22 +168,109 @@
             <div>
               <label class="text-sm font-medium">業種</label>
               <select class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3">
-                <option>IT</option>
-                <option>医療</option>
-                <option>教育</option>
+                <optgroup label="経営・ビジネス">
+                  <option>経営者／代表</option>
+                  <option>個人事業主・フリーランス</option>
+                  <option>事業コンサルタント</option>
+                  <option>起業家・スタートアップ</option>
+                  <option>営業・セールス</option>
+                  <option>マーケティング・広報</option>
+                  <option>人事・採用</option>
+                  <option>経営企画・事業企画</option>
+                </optgroup>
+                <optgroup label="IT・デジタル">
+                  <option>エンジニア（Web／アプリ／システム）</option>
+                  <option>ITコンサルタント</option>
+                  <option>Webデザイナー</option>
+                  <option>UI / UXデザイナー</option>
+                  <option>動画クリエイター</option>
+                  <option>SNS運用・インフルエンサー</option>
+                  <option>AI・データ関連</option>
+                  <option>ITサポート・運用</option>
+                </optgroup>
+                <optgroup label="クリエイティブ">
+                  <option>デザイナー（グラフィック／DTP）</option>
+                  <option>ライター・編集者</option>
+                  <option>カメラマン</option>
+                  <option>映像制作</option>
+                  <option>イラストレーター</option>
+                  <option>音楽・音響関連</option>
+                </optgroup>
+                <optgroup label="金融・士業・専門職">
+                  <option>税理士</option>
+                  <option>会計士</option>
+                  <option>行政書士</option>
+                  <option>社会保険労務士</option>
+                  <option>弁護士</option>
+                  <option>司法書士</option>
+                  <option>ファイナンシャルプランナー（FP）</option>
+                  <option>保険代理店</option>
+                  <option>投資・金融アドバイザー</option>
+                </optgroup>
+                <optgroup label="医療・健康・ウェルネス">
+                  <option>医師・歯科医師</option>
+                  <option>看護師・医療従事者</option>
+                  <option>理学療法士・整体師</option>
+                  <option>鍼灸師</option>
+                  <option>トレーナー</option>
+                  <option>健康・予防医療関連</option>
+                  <option>メンタルヘルス・カウンセラー</option>
+                </optgroup>
+                <optgroup label="美容・ライフスタイル">
+                  <option>美容師</option>
+                  <option>エステティシャン</option>
+                  <option>ネイリスト</option>
+                  <option>アイリスト</option>
+                  <option>セラピスト</option>
+                  <option>ファッション関連</option>
+                  <option>ライフコーチ</option>
+                </optgroup>
+                <optgroup label="教育・講師">
+                  <option>学校教員</option>
+                  <option>講師・インストラクター</option>
+                  <option>コーチ・トレーナー</option>
+                  <option>研修講師</option>
+                  <option>キャリア支援</option>
+                </optgroup>
+                <optgroup label="建築・不動産・現場系">
+                  <option>不動産業</option>
+                  <option>建築士</option>
+                  <option>工務店・施工</option>
+                  <option>内装・リフォーム</option>
+                  <option>設備・電気・水道</option>
+                  <option>現場監督</option>
+                </optgroup>
+                <optgroup label="小売・飲食・サービス">
+                  <option>飲食店経営</option>
+                  <option>飲食スタッフ</option>
+                  <option>小売業</option>
+                  <option>EC運営</option>
+                  <option>接客・販売</option>
+                  <option>観光・宿泊関連</option>
+                  <option>物流・運送</option>
+                  <option>貿易・輸出入</option>
+                  <option>製造業</option>
+                  <option>農業・一次産業</option>
+                  <option>NPO・地域活動</option>
+                  <option>コミュニティ運営</option>
+                  <option>その他</option>
+                </optgroup>
               </select>
             </div>
             <div>
               <label class="text-sm font-medium">料金プラン</label>
-              <select class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3">
-                <option>ベーシック</option>
-                <option>スタンダード</option>
-                <option>プレミアム</option>
+              <select id="detail-plan" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3">
+                <option value="basic" data-price="¥9,800">ベーシック</option>
+                <option value="standard" data-price="¥14,800">スタンダード</option>
+                <option value="premium" data-price="¥19,800">プレミアム</option>
+                <option value="vip" data-price="¥29,800">VIP</option>
               </select>
+              <p id="detail-plan-price" class="mt-2 text-sm text-slate-600">月額料金（税込）：¥9,800</p>
             </div>
             <div class="md:col-span-2">
               <label class="text-sm font-medium">クレジットカード</label>
               <input type="text" placeholder="LINKでカード情報を入力" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3" />
+              <p class="mt-2 text-sm text-slate-500">有効なカードのみをご入力ください。「登録情報を送信する」ボタンを押すと、上記の支払いが発生します。</p>
             </div>
           </div>
           <p id="detail-info-error" class="mt-4 hidden text-sm text-rose-500">入力内容に誤りがあります。</p>
@@ -1107,14 +1202,14 @@
           <div class="rounded-3xl bg-white/90 p-6 shadow">
             <h1 class="page-title text-2xl font-semibold">管理者ホーム</h1>
             <div class="mt-4 grid gap-4">
-              <div class="rounded-2xl border border-slate-200 bg-white p-4">
+              <button data-action="open-admin-requests" class="rounded-2xl border border-slate-200 bg-white p-4 text-left">
                 <div class="text-sm font-semibold">タスクの説明</div>
                 <div class="text-xs text-slate-500">新規入会申し込み</div>
-              </div>
-              <div class="rounded-2xl border border-slate-200 bg-white p-4">
+              </button>
+              <button data-action="open-admin-ads" class="rounded-2xl border border-slate-200 bg-white p-4 text-left">
                 <div class="text-sm font-semibold">タスクの説明</div>
                 <div class="text-xs text-slate-500">広告掲載申込</div>
-              </div>
+              </button>
             </div>
           </div>
           <div class="rounded-3xl bg-white/90 p-6 shadow">
@@ -1177,11 +1272,30 @@
               </div>
             </div>
             <div class="mt-6 flex flex-wrap gap-3">
-              <button class="rounded-xl border border-slate-300 px-4 py-3">利用履歴一覧</button>
-              <button class="rounded-xl border border-slate-300 px-4 py-3">編集</button>
+              <button data-action="open-admin-member-usage" class="rounded-xl border border-slate-300 px-4 py-3">利用履歴一覧</button>
+              <button data-action="open-admin-member-edit" class="rounded-xl border border-slate-300 px-4 py-3">編集</button>
               <button data-action="open-stop-confirm" class="rounded-xl border border-rose-300 px-4 py-3 text-rose-500">停止</button>
               <button data-action="open-resume-confirm" class="rounded-xl border border-slate-300 px-4 py-3">停止解除</button>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-admin-member-usage" class="screen hidden min-h-screen px-4 pt-24">
+        <div class="mx-auto max-w-4xl">
+          <div class="action-bar">
+            <button data-action="open-admin-member-detail" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
+            <div class="flex gap-2 sticky-row">
+              <button data-action="open-admin-usage-search" class="rounded-xl border border-slate-300 px-3 py-2">検索</button>
+              <button data-action="open-admin-usage-sort" class="rounded-xl border border-slate-300 px-3 py-2">並び替え</button>
+            </div>
+            <button data-action="scroll-top" class="rounded-xl border border-slate-300 px-3 py-2 action-btn">topに戻る</button>
+          </div>
+          <div class="mt-8 rounded-3xl bg-white/90 p-8 shadow">
+            <h1 class="page-title text-2xl font-semibold">利用履歴一覧</h1>
+            <p class="mt-2 text-sm text-slate-500">対象会員：高橋 翔太</p>
+            <div class="mt-6 space-y-2" id="admin-member-usage-list" MA-database data-list="admin-member-usage"></div>
+            <button data-action="load-more" data-target="admin-member-usage" class="mt-4 w-full rounded-xl border border-slate-300 px-4 py-3">次の30件を表示</button>
           </div>
         </div>
       </section>
@@ -1308,10 +1422,18 @@
           <div class="mt-8 rounded-3xl bg-white/90 p-8 shadow">
             <h1 class="page-title text-2xl font-semibold">入会申請詳細</h1>
             <div class="mt-6 space-y-2 text-sm text-slate-600">
-              <p>申請者名：佐藤 理沙</p>
+              <p>メールアドレス：member@example.com</p>
               <p>電話番号：090-0000-0000</p>
-              <p>会社名：Sample Inc.</p>
-              <p>招待コード：INV-12345</p>
+              <p>お名前：佐藤 理沙</p>
+              <p>招待コード：VIP-2024</p>
+              <p>生年月日：1990/04/12</p>
+              <p>性別：女性</p>
+              <p>郵便番号：150-0000</p>
+              <p>住所（県＆市区町村）：東京都渋谷区</p>
+              <p>住所（番地以降）：1-2-3 サンプルビル 10F</p>
+              <p>業種：マーケティング・広報</p>
+              <p>料金プラン：vip</p>
+              <p>月額料金（税込）：¥29,800</p>
               <p>承認ステータス：審査中</p>
             </div>
             <div class="mt-6 flex gap-3">
@@ -1449,28 +1571,78 @@
           </div>
           <div class="mt-8 rounded-3xl bg-white/90 p-8 shadow">
             <h1 class="page-title text-2xl font-semibold">プロフィール項目編集</h1>
-            <div class="mt-6">
-              <h2 class="text-sm font-semibold text-slate-600">既存項目</h2>
-              <div class="mt-2 flex flex-wrap gap-2">
-                <span class="rounded-full bg-slate-100 px-3 py-1 text-xs">名前</span>
-                <span class="rounded-full bg-slate-100 px-3 py-1 text-xs">生年月日</span>
-                <span class="rounded-full bg-slate-100 px-3 py-1 text-xs">活動地域</span>
-                <span class="rounded-full bg-slate-100 px-3 py-1 text-xs">業種</span>
-              </div>
-            </div>
-            <div class="mt-6 space-y-4">
-              <div class="flex flex-col gap-3 md:flex-row">
-                <input type="text" placeholder="追加項目名" class="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-3" />
-                <select class="w-40 rounded-xl border border-slate-200 bg-white px-4 py-3">
-                  <option>input</option>
-                  <option>textarea</option>
-                </select>
-                <button data-action="open-delete-confirm" class="rounded-xl border border-rose-300 px-4 py-3 text-rose-500">削除</button>
-              </div>
+            <div class="mt-6 overflow-x-auto">
+              <table class="w-full min-w-[640px] table-auto text-sm">
+                <thead>
+                  <tr class="text-left text-slate-500">
+                    <th class="pb-3 font-medium">項目名</th>
+                    <th class="pb-3 font-medium">タイプ</th>
+                    <th class="pb-3 font-medium">操作</th>
+                  </tr>
+                </thead>
+                <tbody id="profile-field-table" class="space-y-2">
+                  <tr class="border-b border-slate-100">
+                    <td class="py-3 pr-3">
+                      <input type="text" value="名前" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2" />
+                    </td>
+                    <td class="py-3 pr-3">
+                      <select class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2">
+                        <option selected>input</option>
+                        <option>textarea</option>
+                      </select>
+                    </td>
+                    <td class="py-3">
+                      <button data-action="open-delete-confirm" class="rounded-xl border border-rose-300 px-4 py-2 text-rose-500">削除</button>
+                    </td>
+                  </tr>
+                  <tr class="border-b border-slate-100">
+                    <td class="py-3 pr-3">
+                      <input type="text" value="生年月日" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2" />
+                    </td>
+                    <td class="py-3 pr-3">
+                      <select class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2">
+                        <option selected>input</option>
+                        <option>textarea</option>
+                      </select>
+                    </td>
+                    <td class="py-3">
+                      <button data-action="open-delete-confirm" class="rounded-xl border border-rose-300 px-4 py-2 text-rose-500">削除</button>
+                    </td>
+                  </tr>
+                  <tr class="border-b border-slate-100">
+                    <td class="py-3 pr-3">
+                      <input type="text" value="活動地域" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2" />
+                    </td>
+                    <td class="py-3 pr-3">
+                      <select class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2">
+                        <option selected>input</option>
+                        <option>textarea</option>
+                      </select>
+                    </td>
+                    <td class="py-3">
+                      <button data-action="open-delete-confirm" class="rounded-xl border border-rose-300 px-4 py-2 text-rose-500">削除</button>
+                    </td>
+                  </tr>
+                  <tr class="border-b border-slate-100">
+                    <td class="py-3 pr-3">
+                      <input type="text" value="業種" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2" />
+                    </td>
+                    <td class="py-3 pr-3">
+                      <select class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2">
+                        <option selected>input</option>
+                        <option>textarea</option>
+                      </select>
+                    </td>
+                    <td class="py-3">
+                      <button data-action="open-delete-confirm" class="rounded-xl border border-rose-300 px-4 py-2 text-rose-500">削除</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
             <p id="profile-field-error" class="mt-4 hidden text-sm text-rose-500">入力内容に誤りがあります。</p>
             <div class="mt-6 flex gap-3">
-              <button class="rounded-xl border border-slate-300 px-4 py-3">追加</button>
+              <button data-action="add-profile-field-row" class="rounded-xl border border-slate-300 px-4 py-3">追加</button>
               <button class="rounded-xl bg-slate-900 px-4 py-3 text-white">保存</button>
             </div>
             <div class="mt-6 flex justify-end">
@@ -1484,15 +1656,16 @@
         <div class="mx-auto max-w-6xl">
           <div class="action-bar">
             <button data-action="open-admin-home" class="rounded-xl border border-slate-300 px-3 py-2">戻る</button>
-            <div class="flex gap-2 sticky-row">
+            <div class="flex gap-2 sticky-row admin-news-actions">
               <button data-action="open-admin-news-search" class="rounded-xl border border-slate-300 px-3 py-2">検索</button>
               <button data-action="open-admin-news-sort" class="rounded-xl border border-slate-300 px-3 py-2">並び替え</button>
-              <button data-action="open-admin-news-create" class="rounded-xl bg-slate-900 px-3 py-2 text-white">新規作成</button>
+              <button data-action="open-admin-news-create" class="admin-news-create rounded-xl bg-slate-900 px-3 py-2 text-white">新規作成</button>
             </div>
             <button data-action="scroll-top" class="rounded-xl border border-slate-300 px-3 py-2 action-btn">topに戻る</button>
           </div>
           <div class="mt-8 rounded-3xl bg-white/90 p-8 shadow">
             <h1 class="page-title text-2xl font-semibold">公式お知らせ管理</h1>
+            <p class="mt-2 text-sm text-slate-500">新規入会のお知らせは承認時に自動作成されます。</p>
             <div class="mt-6" id="admin-news-list" MA-database data-list="admin-news"></div>
             <button data-action="load-more" data-target="admin-news" class="mt-4 w-full rounded-xl border border-slate-300 px-4 py-3">次の30件を表示</button>
           </div>
@@ -1519,7 +1692,6 @@
               <textarea rows="5" placeholder="本文" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3"></textarea>
               <select class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3">
                 <option>公式</option>
-                <option>新規入会</option>
               </select>
               <input type="url" placeholder="申し込み用URL" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3" />
             </div>
@@ -1572,7 +1744,6 @@
               <textarea rows="5" placeholder="本文" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3"></textarea>
               <select class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3">
                 <option>公式</option>
-                <option>新規入会</option>
               </select>
               <input type="url" placeholder="申し込み用URL" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3" />
             </div>

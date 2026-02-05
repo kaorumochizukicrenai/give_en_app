@@ -21,8 +21,12 @@ const dialogDmBlockConfirm = document.getElementById('dialog-dm-block-confirm');
 const dialogDmUnblockConfirm = document.getElementById('dialog-dm-unblock-confirm');
 const dmMemoListPanel = document.getElementById('dm-memo-list-panel');
 const dmMemoDetailPanel = document.getElementById('dm-memo-detail-panel');
+const detailPlanSelect = document.getElementById('detail-plan');
+const detailPlanPrice = document.getElementById('detail-plan-price');
+const detailInviteCodeInput = document.getElementById('detail-invite-code');
 
 const inviteCode = 'give-A1b2C3d4';
+const vipInviteCode = 'VIP-2024';
 
 const state = {
   activeScreen: 'screen-login',
@@ -148,6 +152,7 @@ const adminData = {
     region: ['東京', '大阪', '福岡'][i % 3],
     industry: ['IT', '医療', '教育'][i % 3],
     status: i % 2 === 0 ? '有効' : '停止',
+    avatar: avatarImages[i % avatarImages.length],
   })),
   requests: Array.from({ length: 50 }, (_, i) => ({
     id: i + 1,
@@ -210,7 +215,7 @@ const adminData = {
     id: i + 1,
     title: `お知らせ ${i + 1}`,
     date: `2024/07/${(i % 28) + 1}`,
-    type: i % 2 === 0 ? '公式' : '新規入会',
+    type: '公式',
   })),
   dm: Array.from({ length: 50 }, (_, i) => ({
     id: i + 1,
@@ -219,6 +224,13 @@ const adminData = {
     time: `2024/07/${(i % 28) + 1}`,
   })),
 };
+
+const adminMemberUsage = Array.from({ length: 50 }, (_, i) => ({
+  id: i + 1,
+  admin: `管理者 ${i + 1}`,
+  action: '会員プロフィール閲覧',
+  date: `2024/07/${(i % 28) + 1} 11:${(i % 60).toString().padStart(2, '0')}`,
+}));
 
 const ads = [
   {
@@ -472,8 +484,11 @@ function renderPartnerServiceTile(item, index) {
 
 function renderAdminRow(row) {
   return `
-    <div class="grid items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 md:grid-cols-5">
-      <div class="text-sm font-semibold">${row.name}</div>
+    <div class="grid items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 md:grid-cols-[auto_1fr_1fr_1fr_auto]">
+      <div class="flex items-center gap-3">
+        <img src="${row.avatar}" alt="${row.name}" class="h-10 w-10 rounded-full object-cover" />
+        <div class="text-sm font-semibold">${row.name}</div>
+      </div>
       <div class="text-sm">${row.region}</div>
       <div class="text-sm">${row.industry}</div>
       <div class="text-sm text-slate-500">${row.status}</div>
@@ -637,6 +652,7 @@ function renderAllLists() {
     'admin-payment': [adminData.payment, renderAdminPayment],
     'admin-news': [adminData.news, renderAdminNews],
     'admin-dm': [adminData.dm, renderAdminDm],
+    'admin-member-usage': [adminMemberUsage, renderAdminUsage],
   };
 
   document.querySelectorAll('[data-list]').forEach((element) => {
@@ -674,6 +690,45 @@ function renderInviteCode() {
   document.querySelectorAll('[data-invite-code-text]').forEach((element) => {
     element.textContent = inviteCode;
   });
+}
+
+function updatePlanPrice() {
+  if (!detailPlanSelect || !detailPlanPrice) return;
+  const selectedOption = detailPlanSelect.options[detailPlanSelect.selectedIndex];
+  // NOTE: 本番環境ではプラン料金をDBから取得する想定。
+  const price = selectedOption?.dataset?.price || '¥0';
+  detailPlanPrice.textContent = `月額料金（税込）：${price}`;
+}
+
+function applyVipPlanIfNeeded() {
+  if (!detailInviteCodeInput || !detailPlanSelect) return;
+  if (detailInviteCodeInput.value.trim() === vipInviteCode) {
+    detailPlanSelect.value = 'vip';
+    updatePlanPrice();
+  }
+}
+
+function addProfileFieldRow() {
+  const tableBody = document.getElementById('profile-field-table');
+  if (!tableBody) return;
+  const row = document.createElement('tr');
+  row.className = 'border-b border-slate-100';
+  row.innerHTML = `
+    <td class="py-3 pr-3">
+      <input type="text" placeholder="追加項目名" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2" />
+    </td>
+    <td class="py-3 pr-3">
+      <select class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2">
+        <option>input</option>
+        <option>textarea</option>
+      </select>
+    </td>
+    <td class="py-3">
+      <button data-action="open-delete-confirm" class="rounded-xl border border-rose-300 px-4 py-2 text-rose-500">削除</button>
+    </td>
+  `;
+  tableBody.appendChild(row);
+  lucide.createIcons();
 }
 
 function renderNoticeSlide(item) {
@@ -1113,6 +1168,9 @@ function handleAction(action, target) {
     case 'open-admin-member-edit':
       showScreen('screen-admin-member-edit', 'admin');
       break;
+    case 'open-admin-member-usage':
+      showScreen('screen-admin-member-usage', 'admin');
+      break;
     case 'open-admin-dm':
       showScreen('screen-admin-dm', 'admin');
       break;
@@ -1190,6 +1248,9 @@ function handleAction(action, target) {
       break;
     case 'open-delete-confirm':
       showDialog('削除確認', '削除しますか？', '削除する');
+      break;
+    case 'add-profile-field-row':
+      addProfileFieldRow();
       break;
     case 'open-new-promo-post':
       showScreen('screen-promo-post', 'member');
@@ -1424,6 +1485,18 @@ function bindEvents() {
       reader.readAsDataURL(file);
     });
   });
+
+  if (detailPlanSelect) {
+    detailPlanSelect.addEventListener('change', () => {
+      updatePlanPrice();
+    });
+  }
+
+  if (detailInviteCodeInput) {
+    detailInviteCodeInput.addEventListener('input', () => {
+      applyVipPlanIfNeeded();
+    });
+  }
 }
 
 const splash = document.getElementById('splash-screen');
@@ -1432,6 +1505,7 @@ renderHeaderAds();
 renderHomeMembers();
 renderAllLists();
 renderInviteCode();
+updatePlanPrice();
 startSlideshow(document.getElementById('notice-slideshow'), notices, renderNoticeSlide, 3500);
 updateTabs();
 bindEvents();
